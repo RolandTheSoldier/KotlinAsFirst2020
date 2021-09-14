@@ -68,7 +68,15 @@ fun minBiRoot(a: Double, b: Double, c: Double): Double {
  * Мой возраст. Для заданного 0 < n < 200, рассматриваемого как возраст человека,
  * вернуть строку вида: «21 год», «32 года», «12 лет».
  */
-fun ageDescription(age: Int): String = TODO()
+fun ageDescription(age: Int): String {
+    val residue100 = age % 100
+    val residue10 = age % 10
+    if (((residue100 >= 10) and (residue100 <= 20)) or (residue10 >= 5)) return ("$age лет")
+    else if (residue10 == 1) return ("$age год")
+    else if ((residue10 >= 2) and (residue10 <= 4)) return ("$age года")
+
+    return "The whole system was destroyed by your entering"
+}
 
 /**
  * Простая (2 балла)
@@ -136,8 +144,7 @@ fun segmentLength(a: Int, b: Int, c: Int, d: Int): Int {
     if (c >= a) {
         if (d <= b) return d - c
         else if (c <= b) return b - c
-    }
-    else {
+    } else {
         if (d >= b) return b - a
         else if (d >= a) return d - a
     }
