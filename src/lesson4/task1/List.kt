@@ -293,7 +293,7 @@ fun russianTo999(n: Int, thousand: Boolean, needSpace: Boolean): String {
         6 to "шестьдесят",
         7 to "семьдесят",
         8 to "восемьдесят",
-        9 to "девятносто"
+        9 to "девяносто"
     )
     val numb100 = mapOf(
         1 to "сто",
