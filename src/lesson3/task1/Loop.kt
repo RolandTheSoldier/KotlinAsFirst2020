@@ -196,17 +196,25 @@ fun cos(x: Double, eps: Double): Double = TODO()
 fun squareSequenceDigit(n: Int): Int {
     var k = 0
     var lastN = 0
+    var lenLastN: Int
 
     for (i in 1..n) {
         lastN = i * i
-        k += lastN.toString().length
+
+        //костыль для "без строк"
+        var resN = lastN
+        lenLastN = 0
+        while (resN >= 1) {
+            lenLastN += 1
+            resN /= 10
+        }
+
+        k += lenLastN
 
         if (k >= n) break
     }
-
-    val strLastN = lastN.toString()
-
-    return strLastN[strLastN.length - 1 - k + n].toString().toInt()
+    val helpC2 = 10.0.pow(k - n).toInt()
+    return lastN / helpC2 - lastN / helpC2 / 10 * 10
 }
 
 /**
