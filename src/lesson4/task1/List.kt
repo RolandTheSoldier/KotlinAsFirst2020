@@ -250,4 +250,93 @@ fun roman(n: Int): String = TODO()
  * Например, 375 = "триста семьдесят пять",
  * 23964 = "двадцать три тысячи девятьсот шестьдесят четыре"
  */
-fun russian(n: Int): String = TODO()
+fun russian(n: Int): String {
+    val thousand: String
+
+    return if (n < 1000) russianTo999(n, thousand = false, needSpace = false)
+    else {
+        val lastThousand = n / 1000 - n / 10000 * 10
+
+        when {
+            lastThousand == 1 -> thousand = "тысяча"
+            lastThousand in 2..4 -> thousand = "тысячи"
+            else -> thousand = "тысяч"
+        }
+        (russianTo999(n / 1000, thousand = true, needSpace = true) + thousand + russianTo999(n - n / 1000 * 1000, false, true))
+    }
+}
+
+fun russianTo999(n: Int, thousand: Boolean, needSpace: Boolean): String {
+    var result = ""
+
+    val numb1 = mapOf(
+        1 to "один",
+        2 to "два",
+        3 to "три",
+        4 to "четыре",
+        5 to "пять",
+        6 to "шесть",
+        7 to "семь",
+        8 to "восемь",
+        9 to "девять"
+    )
+    val numb10 = mapOf(
+        1 to "десять",
+        2 to "двадцать",
+        3 to "тридцать",
+        4 to "сорок",
+        5 to "пятьдесят",
+        6 to "шестьдесят",
+        7 to "семьдесят",
+        8 to "восемьдесят",
+        9 to "девятносто"
+    )
+    val numb100 = mapOf(
+        1 to "сто",
+        2 to "двести",
+        3 to "триста",
+        4 to "четыреста",
+        5 to "пятьсот",
+        6 to "шестьсот",
+        7 to "семьсот",
+        8 to "восемьсот",
+        9 to "девятьсот"
+    )
+    val numb11to19 = mapOf(
+        11 to "одиннадцать",
+        12 to "двенадцать",
+        13 to "тринадцать",
+        14 to "четырнадцать",
+        15 to "пятнадцать",
+        16 to "шестнадцать",
+        17 to "семнадцать",
+        18 to "восемнадцать",
+        19 to "девятнадцать",
+    )
+
+    if (n / 100 > 0) result += numb100[n / 100] + " "
+
+    val tens = n - n / 100 * 100
+    if (tens in 11..19)
+        return if (needSpace) result + numb11to19[tens] + " "
+        else result + numb11to19[tens]
+    else if (tens > 9) {
+        result += numb10[tens / 10] + " "
+    }
+
+    val units = tens - tens / 10 * 10
+    if (thousand) result += when (units) {
+        1 -> "одна "
+        2 -> "две "
+        in 3..9 -> numb1[units] + " "
+        else -> return result
+    }
+    else if (units > 0) result += numb1[units]
+
+    return if (result != "") {
+        if (!thousand)
+            if (needSpace) " $result"
+            else result
+        else result
+    } else ""
+}
