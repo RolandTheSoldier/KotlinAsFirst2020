@@ -253,7 +253,7 @@ fun roman(n: Int): String = TODO()
 fun russian(n: Int): String {
     val thousand: String
 
-    return if (n < 1000) russianTo999(n, thousand = false, needSpace = false)
+    return if (n < 1000) russianTo999(n, thousand = false, needSpace1 = false, needSpace2 = false)
     else {
         val lastThousand = n / 1000 - n / 10000 * 10
 
@@ -262,15 +262,16 @@ fun russian(n: Int): String {
             in 2..4 -> "тысячи"
             else -> "тысяч"
         }
-        (russianTo999(n / 1000, thousand = true, needSpace = true) + thousand + russianTo999(
+        (russianTo999(n / 1000, thousand = true, needSpace1 = true, needSpace2 = true) + thousand + russianTo999(
             n - n / 1000 * 1000,
             thousand = false,
-            needSpace = true
+            needSpace1 = true,
+            needSpace2 = false
         ))
     }
 }
 
-fun russianTo999(n: Int, thousand: Boolean, needSpace: Boolean): String {
+fun russianTo999(n: Int, thousand: Boolean, needSpace1: Boolean, needSpace2: Boolean): String {
     var result = ""
 
     val numb1 = mapOf(
@@ -321,6 +322,8 @@ fun russianTo999(n: Int, thousand: Boolean, needSpace: Boolean): String {
     val tens = n - n / 100 * 100
     val units = tens - tens / 10 * 10
 
+    if (!thousand && needSpace1) result += " "
+
     if (n / 100 > 0) {
         result += numb100[n / 100]
         if (tens > 0) result += " "
@@ -328,10 +331,10 @@ fun russianTo999(n: Int, thousand: Boolean, needSpace: Boolean): String {
 
     if (tens > 0)
         if (tens in 11..19)
-            return if (needSpace) result + numb11to19[tens] + " "
+            return if (needSpace2) result + numb11to19[tens] + " "
             else result + numb11to19[tens]
         else if (tens > 9) {
-            if (tens - tens / 10 * 10 > 0) result += numb10[tens / 10] + " "
+            if (units > 0) result += numb10[tens / 10] + " "
             else result += numb10[tens / 10]
         }
 
@@ -340,14 +343,11 @@ fun russianTo999(n: Int, thousand: Boolean, needSpace: Boolean): String {
             1 -> "одна"
             2 -> "две"
             in 3..9 -> numb1[units]
-            else -> return "$result "
-        }
-        else if (units > 0) result += numb1[units]
+            else -> ""
+        } else result += numb1[units]
 
-    return if (result != "") {
-        if (!thousand)
-            if (needSpace) " $result"
-            else result
-        else "$result "
+    return if (result != "" && result != " ") {
+        if (thousand) "$result "
+        else result
     } else ""
 }
