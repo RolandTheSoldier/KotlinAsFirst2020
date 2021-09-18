@@ -262,7 +262,11 @@ fun russian(n: Int): String {
             in 2..4 -> "тысячи"
             else -> "тысяч"
         }
-        (russianTo999(n / 1000, thousand = true, needSpace = true) + thousand + russianTo999(n - n / 1000 * 1000, false, true))
+        (russianTo999(n / 1000, thousand = true, needSpace = true) + thousand + russianTo999(
+            n - n / 1000 * 1000,
+            thousand = false,
+            needSpace = true
+        ))
     }
 }
 
@@ -321,7 +325,8 @@ fun russianTo999(n: Int, thousand: Boolean, needSpace: Boolean): String {
         return if (needSpace) result + numb11to19[tens] + " "
         else result + numb11to19[tens]
     else if (tens > 9) {
-        result += numb10[tens / 10] + " "
+        if (tens - tens / 10 * 10 > 0) result += numb10[tens / 10] + " "
+        else result += numb10[tens / 10]
     }
 
     val units = tens - tens / 10 * 10
