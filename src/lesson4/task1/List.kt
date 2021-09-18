@@ -257,10 +257,10 @@ fun russian(n: Int): String {
     else {
         val lastThousand = n / 1000 - n / 10000 * 10
 
-        when {
-            lastThousand == 1 -> thousand = "тысяча"
-            lastThousand in 2..4 -> thousand = "тысячи"
-            else -> thousand = "тысяч"
+        thousand = when (lastThousand) {
+            1 -> "тысяча"
+            in 2..4 -> "тысячи"
+            else -> "тысяч"
         }
         (russianTo999(n / 1000, thousand = true, needSpace = true) + thousand + russianTo999(n - n / 1000 * 1000, false, true))
     }
