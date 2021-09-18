@@ -318,30 +318,36 @@ fun russianTo999(n: Int, thousand: Boolean, needSpace: Boolean): String {
         19 to "девятнадцать",
     )
 
-    if (n / 100 > 0) result += numb100[n / 100] + " "
-
     val tens = n - n / 100 * 100
-    if (tens in 11..19)
-        return if (needSpace) result + numb11to19[tens] + " "
-        else result + numb11to19[tens]
-    else if (tens > 9) {
-        if (tens - tens / 10 * 10 > 0) result += numb10[tens / 10] + " "
-        else result += numb10[tens / 10]
+    val units = tens - tens / 10 * 10
+
+    if (n / 100 > 0) {
+        result += numb100[n / 100]
+        if (tens > 0) result += " "
     }
 
-    val units = tens - tens / 10 * 10
-    if (thousand) result += when (units) {
-        1 -> "одна "
-        2 -> "две "
-        in 3..9 -> numb1[units] + " "
-        else -> return result
-    }
-    else if (units > 0) result += numb1[units]
+    if (tens > 0)
+        if (tens in 11..19)
+            return if (needSpace) result + numb11to19[tens] + " "
+            else result + numb11to19[tens]
+        else if (tens > 9) {
+            if (tens - tens / 10 * 10 > 0) result += numb10[tens / 10] + " "
+            else result += numb10[tens / 10]
+        }
+
+    if (units > 0)
+        if (thousand) result += when (units) {
+            1 -> "одна"
+            2 -> "две"
+            in 3..9 -> numb1[units]
+            else -> return "$result "
+        }
+        else if (units > 0) result += numb1[units]
 
     return if (result != "") {
         if (!thousand)
             if (needSpace) " $result"
             else result
-        else result
+        else "$result "
     } else ""
 }
