@@ -241,7 +241,29 @@ fun decimalFromString(str: String, base: Int): Int = TODO()
  * 90 = XC, 100 = C, 400 = CD, 500 = D, 900 = CM, 1000 = M.
  * Например: 23 = XXIII, 44 = XLIV, 100 = C
  */
-fun roman(n: Int): String = TODO()
+val roman1: List<String> = listOf("I", "X", "C", "M")
+val roman5: List<String> = listOf("V", "L", "D")
+
+fun roman(n: Int): String {
+    val strN = n.toString()
+    var result = ""
+    for ((k, c) in strN.withIndex()) {
+        val k2 = strN.length - k - 1
+        result += when (c) {
+            '1' -> roman1[k2]
+            '2' -> roman1[k2] + roman1[k2]
+            '3' -> roman1[k2] + roman1[k2] + roman1[k2]
+            '4' -> roman1[k2] + roman5[k2]
+            '5' -> roman5[k2]
+            '6' -> roman5[k2] + roman1[k2]
+            '7' -> roman5[k2] + roman1[k2] + roman1[k2]
+            '8' -> roman5[k2] + roman1[k2] + roman1[k2] + roman1[k2]
+            '9' -> roman1[k2] + roman1[k2 + 1]
+            else -> ""
+        }
+    }
+    return result
+}
 
 /**
  * Очень сложная (7 баллов)
@@ -271,53 +293,53 @@ fun russian(n: Int): String {
     }
 }
 
+val numb1 = mapOf(
+    1 to "один",
+    2 to "два",
+    3 to "три",
+    4 to "четыре",
+    5 to "пять",
+    6 to "шесть",
+    7 to "семь",
+    8 to "восемь",
+    9 to "девять"
+)
+val numb10 = mapOf(
+    1 to "десять",
+    2 to "двадцать",
+    3 to "тридцать",
+    4 to "сорок",
+    5 to "пятьдесят",
+    6 to "шестьдесят",
+    7 to "семьдесят",
+    8 to "восемьдесят",
+    9 to "девяносто"
+)
+val numb100 = mapOf(
+    1 to "сто",
+    2 to "двести",
+    3 to "триста",
+    4 to "четыреста",
+    5 to "пятьсот",
+    6 to "шестьсот",
+    7 to "семьсот",
+    8 to "восемьсот",
+    9 to "девятьсот"
+)
+val numb11to19 = mapOf(
+    11 to "одиннадцать",
+    12 to "двенадцать",
+    13 to "тринадцать",
+    14 to "четырнадцать",
+    15 to "пятнадцать",
+    16 to "шестнадцать",
+    17 to "семнадцать",
+    18 to "восемнадцать",
+    19 to "девятнадцать",
+)
+
 fun russianTo999(n: Int, thousand: Boolean, needSpace1: Boolean, needSpace2: Boolean): String {
     var result = ""
-
-    val numb1 = mapOf(
-        1 to "один",
-        2 to "два",
-        3 to "три",
-        4 to "четыре",
-        5 to "пять",
-        6 to "шесть",
-        7 to "семь",
-        8 to "восемь",
-        9 to "девять"
-    )
-    val numb10 = mapOf(
-        1 to "десять",
-        2 to "двадцать",
-        3 to "тридцать",
-        4 to "сорок",
-        5 to "пятьдесят",
-        6 to "шестьдесят",
-        7 to "семьдесят",
-        8 to "восемьдесят",
-        9 to "девяносто"
-    )
-    val numb100 = mapOf(
-        1 to "сто",
-        2 to "двести",
-        3 to "триста",
-        4 to "четыреста",
-        5 to "пятьсот",
-        6 to "шестьсот",
-        7 to "семьсот",
-        8 to "восемьсот",
-        9 to "девятьсот"
-    )
-    val numb11to19 = mapOf(
-        11 to "одиннадцать",
-        12 to "двенадцать",
-        13 to "тринадцать",
-        14 to "четырнадцать",
-        15 to "пятнадцать",
-        16 to "шестнадцать",
-        17 to "семнадцать",
-        18 to "восемнадцать",
-        19 to "девятнадцать",
-    )
 
     val tens = n - n / 100 * 100
     val units = tens - tens / 10 * 10
