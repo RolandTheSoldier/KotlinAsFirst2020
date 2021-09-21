@@ -196,25 +196,16 @@ fun cos(x: Double, eps: Double): Double = TODO()
 fun squareSequenceDigit(n: Int): Int {
     var k = 0
     var lastN = 0
-    var lenLastN: Int
 
     for (i in 1..n) {
         lastN = i * i
 
-        //костыль для "без строк"
-        var resN = lastN
-        lenLastN = 0
-        while (resN >= 1) {
-            lenLastN += 1
-            resN /= 10
-        }
-
-        k += lenLastN
+        k += findLen(lastN)
 
         if (k >= n) break
     }
-    val helpC2 = 10.0.pow(k - n).toInt()
-    return lastN / helpC2 - lastN / helpC2 / 10 * 10
+    val helpDivNumb = 10.0.pow(k - n).toInt()
+    return lastN / helpDivNumb % 10
 }
 
 /**
@@ -234,7 +225,6 @@ fun fibSequenceDigit(n: Int): Int {
 
     var k = 2
     var lastN = 0
-    var lenLastN: Int
 
     var n1 = 1
     var n2 = 1
@@ -242,20 +232,23 @@ fun fibSequenceDigit(n: Int): Int {
     for (i in 1..n) {
         lastN = n1 + n2
 
-        //костыль для "без строк"
-        var resN = lastN
-        lenLastN = 0
-        while (resN >= 1) {
-            lenLastN += 1
-            resN /= 10
-        }
-
+        k += findLen(lastN)
         n1 = n2
         n2 = lastN
-        k += lenLastN
 
         if (k >= n) break
     }
-    val helpC2 = 10.0.pow(k - n).toInt()
-    return lastN / helpC2 - lastN / helpC2 / 10 * 10
+    val helpDivNumb = 10.0.pow(k - n).toInt()
+    return lastN / helpDivNumb % 10
+}
+
+fun findLen(n: Int): Int {
+    var resN = n
+    var len = 0
+    while (resN >= 1) {
+        len++
+        resN /= 10
+    }
+
+    return len
 }

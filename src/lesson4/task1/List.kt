@@ -277,7 +277,7 @@ fun russian(n: Int): String {
 
     return if (n < 1000) russianTo999(n, thousand = false, needSpace1 = false, needSpace2 = false)
     else {
-        val lastThousand = n / 1000 - n / 100000 * 100
+        val lastThousand = n / 1000 % 100
 
         thousand = when {
             lastThousand in 11..14 -> "тысяч"
@@ -286,7 +286,7 @@ fun russian(n: Int): String {
             else -> "тысяч"
         }
         (russianTo999(n / 1000, thousand = true, needSpace1 = true, needSpace2 = true) + thousand + russianTo999(
-            n - n / 1000 * 1000,
+            n % 1000,
             thousand = false,
             needSpace1 = true,
             needSpace2 = false
@@ -342,8 +342,8 @@ val numb11to19 = mapOf(
 fun russianTo999(n: Int, thousand: Boolean, needSpace1: Boolean, needSpace2: Boolean): String {
     var result = ""
 
-    val tens = n - n / 100 * 100
-    val units = tens - tens / 10 * 10
+    val tens = n % 100
+    val units = tens % 10
 
     if (!thousand && needSpace1) result += " "
 
