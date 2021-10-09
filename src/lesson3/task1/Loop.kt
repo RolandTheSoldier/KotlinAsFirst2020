@@ -159,7 +159,27 @@ fun isPalindrome(n: Int): Boolean = TODO()
  *
  * Использовать операции со строками в этой задаче запрещается.
  */
-fun hasDifferentDigits(n: Int): Boolean = TODO()
+fun hasDifferentDigits(n: Int): Boolean {
+    if (n / 10 == 0) return false
+
+    var countN = 0
+    var n2 = n
+    while (n2 > 1) {
+        n2 /= 10
+        ++countN
+    }
+
+    n2 = n
+    val firstN = n % 10
+
+    for (i in 1..countN) {
+        val difN = n2 % 10
+        n2 /= 10
+        if (firstN == difN) continue
+        else return true
+    }
+    return false
+}
 
 /**
  * Средняя (4 балла)
