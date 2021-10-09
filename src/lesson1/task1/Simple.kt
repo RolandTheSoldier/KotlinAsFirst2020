@@ -70,7 +70,8 @@ println("Root product: $x1x2")
  * Пользователь задает время в часах, минутах и секундах, например, 8:20:35.
  * Рассчитать время в секундах, прошедшее с начала суток (30035 в данном случае).
  */
-fun seconds(hours: Int, minutes: Int, seconds: Int): Int = seconds + (minutes * 60) + (hours * 3600)
+fun seconds(hours: Int, minutes: Int, seconds: Int): Int =
+    seconds + (minutes * 60) + (hours * 3600)
 
 
 /**
@@ -131,7 +132,8 @@ fun travelMinutes(hoursDepart: Int, minutesDepart: Int, hoursArrive: Int, minute
  * Сколько денег будет на счету через 3 года (с учётом сложных процентов)?
  * Например, 100 рублей под 10% годовых превратятся в 133.1 рубля
  */
-fun accountInThreeYears(initial: Int, percent: Int): Double = initial * (1 + percent * 0.01).pow(3.0)
+fun accountInThreeYears(initial: Int, percent: Int): Double =
+    initial * (1 + percent * 0.01).pow(3.0)
 
 
 /**
@@ -140,4 +142,5 @@ fun accountInThreeYears(initial: Int, percent: Int): Double = initial * (1 + per
  * Пользователь задает целое трехзначное число (например, 478).
  * Необходимо вывести число, полученное из заданного перестановкой цифр в обратном порядке (например, 874).
  */
-fun numberRevert(number: Int): Int = (number % 10) * 100 + ((number % 100) / 10) * 10 + (number / 100)
+fun numberRevert(number: Int): Int =
+    (number % 10) * 100 + ((number % 100) / 10) * 10 + (number / 100)

@@ -62,30 +62,20 @@ fun minBiRoot(a: Double, b: Double, c: Double): Double {
     return -sqrt(y3)           // 7
 }
 
-
-
-
-
-
-
-
-
 /**
  * Простая (2 балла)
  *
  * Мой возраст. Для заданного 0 < n < 200, рассматриваемого как возраст человека,
  * вернуть строку вида: «21 год», «32 года», «12 лет».
  */
-fun ageDescription(age: Int): String
-{
-    if (age < 1 || age > 199) return "Not correct number"
-    if (age % 100 in 10..20) return "$age лет"
-    if (age % 10 == 1) return "$age год"
-    if (age % 10 in 2..4) return "$age года"
-    if (age % 10 == 0 || age % 10 in 5..9) return "$age лет"
-    return "Not correct number"
+fun ageDescription(age: Int): String = when {
+    age < 1 || age > 199 -> "Not correct number"
+    age % 100 in 10..20 -> "$age лет"
+    age % 10 == 1 -> "$age год"
+    age % 10 in 2..4 -> "$age года"
+    age % 10 == 0 || age % 10 in 5..9 -> "$age лет"
+    else -> "Not correct number"
 }
-
 
 /**
  * Простая (2 балла)
@@ -98,17 +88,18 @@ fun timeForHalfWay(
     t1: Double, v1: Double,
     t2: Double, v2: Double,
     t3: Double, v3: Double
-): Double
-{
+): Double {
     val l1 = t1 * v1
     val l2 = t2 * v2
     val l3 = t3 * v3
     val l = l1 + l2 + l3
     val lHalf = l / 2.0
-    if (lHalf <= l1) return l / v1 / 2.0
-    if (lHalf > l1 && lHalf <= l1 + l2) return t1 + (lHalf - l1) / v2
-    if (lHalf > l1 + l2) return t1 + t2 + (lHalf - l1 - l2) / v3
-    return 0.0
+    return when {
+        lHalf <= l1 -> l / v1 / 2.0
+        lHalf > l1 && lHalf <= l1 + l2 -> t1 + (lHalf - l1) / v2
+        lHalf > l1 + l2 -> t1 + t2 + (lHalf - l1 - l2) / v3
+        else -> 0.0
+    }
 }
 
 /**
@@ -124,13 +115,15 @@ fun whichRookThreatens(
     kingX: Int, kingY: Int,
     rookX1: Int, rookY1: Int,
     rookX2: Int, rookY2: Int
-): Int
-{
-    if (kingX == rookX1 || kingY == rookY1)
-        return if (kingX == rookX2 || kingY == rookY2) 3
-        else 1
-    return if (kingX == rookX2 || kingY == rookY2) 2
-    else 0
+): Int {
+    val checkOne: Boolean = (kingX == rookX1 || kingY == rookY1)
+    val checkTwo: Boolean = (kingX == rookX2 || kingY == rookY2)
+    return when {
+        checkOne && checkTwo -> 3
+        checkOne -> 1
+        checkTwo -> 2
+        else -> 0
+    }
 }
 
 /**
@@ -147,8 +140,7 @@ fun rookOrBishopThreatens(
     kingX: Int, kingY: Int,
     rookX: Int, rookY: Int,
     bishopX: Int, bishopY: Int
-): Int
-{
+): Int {
     if (kingX == rookX || kingY == rookY)
         return if (abs(kingX - bishopX) == abs(kingY - bishopY)) 3
         else 1
@@ -164,16 +156,16 @@ fun rookOrBishopThreatens(
  * прямоугольным (вернуть 1) или тупоугольным (вернуть 2).
  * Если такой треугольник не существует, вернуть -1.
  */
-fun triangleKind(a: Double, b: Double, c: Double): Int
-{
-    val largeSide: Double = max(a, max(b, c))
-    val smallSide: Double = min(a, min(b, c))
-    val middleSide: Double = a + b + c - largeSide - smallSide
+fun triangleKind(a: Double, b: Double, c: Double): Int {
+    val largeSide = max(a, max(b, c))
+    val smallSide = min(a, min(b, c))
+    val middleSide = a + b + c - largeSide - smallSide
     if (middleSide + smallSide <= largeSide) return -1
     if (sqr(middleSide) + sqr(smallSide) == sqr(largeSide)) return 1
-    if ((sqr(largeSide) - sqr(middleSide) - sqr(smallSide)) / (-2.0 * smallSide * middleSide) < 0)
-        return 2
-    else return 0
+    return if (
+        (sqr(largeSide) - sqr(middleSide) - sqr(smallSide)) / (-2.0 * smallSide * middleSide) < 0
+    ) 2
+    else 0
 }
 
 /**
@@ -184,8 +176,7 @@ fun triangleKind(a: Double, b: Double, c: Double): Int
  * Найти длину пересечения отрезков AB и CD.
  * Если пересечения нет, вернуть -1.
  */
-fun segmentLength(a: Int, b: Int, c: Int, d: Int): Int
-{
+fun segmentLength(a: Int, b: Int, c: Int, d: Int): Int {
     if (b == a || d == c) return -1
     if (b < c || d < a) return -1
     if (b == c || d == a) return 0
