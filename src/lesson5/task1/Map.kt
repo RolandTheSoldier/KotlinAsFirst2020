@@ -314,4 +314,26 @@ fun helperFindSumOfTwo(i: Int, dif: Int, list: List<Int>): Pair<Int, Int> {
  *     450
  *   ) -> emptySet()
  */
-fun bagPacking(treasures: Map<String, Pair<Int, Int>>, capacity: Int): Set<String> = TODO()
+fun bagPacking(treasures: Map<String, Pair<Int, Int>>, capacity: Int): Set<String> {
+    val result = mutableSetOf<String>()
+    val listWorth = mutableListOf<Pair<String, Double>>()
+
+    //Выделение коэф. ценности в отдельный список
+    for ((key, value) in treasures) {
+        listWorth.add(key to (value.second.toDouble() / value.first.toDouble()))
+    }
+
+    listWorth.sortBy { it.second }
+    listWorth.reverse()
+
+    //Основная работа
+    var residualCapacity = capacity
+    for ((name, _) in listWorth) {
+        if (residualCapacity >= treasures.getValue(name).first) {
+            result.add(name)
+            residualCapacity -= treasures.getValue(name).first
+        } else continue
+    }
+
+    return result
+}
