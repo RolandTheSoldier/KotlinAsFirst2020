@@ -367,7 +367,7 @@ fun bagPacking(treasures: Map<String, Pair<Int, Int>>, capacity: Int): Set<Strin
             if (totalCost < treasures.getValue(listWorth[0].first).second) {
                 helpList.add(name to values)
                 toDeleteHelp.add(name to values)
-            }
+            } else break
 
             if (residualCapacity + totalWeight >= treasures.getValue(listWorth[0].first).first) {
                 resultList.add(
