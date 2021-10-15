@@ -321,11 +321,10 @@ fun bagPacking(treasures: Map<String, Pair<Int, Int>>, capacity: Int): Set<Strin
 
     //Выделение коэф. ценности в отдельный список
     for ((key, value) in treasures) {
-        if (value.first <= capacity) listWorth.add(key to (value.second.toDouble() / value.first.toDouble()))
+        if (value.first <= capacity) listWorth.add(key to (value.first.toDouble() / value.second.toDouble()))
     }
 
     listWorth.sortBy { it.second }
-    listWorth.reverse()
 
     //Основная работа
     val toDeleteWorth = mutableListOf<Pair<String, Double>>()
@@ -367,14 +366,15 @@ fun bagPacking(treasures: Map<String, Pair<Int, Int>>, capacity: Int): Set<Strin
             if (totalCost < treasures.getValue(listWorth[0].first).second) {
                 helpList.add(name to values)
                 toDeleteHelp.add(name to values)
+                residualCapacity += values.first
             } else break
 
-            if (residualCapacity + totalWeight >= treasures.getValue(listWorth[0].first).first) {
+            if (residualCapacity + totalWeight > treasures.getValue(listWorth[0].first).first) {
                 resultList.add(
                     listWorth[0].first to (treasures.getValue(listWorth[0].first).first to
                             treasures.getValue(listWorth[0].first).second)
                 )
-                residualCapacity -= treasures.getValue(listWorth[0].first).first + totalWeight
+                residualCapacity -= treasures.getValue(listWorth[0].first).first + totalWeight - values.first
                 break
             }
         }
