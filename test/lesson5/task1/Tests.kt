@@ -355,8 +355,21 @@ class Tests {
                     "6" to (462 to 192),
                     "7" to (1 to 1),
                     "8" to (1 to 1),
-                    "9" to (2 to 149),
+                    "9" to (2 to 149)
                 ), 845
+            )
+        )
+        assertEquals(
+            setOf("4", "3", "2", "1", "0"),
+            bagPacking(
+                mapOf(
+                    "0" to (1 to 1),
+                    "1" to (499 to 2),
+                    "2" to (1 to 1),
+                    "3" to (108 to 2),
+                    "4" to (1 to 1),
+                    "5" to (2 to 1)
+                ), 611
             )
         )
     }
