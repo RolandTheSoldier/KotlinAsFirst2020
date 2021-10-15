@@ -328,11 +328,23 @@ fun bagPacking(treasures: Map<String, Pair<Int, Int>>, capacity: Int): Set<Strin
 
     //Основная работа
     var residualCapacity = capacity
+    var lastWeight = 0
+    var lastCost = 0
     for ((name, _) in listWorth) {
         if (residualCapacity >= treasures.getValue(name).first) {
             result.add(name)
             residualCapacity -= treasures.getValue(name).first
-        } else continue
+            lastWeight = treasures.getValue(name).first
+            lastCost = treasures.getValue(name).second
+        } else {
+            if (residualCapacity + lastWeight >= treasures.getValue(name).first && lastCost < treasures.getValue(name).second) {
+                result.remove(result.last())
+                result.add(name)
+                residualCapacity -= treasures.getValue(name).first + lastWeight
+                lastWeight = treasures.getValue(name).first
+                lastCost = treasures.getValue(name).second
+            }
+        }
     }
 
     return result
