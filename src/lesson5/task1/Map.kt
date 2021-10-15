@@ -369,7 +369,7 @@ fun bagPacking(treasures: Map<String, Pair<Int, Int>>, capacity: Int): Set<Strin
                 residualCapacity += values.first
             } else break
 
-            if (residualCapacity + totalWeight > treasures.getValue(listWorth[0].first).first) {
+            if (residualCapacity - treasures.getValue(listWorth[0].first).first >= 0) {
                 resultList.add(
                     listWorth[0].first to (treasures.getValue(listWorth[0].first).first to
                             treasures.getValue(listWorth[0].first).second)
