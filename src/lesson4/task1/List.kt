@@ -241,28 +241,32 @@ fun decimalFromString(str: String, base: Int): Int = TODO()
  * 90 = XC, 100 = C, 400 = CD, 500 = D, 900 = CM, 1000 = M.
  * Например: 23 = XXIII, 44 = XLIV, 100 = C
  */
-val roman1: List<String> = listOf("I", "X", "C", "M")
-val roman5: List<String> = listOf("V", "L", "D")
+val roman1 = listOf("I", "X", "C", "M")
+val roman5 = listOf("V", "L", "D")
 
 fun roman(n: Int): String {
     val strN = n.toString()
-    var result = ""
-    for ((k, c) in strN.withIndex()) {
-        val k2 = strN.length - k - 1
-        result += when (c) {
-            '1' -> roman1[k2]
-            '2' -> roman1[k2] + roman1[k2]
-            '3' -> roman1[k2] + roman1[k2] + roman1[k2]
-            '4' -> roman1[k2] + roman5[k2]
-            '5' -> roman5[k2]
-            '6' -> roman5[k2] + roman1[k2]
-            '7' -> roman5[k2] + roman1[k2] + roman1[k2]
-            '8' -> roman5[k2] + roman1[k2] + roman1[k2] + roman1[k2]
-            '9' -> roman1[k2] + roman1[k2 + 1]
-            else -> ""
-        }
+    val result = StringBuilder()
+
+    for ((index, number) in strN.withIndex()) {
+        val i = strN.length - index - 1
+        val interimResult = StringBuilder()
+        result.append(
+            when (number) {
+                '1' -> roman1[i]
+                '2' -> interimResult.append(roman1[i]).append(roman1[i])
+                '3' -> interimResult.append(roman1[i]).append(roman1[i]).append(roman1[i])
+                '4' -> interimResult.append(roman1[i]).append(roman5[i])
+                '5' -> roman5[i]
+                '6' -> interimResult.append(roman5[i]).append(roman1[i])
+                '7' -> interimResult.append(roman5[i]).append(roman1[i]).append(roman1[i])
+                '8' -> interimResult.append(roman5[i]).append(roman1[i]).append(roman1[i]).append(roman1[i])
+                '9' -> interimResult.append(roman1[i]).append(roman1[i + 1])
+                else -> ""
+            }
+        )
     }
-    return result
+    return result.toString()
 }
 
 /**
