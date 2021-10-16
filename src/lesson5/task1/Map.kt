@@ -338,71 +338,83 @@ fun helperFindSumOfTwo(i: Int, dif: Int, list: List<Int>): Pair<Int, Int> {
  *     450
  *   ) -> emptySet()
  */
-fun bagPacking(treasures: Map<String, Pair<Int, Int>>, capacity: Int): Set<String> = TODO()/*{
-    val listWorth = mutableListOf<Pair<String, Double>>()
-    val haveTreasures = treasures.toMutableMap()
-    var result = mutableSetOf<String>()
+var solutionSet = mutableSetOf<String>()
+var solutionCost = 0
+fun bagPacking(treasures: Map<String, Pair<Int, Int>>, capacity: Int): Set<String> {
+    solutionSet.clear()
+    solutionCost = 0
+    if (treasures.all { it.value.first > capacity }) return setOf()
 
-    for ((name, values) in treasures) listWorth.add(name to (values.first.toDouble() / values.second.toDouble()))
-    listWorth.sortBy { it.second }
-
-    var totalCost = 0
-    var totalCapacity = 0
-    for ((name, worth) in listWorth) {
-        var newSet = setOf<String>()
-        if (totalCapacity + treasures.getValue(name).first >= capacity) {
-            if (lastName != "") {
-                if (result.contains(lastName)) {
-                    result.remove(lastName)
-                    totalCost -= treasures.getValue(lastName).second
-                    totalCapacity -= treasures.getValue(lastName).first
-                    newSet =
-                        bagPacking(haveTreasures, capacity - totalCapacity + treasures.getValue(lastName).first)
-                }
-                else {
-                    newSet =
-                        bagPacking(haveTreasures, capacity - totalCapacity)
-                }
-
-                var newCost = 0
-
-                for (name in newSet) {
-                    newCost += treasures.getValue(name).second
-                }
-
-                if (treasures.getValue(name).second >= newCost) {
-                    result.add(lastName)
-                    for ((name, values) in haveTreasures) {
-                        if (newSet.contains(name)) haveTreasures.remove(name)
-                    }
-                    totalCost += treasures.getValue(lastName).second
-                    totalCapacity += treasures.getValue(lastName).first
-
-                    lastName = result.last()
-                    return result
-                }
-            }
-
-            newSet = bagPacking(haveTreasures.minus(name), capacity - totalCapacity)
-            var newCost = 0
-            var newCapacity = 0
-
-            for (name in newSet) {
-                newCost += treasures.getValue(name).second
-                newCapacity += treasures.getValue(name).first
-            }
-
-            result.addAll(newSet)
-            totalCost += newCost
-            totalCapacity += newCapacity
-            return result
-        }
-        lastName = name
-        totalCapacity += treasures.getValue(name).first
-        totalCost += treasures.getValue(name).second
-        result.add(name)
-        haveTreasures.remove(name)
+    val listAllow = mutableListOf<Boolean>()
+    val listNames = mutableListOf<String>()
+    for ((key) in treasures) {
+        listNames.add(key)
+        listAllow.add(true)
     }
 
-    return result
-}*/
+    var totalWeight = 0
+    var totalCost = 0
+    var i = 0
+
+    while (true) {
+        while (true) {
+            if (listAllow[i]) {
+                totalWeight += treasures.getValue(listNames[i]).first
+                totalCost += treasures.getValue(listNames[i]).second
+            }
+
+            if (totalWeight > capacity) {
+                totalWeight -= treasures.getValue(listNames[i]).first
+                totalCost -= treasures.getValue(listNames[i]).second
+                listAllow[i] = false
+
+                if (!listAllow.contains(true)) {
+                    return solutionSet
+                }
+                break
+            }
+            i++
+
+            if (i == listAllow.size) {
+                i--
+                break
+            }
+        }
+
+        if (i < listAllow.size - 1) {
+            i = 0
+            totalWeight = 0
+            totalCost = 0
+            continue
+        }
+        if (totalCost > solutionCost) {
+            solutionSet.clear()
+            for (k in listAllow.indices) {
+                if (listAllow[k]) solutionSet.add(listNames[k])
+            }
+            solutionCost = totalCost
+        }
+
+        totalWeight = 0
+        totalCost = 0
+
+        while (true) {
+            if (!listAllow[i])
+                i--
+            else break
+
+            if (i < 0) {
+                return solutionSet
+            }
+        }
+        listAllow[i] = false
+
+        for (k in ++i until listAllow.size) listAllow[k] = true
+
+        if (!listAllow.contains(true)) {
+            return solutionSet
+        }
+
+        i = 0
+    }
+}
