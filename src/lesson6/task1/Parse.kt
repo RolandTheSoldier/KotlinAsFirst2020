@@ -177,7 +177,7 @@ fun mostExpensive(description: String): String = TODO()
  */
 val romanMap: Map<String, Int> = mapOf("I" to 1, "V" to 5, "X" to 10, "L" to 50, "C" to 100, "D" to 500, "M" to 1000)
 fun fromRoman(roman: String): Int {
-    var listRoman: List<Int>
+    val listRoman: List<Int>
     try {
         listRoman = roman.toList().map { romanMap[it.toString()] as Int }
     } catch (e: NullPointerException) {
@@ -185,7 +185,7 @@ fun fromRoman(roman: String): Int {
     }
     if (listRoman.isEmpty()) return -1
 
-    var resultList = mutableListOf<Int>()
+    val resultList = mutableListOf<Int>()
 
     var lastN = listRoman[0]
     var lastSimilar = 0
@@ -206,9 +206,14 @@ fun fromRoman(roman: String): Int {
                     lastN = 0
                     lastSimilar = 0
                 } else {
-                    if (listRoman[i] == lastN) lastSimilar = listRoman[i]
-                    resultList.add(lastN)
-                    lastN = listRoman[i]
+                    if (listRoman[i] == lastN) {
+                        lastSimilar = listRoman[i]
+                        lastN *= 2
+                    } else {
+                        resultList.add(lastN)
+                        lastN = listRoman[i]
+                    }
+
                 }
             } else {
                 resultList.add(lastN)
@@ -226,11 +231,11 @@ fun fromRoman(roman: String): Int {
 }
 
 fun lenInt(n: Int): Int {
-    var n = n
+    var resN = n
     var len = 0
-    while (n >= 1) {
+    while (resN >= 1) {
         len++
-        n /= 10
+        resN /= 10
     }
 
     return len
