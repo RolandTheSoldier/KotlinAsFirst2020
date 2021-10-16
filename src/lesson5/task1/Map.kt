@@ -298,7 +298,7 @@ fun findAllFriends(
         }
     if (alreadyKnown.size > 0){
         for (friend in alreadyKnown) {
-            helpResult.addAll(helper.getValue(friend).minus(name).plus(friend))
+            helpResult.addAll(helper.getValue(friend).minus(forbidden).plus(friend))
         }
         return helpResult
     }
