@@ -338,7 +338,7 @@ fun helperFindSumOfTwo(i: Int, dif: Int, list: List<Int>): Pair<Int, Int> {
  *     450
  *   ) -> emptySet()
  */
-var LeeryValue = 0
+//var LeeryValue = 0
 var solutionSet = mutableSetOf<String>()
 var solutionCost = 0
 val listAllow = mutableListOf<Boolean>()
@@ -348,7 +348,7 @@ fun bagPacking(treasures: Map<String, Pair<Int, Int>>, capacity: Int): Set<Strin
     solutionCost = 0
     listAllow.clear()
     listNames.clear()
-    LeeryValue = 0
+    //LeeryValue = 0
     if (treasures.all { it.value.first > capacity }) return setOf()
 
     for ((key) in treasures) {
@@ -362,8 +362,8 @@ fun bagPacking(treasures: Map<String, Pair<Int, Int>>, capacity: Int): Set<Strin
 
     while (true) {
         while (true) {
-            LeeryValue++
-            if (LeeryValue > 500000) return setOf()
+            //LeeryValue++
+            //if (LeeryValue > 500000000) return setOf()
 
             if (listAllow[i]) {
                 totalWeight += treasures.getValue(listNames[i]).first
@@ -400,6 +400,7 @@ fun bagPacking(treasures: Map<String, Pair<Int, Int>>, capacity: Int): Set<Strin
                 if (listAllow[k]) solutionSet.add(listNames[k])
             }
             solutionCost = totalCost
+            if (totalWeight == capacity) return solutionSet
         }
 
         totalWeight = 0
