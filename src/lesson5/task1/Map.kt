@@ -275,7 +275,7 @@ fun propagateHandshakes(friends: Map<String, Set<String>>): Map<String, Set<Stri
     return result
 }
 
-tailrec fun findAllFriends(
+fun findAllFriends(
     name: String,
     friends: Map<String, Set<String>>,
     forbiddenNames: Set<String>
@@ -284,7 +284,7 @@ tailrec fun findAllFriends(
     val helpResult = mutableSetOf<String>()
     forbidden.add(name)
 
-    if (friends.getValue(name).isEmpty()) return setOf()
+    if (friends.getValue(name).minus(forbidden).isEmpty()) return setOf()
 
     val alreadyKnown = mutableSetOf<String>()
     for (friendName in friends.getValue(name))
@@ -303,7 +303,7 @@ tailrec fun findAllFriends(
         return helpResult
     }
 
-    if (helpResult.size == 0) return setOf(name)
+    if (helpResult.size == 0) return setOf()
     return helpResult
 }
 
