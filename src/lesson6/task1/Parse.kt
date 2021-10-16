@@ -193,15 +193,12 @@ fun fromRoman(roman: String): Int {
     var lastSimilar = 0
 
     for (i in 1 until listRoman.size) if (lastN != 0) {
-        if (listRoman[i] > lastN)
+        if (listRoman[i] > lastN) {
             if (lenInt(listRoman[i] - 1) == lenInt(lastN)) {
                 resultList.add(listRoman[i] - lastN)
                 lastN = 0
-            } else {
-                resultList.add(lastN)
-                lastN = listRoman[i]
             }
-        else
+        } else
             if (lenInt(listRoman[i]) == lenInt(lastN)) {
                 if (lastSimilar == listRoman[i]) {
                     resultList.add(listRoman[i] + lastN)
@@ -211,19 +208,23 @@ fun fromRoman(roman: String): Int {
                     if (listRoman[i] == lastN) {
                         lastSimilar = listRoman[i]
                         lastN *= 2
+                        if (i == listRoman.size - 1) resultList.add(lastN)
                     } else {
                         resultList.add(lastN)
                         lastN = listRoman[i]
+                        if (i == listRoman.size - 1) resultList.add(lastN)
                     }
 
                 }
             } else {
                 resultList.add(lastN)
                 lastN = listRoman[i]
+                if (i == listRoman.size - 1) resultList.add(lastN)
             }
-    } else lastN = listRoman[i]
-
-    if (lastSimilar != 0) resultList.add(lastN)
+    } else {
+        lastN = listRoman[i]
+        if (i == listRoman.size - 1) resultList.add(lastN)
+    }
 
     val result = resultList.fold(0) { a, b ->
         a + b
