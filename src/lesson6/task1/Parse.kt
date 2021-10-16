@@ -175,7 +175,65 @@ fun mostExpensive(description: String): String = TODO()
  *
  * Вернуть -1, если roman не является корректным римским числом
  */
-fun fromRoman(roman: String): Int = TODO()
+val romanMap: Map<String, Int> = mapOf("I" to 1, "V" to 5, "X" to 10, "L" to 50, "C" to 100, "D" to 500, "M" to 1000)
+fun fromRoman(roman: String): Int {
+    var listRoman: List<Int>
+    try {
+        listRoman = roman.toList().map { romanMap[it.toString()] as Int }
+    } catch (e: NullPointerException) {
+        return -1
+    }
+
+    var resultList = mutableListOf<Int>()
+
+    var lastN = listRoman[0]
+    var lastSimilar = 0
+
+    for (i in 1 until listRoman.size) if (lastN != 0) {
+        if (listRoman[i] > lastN)
+            if (lenInt(listRoman[i] - 1) == lenInt(lastN)) {
+                resultList.add(listRoman[i] - lastN)
+                lastN = 0
+            } else {
+                resultList.add(lastN)
+                lastN = listRoman[i]
+            }
+        else
+            if (lenInt(listRoman[i]) == lenInt(lastN)) {
+                if (lastSimilar == listRoman[i]) {
+                    resultList.add(listRoman[i] + lastN)
+                    lastN = 0
+                    lastSimilar = 0
+                } else {
+                    if (listRoman[i] == lastN) lastSimilar = listRoman[i]
+                    resultList.add(lastN)
+                    lastN = listRoman[i]
+                }
+            } else {
+                resultList.add(lastN)
+                lastN = listRoman[i]
+            }
+    } else lastN = listRoman[i]
+
+    if (resultList.isEmpty()) return lastN
+
+    val result = resultList.fold(0) { a, b ->
+        a + b
+    }
+
+    return result
+}
+
+fun lenInt(n: Int): Int {
+    var n = n
+    var len = 0
+    while (n >= 1) {
+        len++
+        n /= 10
+    }
+
+    return len
+}
 
 /**
  * Очень сложная (7 баллов)

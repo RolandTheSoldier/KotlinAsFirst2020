@@ -2,8 +2,6 @@
 
 package lesson5.task1
 
-import ru.spbstu.wheels.getEntry
-
 // Урок 5: ассоциативные массивы и множества
 // Максимальное количество баллов = 14
 // Рекомендуемое количество баллов = 9
@@ -341,82 +339,70 @@ fun helperFindSumOfTwo(i: Int, dif: Int, list: List<Int>): Pair<Int, Int> {
  *   ) -> emptySet()
  */
 fun bagPacking(treasures: Map<String, Pair<Int, Int>>, capacity: Int): Set<String> = TODO()/*{
-    val result = mutableSetOf<String>()
-    val resultList = mutableListOf<Pair<String, Pair<Int, Int>>>()
     val listWorth = mutableListOf<Pair<String, Double>>()
+    val haveTreasures = treasures.toMutableMap()
+    var result = mutableSetOf<String>()
 
-    //Выделение коэф. ценности в отдельный список
-    for ((key, value) in treasures) {
-        if (value.first <= capacity) listWorth.add(key to (value.first.toDouble() / value.second.toDouble()))
-    }
-
+    for ((name, values) in treasures) listWorth.add(name to (values.first.toDouble() / values.second.toDouble()))
     listWorth.sortBy { it.second }
 
-    //Основная работа
-    val toDeleteWorth = mutableListOf<Pair<String, Double>>()
-    var residualCapacity = capacity
-    var lastWeight = 0
-    var lastCost = 0
+    var totalCost = 0
+    var totalCapacity = 0
     for ((name, worth) in listWorth) {
-        if (residualCapacity >= treasures.getValue(name).first) {
-            resultList.add(name to (treasures.getValue(name).first to treasures.getValue(name).second))
-            toDeleteWorth.add(name to worth)
-            residualCapacity -= treasures.getValue(name).first
-            lastWeight = treasures.getValue(name).first
-            lastCost = treasures.getValue(name).second
-        } else {
-            if (residualCapacity + lastWeight >= treasures.getValue(name).first && lastCost < treasures.getValue(name).second) {
-                resultList.remove(resultList.last())
-                resultList.add(name to (treasures.getValue(name).first to treasures.getValue(name).second))
-                toDeleteWorth.add(name to worth)
-                residualCapacity -= treasures.getValue(name).first + lastWeight
-                lastWeight = treasures.getValue(name).first
-                lastCost = treasures.getValue(name).second
+        var newSet = setOf<String>()
+        if (totalCapacity + treasures.getValue(name).first >= capacity) {
+            if (lastName != "") {
+                if (result.contains(lastName)) {
+                    result.remove(lastName)
+                    totalCost -= treasures.getValue(lastName).second
+                    totalCapacity -= treasures.getValue(lastName).first
+                    newSet =
+                        bagPacking(haveTreasures, capacity - totalCapacity + treasures.getValue(lastName).first)
+                }
+                else {
+                    newSet =
+                        bagPacking(haveTreasures, capacity - totalCapacity)
+                }
+
+                var newCost = 0
+
+                for (name in newSet) {
+                    newCost += treasures.getValue(name).second
+                }
+
+                if (treasures.getValue(name).second >= newCost) {
+                    result.add(lastName)
+                    for ((name, values) in haveTreasures) {
+                        if (newSet.contains(name)) haveTreasures.remove(name)
+                    }
+                    totalCost += treasures.getValue(lastName).second
+                    totalCapacity += treasures.getValue(lastName).first
+
+                    lastName = result.last()
+                    return result
+                }
             }
-        }
-    }
-    for (elem in toDeleteWorth) listWorth.remove(elem)
 
-    if (listWorth.size != 0) {
-        resultList.sortBy { it.second.first }
-        resultList.reverse()
-        resultList.sortBy { it.second.second }
-        val toDeleteHelp = mutableListOf<Pair<String, Pair<Int, Int>>>()
-        val helpList = mutableListOf<Pair<String, Pair<Int, Int>>>()
-        var totalCost = 0
-        var totalWeight = 0
-        for ((name, values) in resultList) {
-            totalCost += values.second
-            totalWeight += values.first
+            newSet = bagPacking(haveTreasures.minus(name), capacity - totalCapacity)
+            var newCost = 0
+            var newCapacity = 0
 
-            if (totalCost < treasures.getValue(listWorth[0].first).second) {
-                helpList.add(name to values)
-                toDeleteHelp.add(name to values)
-                residualCapacity += values.first
-            } else break
-
-            if (residualCapacity - treasures.getValue(listWorth[0].first).first >= 0) {
-                resultList.add(
-                    listWorth[0].first to (treasures.getValue(listWorth[0].first).first to
-                            treasures.getValue(listWorth[0].first).second)
-                )
-                residualCapacity -= treasures.getValue(listWorth[0].first).first + totalWeight - values.first
-                break
+            for (name in newSet) {
+                newCost += treasures.getValue(name).second
+                newCapacity += treasures.getValue(name).first
             }
-        }
-        for (elem in toDeleteHelp) resultList.remove(elem)
 
-        helpList.sortBy { it.second.second }
-        helpList.reverse()
-
-        for ((name, _) in helpList) {
-            if (residualCapacity >= treasures.getValue(name).first) {
-                resultList.add(name to (treasures.getValue(name).first to treasures.getValue(name).second))
-                residualCapacity -= treasures.getValue(name).first
-            } else continue
+            result.addAll(newSet)
+            totalCost += newCost
+            totalCapacity += newCapacity
+            return result
         }
+        lastName = name
+        totalCapacity += treasures.getValue(name).first
+        totalCost += treasures.getValue(name).second
+        result.add(name)
+        haveTreasures.remove(name)
     }
 
-    for ((name, _) in resultList) result.add(name)
     return result
 }*/
