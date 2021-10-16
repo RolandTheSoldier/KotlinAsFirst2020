@@ -183,6 +183,7 @@ fun fromRoman(roman: String): Int {
     } catch (e: NullPointerException) {
         return -1
     }
+    if (listRoman.isEmpty()) return -1
 
     var resultList = mutableListOf<Int>()
 
