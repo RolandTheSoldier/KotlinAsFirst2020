@@ -272,7 +272,7 @@ fun propagateHandshakes(friends: Map<String, Set<String>>): Map<String, Set<Stri
     return result
 }
 
-fun findAllFriends(
+tailrec fun findAllFriends(
     name: String,
     friends: Map<String, Set<String>>,
     forbiddenNames: Set<String>
@@ -346,7 +346,7 @@ fun helperFindSumOfTwo(i: Int, dif: Int, list: List<Int>): Pair<Int, Int> {
  *     450
  *   ) -> emptySet()
  */
-fun bagPacking(treasures: Map<String, Pair<Int, Int>>, capacity: Int): Set<String> {
+fun bagPacking(treasures: Map<String, Pair<Int, Int>>, capacity: Int): Set<String> = TODO()/*{
     val result = mutableSetOf<String>()
     val resultList = mutableListOf<Pair<String, Pair<Int, Int>>>()
     val listWorth = mutableListOf<Pair<String, Double>>()
@@ -425,4 +425,4 @@ fun bagPacking(treasures: Map<String, Pair<Int, Int>>, capacity: Int): Set<Strin
 
     for ((name, _) in resultList) result.add(name)
     return result
-}
+}*/
