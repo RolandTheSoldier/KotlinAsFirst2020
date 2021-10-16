@@ -2,6 +2,8 @@
 
 package lesson5.task1
 
+import ru.spbstu.wheels.getEntry
+
 // Урок 5: ассоциативные массивы и множества
 // Максимальное количество баллов = 14
 // Рекомендуемое количество баллов = 9
@@ -258,9 +260,7 @@ fun hasAnagrams(words: List<String>): Boolean = TODO()
  *          "GoodGnome" to setOf()
  *        )
  */
-var helper = mutableMapOf<String, Set<String>>()
 fun propagateHandshakes(friends: Map<String, Set<String>>): Map<String, Set<String>> {
-    helper.clear()
     val friendsFull = friends.toMutableMap()
     for ((_, others) in friends)
         for (friend in others)
@@ -268,43 +268,22 @@ fun propagateHandshakes(friends: Map<String, Set<String>>): Map<String, Set<Stri
 
     val result = mutableMapOf<String, Set<String>>()
     for ((key) in friendsFull) {
-        result[key] = findAllFriends(key, friendsFull, setOf())
-        helper = result
+        result[key] = findAllFriends(key, friendsFull, friendsFull.getValue(key), 0)
     }
 
     return result
 }
 
-fun findAllFriends(
-    name: String,
-    friends: Map<String, Set<String>>,
-    forbiddenNames: Set<String>
-): Set<String> {
-    val forbidden = forbiddenNames.toMutableSet()
-    val helpResult = mutableSetOf<String>()
-    forbidden.add(name)
+fun findAllFriends(name: String, friends: Map<String, Set<String>>, nextSet: Set<String>, step: Int): Set<String> {
+    val result = nextSet.toMutableSet()
 
-    if (friends.getValue(name).minus(forbidden).isEmpty()) return setOf()
-
-    val alreadyKnown = mutableSetOf<String>()
-    for (friendName in friends.getValue(name))
-        if (!forbidden.contains(friendName)) {
-            if (helper.contains(friendName)) {
-                alreadyKnown.add(friendName)
-                continue
-            }
-            helpResult.addAll(findAllFriends(friendName, friends, forbidden))
-            helpResult.add(friendName)
-        }
-    if (alreadyKnown.size > 0){
-        for (friend in alreadyKnown) {
-            helpResult.addAll(helper.getValue(friend).minus(forbidden).plus(friend))
-        }
-        return helpResult
+    for (friend in step until nextSet.size) {
+        result.addAll(friends.getValue(nextSet.elementAt(friend)))
     }
+    result.remove(name)
 
-    if (helpResult.size == 0) return setOf()
-    return helpResult
+    if (nextSet.size != result.size) result.addAll(findAllFriends(name, friends, result, nextSet.size))
+    return result
 }
 
 /**
