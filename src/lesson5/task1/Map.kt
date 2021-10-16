@@ -286,12 +286,23 @@ fun findAllFriends(
 
     if (friends.getValue(name).isEmpty()) return setOf()
 
+    val alreadyKnown = mutableSetOf<String>()
     for (friendName in friends.getValue(name))
         if (!forbidden.contains(friendName)) {
-            if (helper.contains(friendName)) return helper.getValue(friendName).minus(name).plus(friendName)
+            if (helper.contains(friendName)) {
+                alreadyKnown.add(friendName)
+                continue
+            }
             helpResult.addAll(findAllFriends(friendName, friends, forbidden))
             helpResult.add(friendName)
         }
+    if (alreadyKnown.size > 0){
+        for (friend in alreadyKnown) {
+            helpResult.addAll(helper.getValue(friend).minus(name).plus(friend))
+        }
+        return helpResult
+    }
+
     if (helpResult.size == 0) return setOf(name)
     return helpResult
 }
