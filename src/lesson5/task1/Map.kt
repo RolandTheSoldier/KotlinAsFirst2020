@@ -397,6 +397,9 @@ fun bagPacking(treasures: Map<String, Pair<Int, Int>>, capacity: Int): Set<Strin
         }
         if (totalCost > solutionCost) {
             solutionSet.clear()
+            if (solutionSet.isNotEmpty()) return setOf("solution!!!")
+            if (listAllow.isNotEmpty()) return setOf("allow!!!")
+            if (listNames.isNotEmpty()) return setOf("names!!!")
             for (k in listAllow.indices) {
                 if (listAllow[k]) solutionSet.add(listNames[k])
             }
