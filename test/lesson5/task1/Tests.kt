@@ -364,74 +364,6 @@ class Tests {
             )
         )
         assertEquals(
-            setOf(
-                "19",
-                "18",
-                "17",
-                "16",
-                "15",
-                "14",
-                "13",
-                "12",
-                "11",
-                "10",
-                "9",
-                "8",
-                "7",
-                "6",
-                "5",
-                "4",
-                "3",
-                "2",
-                "1",
-                "0"
-            ),
-            bagPacking(
-                mapOf(
-                    "0" to (1 to 1),
-                    "1" to (1 to 1),
-                    "2" to (1 to 1),
-                    "3" to (1 to 1),
-                    "4" to (1 to 1),
-                    "5" to (1 to 1),
-                    "6" to (1 to 1),
-                    "7" to (1 to 1),
-                    "8" to (1 to 1),
-                    "9" to (1 to 1),
-                    "10" to (1 to 1),
-                    "11" to (1 to 1),
-                    "12" to (1 to 1),
-                    "13" to (1 to 1),
-                    "14" to (1 to 1),
-                    "15" to (1 to 1),
-                    "16" to (1 to 1),
-                    "17" to (1 to 1),
-                    "18" to (1 to 1),
-                    "19" to (1 to 1),
-                    "20" to (1 to 1),
-                    "21" to (1 to 1),
-                    "22" to (1 to 1),
-                    "23" to (1 to 1),
-                    "24" to (1 to 1),
-                    "25" to (1 to 1),
-                    "26" to (1 to 1),
-                    "27" to (1 to 1),
-                    "28" to (1 to 1),
-                    "29" to (1 to 1),
-                    "30" to (1 to 1),
-                    "31" to (1 to 1),
-                    "32" to (1 to 1),
-                    "33" to (1 to 1),
-                    "34" to (1 to 1),
-                    "35" to (1 to 1),
-                    "36" to (1 to 1),
-                    "37" to (1 to 1),
-                    "38" to (1 to 1),
-                    "39" to (1 to 1),
-                ), 20
-            )
-        )
-        assertEquals(
             setOf("Слиток"),
             bagPacking(
                 mapOf("Кубок" to (500 to 2000), "Слиток" to (1000 to 3999)),
@@ -466,21 +398,6 @@ class Tests {
                     "4" to (1 to 1),
                     "5" to (2 to 1)
                 ), 611
-            )
-        )
-        assertEquals(
-            setOf("0", "1"),
-            bagPacking(
-                mapOf(
-                    "0" to (1 to 2),
-                    "1" to (1 to 1),
-                    "2" to (1 to 1),
-                    "3" to (1 to 1),
-                    "4" to (1 to 1),
-                    "5" to (1 to 1),
-                    "6" to (1 to 1),
-                    "7" to (2 to 2)
-                ), 2
             )
         )
         assertEquals(
@@ -544,6 +461,15 @@ class Tests {
                     "6" to (500 to 1),
                     "7" to (99 to 1)
                 ), 99
+            )
+        )
+        assertEquals(
+            setOf("1"),
+            bagPacking(
+                mapOf(
+                    "0" to (1 to 1),
+                    "1" to (1 to 2)
+                ), 1
             )
         )
     }

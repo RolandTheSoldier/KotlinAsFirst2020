@@ -338,22 +338,37 @@ fun helperFindSumOfTwo(i: Int, dif: Int, list: List<Int>): Pair<Int, Int> {
  *     450
  *   ) -> emptySet()
  */
-//var LeeryValue = 0
 var solutionSet = mutableSetOf<String>()
 var solutionCost = 0
 val listAllow = mutableListOf<Boolean>()
-val listNames = mutableListOf<String>()
+val listNames = mutableListOf<Pair<String, Int>>()
 fun bagPacking(treasures: Map<String, Pair<Int, Int>>, capacity: Int): Set<String> {
     solutionSet.clear()
     solutionCost = 0
     listAllow.clear()
     listNames.clear()
-    //LeeryValue = 0
     if (treasures.all { it.value.first > capacity }) return setOf()
 
-    for ((key) in treasures) {
-        listNames.add(key)
+    for ((key, values) in treasures) {
+        listNames.add(key to values.second)
         listAllow.add(true)
+    }
+    var flag = false
+    for (i in 1 until treasures.size) {
+        if (treasures.getValue(listNames[i].first) != treasures.getValue(listNames[i - 1].first)) {
+            flag = true
+            break
+        }
+    }
+    if (!flag) {
+        var content = 0
+        for ((name, values) in treasures) {
+            if (content + values.first <= capacity) {
+                solutionSet.add(name)
+                content += values.first
+            } else break
+        }
+        return solutionSet
     }
 
     var totalWeight = 0
@@ -362,17 +377,14 @@ fun bagPacking(treasures: Map<String, Pair<Int, Int>>, capacity: Int): Set<Strin
 
     while (true) {
         while (true) {
-            //LeeryValue++
-            //if (LeeryValue > 500000000) return setOf()
-
             if (listAllow[i]) {
-                totalWeight += treasures.getValue(listNames[i]).first
-                totalCost += treasures.getValue(listNames[i]).second
+                totalWeight += treasures.getValue(listNames[i].first).first
+                totalCost += treasures.getValue(listNames[i].first).second
             }
 
             if (totalWeight > capacity) {
-                totalWeight -= treasures.getValue(listNames[i]).first
-                totalCost -= treasures.getValue(listNames[i]).second
+                totalWeight -= treasures.getValue(listNames[i].first).first
+                totalCost -= treasures.getValue(listNames[i].first).second
                 listAllow[i] = false
 
                 if (!listAllow.contains(true)) {
@@ -396,13 +408,11 @@ fun bagPacking(treasures: Map<String, Pair<Int, Int>>, capacity: Int): Set<Strin
         }
         if (totalCost > solutionCost) {
             solutionSet.clear()
-            if (listAllow.size != treasures.size) return setOf("allow!!!")
-            if (listNames.size != treasures.size) return setOf("names!!!")
             for (k in listAllow.indices) {
-                if (listAllow[k]) solutionSet.add(listNames[k])
+                if (listAllow[k]) solutionSet.add(listNames[k].first)
             }
             solutionCost = totalCost
-            if (totalWeight == capacity) return solutionSet
+            //if (totalWeight == capacity) return solutionSet
         }
 
         totalWeight = 0
