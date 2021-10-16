@@ -259,7 +259,7 @@ fun hasAnagrams(words: List<String>): Boolean = TODO()
  *        )
  */
 var helper = mutableMapOf<String, Set<String>>()
-tailrec fun propagateHandshakes(friends: Map<String, Set<String>>): Map<String, Set<String>> {
+fun propagateHandshakes(friends: Map<String, Set<String>>): Map<String, Set<String>> {
     helper.clear()
     val friendsFull = friends.toMutableMap()
     for ((_, others) in friends)
@@ -275,7 +275,7 @@ tailrec fun propagateHandshakes(friends: Map<String, Set<String>>): Map<String, 
     return result
 }
 
-fun findAllFriends(
+tailrec fun findAllFriends(
     name: String,
     friends: Map<String, Set<String>>,
     forbiddenNames: Set<String>
