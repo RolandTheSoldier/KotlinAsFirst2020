@@ -363,7 +363,7 @@ fun bagPacking(treasures: Map<String, Pair<Int, Int>>, capacity: Int): Set<Strin
     while (true) {
         while (true) {
             LeeryValue++
-            if (LeeryValue > 500) return setOf()
+            if (LeeryValue > 500000) return setOf()
 
             if (listAllow[i]) {
                 totalWeight += treasures.getValue(listNames[i]).first
