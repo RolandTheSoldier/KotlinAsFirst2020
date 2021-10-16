@@ -258,7 +258,9 @@ fun hasAnagrams(words: List<String>): Boolean = TODO()
  *          "GoodGnome" to setOf()
  *        )
  */
+var helper = mutableMapOf<String, Set<String>>()
 fun propagateHandshakes(friends: Map<String, Set<String>>): Map<String, Set<String>> {
+    helper.clear()
     val friendsFull = friends.toMutableMap()
     for ((_, others) in friends)
         for (friend in others)
@@ -267,12 +269,13 @@ fun propagateHandshakes(friends: Map<String, Set<String>>): Map<String, Set<Stri
     val result = mutableMapOf<String, Set<String>>()
     for ((key) in friendsFull) {
         result[key] = findAllFriends(key, friendsFull, setOf())
+        helper = result
     }
 
     return result
 }
 
-tailrec fun findAllFriends(
+fun findAllFriends(
     name: String,
     friends: Map<String, Set<String>>,
     forbiddenNames: Set<String>
@@ -285,6 +288,7 @@ tailrec fun findAllFriends(
 
     for (friendName in friends.getValue(name))
         if (!forbidden.contains(friendName)) {
+            if (helper.contains(friendName)) return helper.getValue(friendName).minus(name).plus(friendName)
             helpResult.addAll(findAllFriends(friendName, friends, forbidden))
             helpResult.add(friendName)
         }
