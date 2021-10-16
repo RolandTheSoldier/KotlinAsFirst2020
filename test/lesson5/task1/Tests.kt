@@ -431,6 +431,21 @@ class Tests {
             )
         )
         assertEquals(
+            emptySet<String>(),
+            bagPacking(
+                mapOf(
+                    "0" to (10 to 2),
+                    "1" to (10 to 1),
+                    "2" to (10 to 1),
+                    "3" to (10 to 1),
+                    "4" to (10 to 1),
+                    "5" to (10 to 1),
+                    "6" to (10 to 1),
+                    "7" to (20 to 2)
+                ), 2
+            )
+        )
+        assertEquals(
             setOf("0"),
             bagPacking(
                 mapOf(
