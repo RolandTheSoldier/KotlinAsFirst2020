@@ -185,6 +185,8 @@ fun fromRoman(roman: String): Int {
     }
     if (listRoman.isEmpty()) return -1
 
+    if (listRoman.size == 1) return listRoman[0]
+
     val resultList = mutableListOf<Int>()
 
     var lastN = listRoman[0]
@@ -221,7 +223,7 @@ fun fromRoman(roman: String): Int {
             }
     } else lastN = listRoman[i]
 
-    if (resultList.isEmpty()) return lastN
+    if (lastSimilar != 0) resultList.add(lastN)
 
     val result = resultList.fold(0) { a, b ->
         a + b
