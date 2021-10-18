@@ -371,7 +371,7 @@ fun bagPacking(treasures: Map<String, Pair<Int, Int>>, capacity: Int): Set<Strin
                 if (!listAllow.contains(true)) {
                     return solutionSet
                 }
-                break
+                continue
             }
             i++
 
@@ -381,12 +381,6 @@ fun bagPacking(treasures: Map<String, Pair<Int, Int>>, capacity: Int): Set<Strin
             }
         }
 
-        if (i < listAllow.size - 1) {
-            i = 0
-            totalWeight = 0
-            totalCost = 0
-            continue
-        }
         if (totalCost > solutionCost) {
             solutionSet.clear()
             for (k in listAllow.indices) {
