@@ -303,7 +303,7 @@ fun findAllFriends(name: String, friends: Map<String, Set<String>>, nextSet: Set
  */
 fun findSumOfTwo(list: List<Int>, number: Int): Pair<Int, Int> {
     for (i in 0..(list.size - 2)) {
-        for (j in 1 until list.size)
+        for (j in i + 1 until list.size)
             if (number - list[i] == list[j]) return Pair(i, j)
     }
 
