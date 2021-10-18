@@ -302,18 +302,11 @@ fun findAllFriends(name: String, friends: Map<String, Set<String>>, nextSet: Set
  *   findSumOfTwo(listOf(1, 2, 3), 6) -> Pair(-1, -1)
  */
 fun findSumOfTwo(list: List<Int>, number: Int): Pair<Int, Int> {
-    for (i in list.indices) {
-        val dif = number - list[i]
-
-        if (list.any { it == dif && list.indexOf(it) != i }) return helperFindSumOfTwo(i, dif, list)
+    for (i in 0..(list.size - 2)) {
+        for (j in 1 until list.size)
+            if (number - list[i] == list[j]) return Pair(i, j)
     }
-    return Pair(-1, -1)
-}
 
-fun helperFindSumOfTwo(i: Int, dif: Int, list: List<Int>): Pair<Int, Int> {
-    list.forEachIndexed { index, it ->
-        if (it == dif) return Pair(i, index)
-    }
     return Pair(-1, -1)
 }
 
