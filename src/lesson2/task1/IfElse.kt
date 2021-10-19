@@ -143,7 +143,7 @@ fun rookOrBishopThreatens(
 ): Int {
     val checkOne = kingX == rookX || kingY == rookY
     val checkTwo = abs(kingX - bishopX) == abs(kingY - bishopY)
-    return when (true) {
+    return when {
         checkOne && checkTwo -> 3
         checkTwo -> 2
         checkOne -> 1
