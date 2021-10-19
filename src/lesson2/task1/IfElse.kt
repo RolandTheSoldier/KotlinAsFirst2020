@@ -116,8 +116,8 @@ fun whichRookThreatens(
     rookX1: Int, rookY1: Int,
     rookX2: Int, rookY2: Int
 ): Int {
-    val checkOne: Boolean = (kingX == rookX1 || kingY == rookY1)
-    val checkTwo: Boolean = (kingX == rookX2 || kingY == rookY2)
+    val checkOne = kingX == rookX1 || kingY == rookY1
+    val checkTwo = kingX == rookX2 || kingY == rookY2
     return when {
         checkOne && checkTwo -> 3
         checkOne -> 1
@@ -141,11 +141,14 @@ fun rookOrBishopThreatens(
     rookX: Int, rookY: Int,
     bishopX: Int, bishopY: Int
 ): Int {
-    if (kingX == rookX || kingY == rookY)
-        return if (abs(kingX - bishopX) == abs(kingY - bishopY)) 3
-        else 1
-    return if (abs(kingX - bishopX) == abs(kingY - bishopY)) 2
-    else 0
+    val checkOne = kingX == rookX || kingY == rookY
+    val checkTwo = abs(kingX - bishopX) == abs(kingY - bishopY)
+    return when (true) {
+        checkOne && checkTwo -> 3
+        checkTwo -> 2
+        checkOne -> 1
+        else -> 0
+    }
 }
 
 /**
@@ -160,12 +163,13 @@ fun triangleKind(a: Double, b: Double, c: Double): Int {
     val largeSide = max(a, max(b, c))
     val smallSide = min(a, min(b, c))
     val middleSide = a + b + c - largeSide - smallSide
-    if (middleSide + smallSide <= largeSide) return -1
-    if (sqr(middleSide) + sqr(smallSide) == sqr(largeSide)) return 1
-    return if (
-        (sqr(largeSide) - sqr(middleSide) - sqr(smallSide)) / (-2.0 * smallSide * middleSide) < 0
-    ) 2
-    else 0
+    return when {
+        middleSide + smallSide <= largeSide -> -1
+        sqr(middleSide) + sqr(smallSide) == sqr(largeSide) -> 1
+        (sqr(largeSide) - sqr(middleSide) - sqr(smallSide)) /
+                (-2.0 * smallSide * middleSide) < 0 -> 2
+        else -> 0
+    }
 }
 
 /**
@@ -176,13 +180,5 @@ fun triangleKind(a: Double, b: Double, c: Double): Int {
  * Найти длину пересечения отрезков AB и CD.
  * Если пересечения нет, вернуть -1.
  */
-fun segmentLength(a: Int, b: Int, c: Int, d: Int): Int {
-    if (b == a || d == c) return -1
-    if (b < c || d < a) return -1
-    if (b == c || d == a) return 0
-    if (a >= c && b <= d) return b - a
-    if (c > a && d < b) return d - c
-    if (d > b) return b - c
-    if (b > d) return d - a
-    return -1
-}
+fun segmentLength(a: Int, b: Int, c: Int, d: Int): Int =
+    if (minOf(d, b) - maxOf(a, c) >= 0) minOf(d, b) - maxOf(a, c) else -1

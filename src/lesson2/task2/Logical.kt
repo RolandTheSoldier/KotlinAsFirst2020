@@ -22,7 +22,7 @@ fun pointInsideCircle(x: Double, y: Double, x0: Double, y0: Double, r: Double) =
 fun isNumberHappy(number: Int): Boolean {
     val partOne = number / 100
     val partTwo = number % 100
-    return (partOne / 10 + partOne % 10 == partTwo / 10 + partTwo % 10)
+    return partOne / 10 + partOne % 10 == partTwo / 10 + partTwo % 10
 }
 
 /**
@@ -32,12 +32,8 @@ fun isNumberHappy(number: Int): Boolean {
  * Определить, угрожают ли они друг другу. Вернуть true, если угрожают.
  * Считать, что ферзи не могут загораживать друг друга.
  */
-fun queenThreatens(x1: Int, y1: Int, x2: Int, y2: Int): Boolean = when {
-    x1 == x2 -> true
-    y1 == y2 -> true
-    abs(x1 - x2) == abs(y1 - y2) -> true
-    else -> false
-}
+fun queenThreatens(x1: Int, y1: Int, x2: Int, y2: Int): Boolean =
+    x1 == x2 || y1 == y2 || abs(x1 - x2) == abs(y1 - y2)
 
 /**
  * Простая (2 балла)
@@ -46,10 +42,8 @@ fun queenThreatens(x1: Int, y1: Int, x2: Int, y2: Int): Boolean = when {
  * Вернуть число дней в этом месяце этого года по григорианскому календарю.
  */
 fun daysInMonth(month: Int, year: Int): Int = when {
-    year == 1900 && month == 2 -> 28
-    year % 4 == 0 && month == 2 -> 29
+    (year % 400 == 0 || (year % 4 == 0 && year % 100 != 0)) && month == 2 -> 29
     month == 2 -> 28
-
     month <= 7 && month % 2 == 1 -> 31
     month <= 7 && month % 2 == 0 -> 30
     month >= 8 && month % 2 == 1 -> 30
@@ -84,6 +78,7 @@ fun brickPasses(a: Int, b: Int, c: Int, r: Int, s: Int): Boolean = when {
     r >= c && s >= a || r >= a && s >= c -> true
     else -> false
 }
+
 
 
 
