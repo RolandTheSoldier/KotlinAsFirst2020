@@ -331,77 +331,46 @@ fun findSumOfTwo(list: List<Int>, number: Int): Pair<Int, Int> {
  *     450
  *   ) -> emptySet()
  */
-var solutionSet = mutableSetOf<String>()
-var solutionCost = 0
 fun bagPacking(treasures: Map<String, Pair<Int, Int>>, capacity: Int): Set<String> {
-    solutionSet.clear()
-    solutionCost = 0
-    val listAllow = mutableListOf<Boolean>()
-    val listNames = mutableListOf<String>()
-    if (treasures.all { it.value.first > capacity }) return setOf()
+    val result = mutableSetOf<String>()
+    var maximum = 0
+    var maxI = 0
+    var maxJ = 0
 
-    for ((key, values) in treasures) {
-        listNames.add(key)
-        listAllow.add(true)
+    val listTreasures = mutableListOf("-" to (0 to 0))
+    listTreasures += treasures.toList()
+    val maxTreas = Array(listTreasures.size + 1) { Array(capacity + 1) { 0 } }
+    for (i in 1 until maxTreas.size - 1) {
+        for (j in 0 until capacity + 1) {
+            if (listTreasures[i].second.first > j)
+                maxTreas[i][j] = maxTreas[i - 1][j]
+            else {
+                maxTreas[i][j] = maxOf(
+                    maxTreas[i - 1][j],
+                    maxTreas[i - 1][j - listTreasures[i].second.first] + listTreasures[i].second.second
+                )
+            }
+
+            if (maxTreas[i][j] > maximum) {
+                maximum = maxTreas[i][j]
+                maxI = i
+                maxJ = j
+            }
+        }
     }
 
-    var totalWeight = 0
-    var totalCost = 0
-    var i = 0
-
-    while (true) {
-        while (true) {
-            if (listAllow[i]) {
-                totalWeight += treasures.getValue(listNames[i]).first
-                totalCost += treasures.getValue(listNames[i]).second
-            }
-
-            if (totalWeight > capacity) {
-                totalWeight -= treasures.getValue(listNames[i]).first
-                totalCost -= treasures.getValue(listNames[i]).second
-                listAllow[i] = false
-
-                if (!listAllow.contains(true)) {
-                    return solutionSet
-                }
-                continue
-            }
-            i++
-
-            if (i == listAllow.size) {
-                i--
-                break
-            }
+    //find optimal way
+    var i = maxI
+    var j = maxJ
+    while (j > 0) {
+        if (listTreasures[i].second.first <= j && maxTreas[i][j] - listTreasures[i].second.second == maxTreas[i - 1][j - listTreasures[i].second.first]) {
+            result += listTreasures[i].first
+            j -= listTreasures[i].second.first
+            i--
+        } else {
+            i--
         }
-
-        if (totalCost > solutionCost) {
-            solutionSet.clear()
-            for (k in listAllow.indices) {
-                if (listAllow[k]) solutionSet.add(listNames[k])
-            }
-            solutionCost = totalCost
-        }
-
-        totalWeight = 0
-        totalCost = 0
-
-        while (true) {
-            if (!listAllow[i])
-                i--
-            else break
-
-            if (i < 0) {
-                return solutionSet
-            }
-        }
-        listAllow[i] = false
-
-        for (k in ++i until listAllow.size) listAllow[k] = true
-
-        if (!listAllow.contains(true)) {
-            return solutionSet
-        }
-
-        i = 0
     }
+
+    return result
 }
