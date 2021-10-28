@@ -2,6 +2,7 @@
 
 package lesson3.task1
 
+import com.sun.jdi.LongValue
 import kotlin.math.*
 
 // Урок 3: циклы
@@ -83,12 +84,20 @@ fun digitNumber(n: Int): Int = when {
  * Найти число Фибоначчи из ряда 1, 1, 2, 3, 5, 8, 13, 21, ... с номером n.
  * Ряд Фибоначчи определён следующим образом: fib(1) = 1, fib(2) = 1, fib(n+2) = fib(n) + fib(n+1)
  */
-fun fib(n: Int): Int =
-    when {
-        n in 1..2 -> 1
-        n > 2 -> fib(n - 1) + fib(n - 2)
-        else -> 0
+fun fib(n: Int): Int {
+    if (n in 1..2) return 1
+
+    var sum = 0
+    var previous = 1
+    var current = 1
+
+    for (i in 3..n) {
+        sum = previous + current
+        previous = current
+        current = sum
     }
+    return sum
+}
 
 /**
  * Простая (2 балла)
@@ -96,7 +105,7 @@ fun fib(n: Int): Int =
  * Для заданного числа n > 1 найти минимальный делитель, превышающий 1
  */
 fun minDivisor(n: Int): Int {
-    for (i in 2..n / 2) {
+    for (i in 2..sqrt(n.toDouble()).toInt()) {
         if (n % i == 0) return i
     }
     return n
@@ -108,7 +117,7 @@ fun minDivisor(n: Int): Int {
  * Для заданного числа n > 1 найти максимальный делитель, меньший n
  */
 fun maxDivisor(n: Int): Int {
-    for (i in n / 2 downTo 2) {      // А можно for (i in n / 2..2) ?
+    for (i in n / 2 downTo 2) {
         if (n % i == 0) return i
     }
     return 1
@@ -156,7 +165,7 @@ fun lcm(m: Int, n: Int): Int {
     if (m == 1 || n == 1) return max(m, n)
     var a = m
     var b = n
-    while (a != 0 && b != 0) {      // Есть разные вариации. Это вроде рабочая
+    while (a != 0 && b != 0) {
         if (a > b) a %= b
         else b %= a
     }
@@ -173,7 +182,7 @@ fun lcm(m: Int, n: Int): Int {
 fun isCoPrime(m: Int, n: Int): Boolean {
     var a = m
     var b = n
-    while (a != 0 && b != 0) {      // Есть разные вариации. Это вроде рабочая
+    while (a != 0 && b != 0) {
         if (a > b) a %= b
         else b %= a
     }
@@ -208,7 +217,18 @@ fun revert(n: Int): Int {
  *
  * Использовать операции со строками в этой задаче запрещается.
  */
-fun isPalindrome(n: Int): Boolean = TODO()
+fun isPalindrome(n: Int): Boolean {
+    var num = n
+    var dn = digitNumber(n)
+    val ten = 10.0
+    for (i in 1..digitNumber(n) / 2) {
+        if (num % 10 == num / (ten.pow(dn.toDouble() - 1.0)).toInt()) {
+            num = (num % (ten.pow(dn.toDouble() - 1.0)).toInt()) / 10
+            dn -= 2
+        } else return false
+    }
+    return true
+}
 
 /**
  * Средняя (3 балла)
@@ -219,25 +239,12 @@ fun isPalindrome(n: Int): Boolean = TODO()
  * Использовать операции со строками в этой задаче запрещается.
  */
 fun hasDifferentDigits(n: Int): Boolean {
-    if (n / 10 == 0) return false
-
-    var countN = 0
-    var n2 = n
-    while (n2 > 1) {
-        n2 /= 10
-        ++countN
-    }
-
-    n2 = n
-    val firstN = n % 10
-
-    for (i in 1..countN) {
-        val difN = n2 % 10
-        n2 /= 10
-        if (firstN == difN) continue
+    var num = n
+    for (i in 1 until digitNumber(n)) {
+        if (num % 100 / 10 == num % 10) num /= 10
         else return true
     }
-    return false
+    return n % 10 != num
 }
 
 /**
@@ -271,7 +278,20 @@ fun cos(x: Double, eps: Double): Double = TODO()
  *
  * Использовать операции со строками в этой задаче запрещается.
  */
-fun squareSequenceDigit(n: Int): Int = TODO()
+fun squareSequenceDigit(n: Int): Int {
+    val ten = 10.0
+    var curSqr = 1
+    var countSqr = 1
+    var num = 0
+
+    while (num < n) {
+        curSqr = countSqr * countSqr
+        num += digitNumber(curSqr)
+        ++countSqr
+    }
+
+    return curSqr / ten.pow((num - n).toDouble()).toInt() % 10
+}
 
 /**
  * Сложная (5 баллов)
@@ -282,4 +302,17 @@ fun squareSequenceDigit(n: Int): Int = TODO()
  *
  * Использовать операции со строками в этой задаче запрещается.
  */
-fun fibSequenceDigit(n: Int): Int = TODO()
+fun fibSequenceDigit(n: Int): Int {
+    val ten = 10.0
+    var curFib = 1
+    var countFib = 1
+    var num = 0
+
+    while (num < n) {
+        curFib = fib(countFib)
+        num += digitNumber(curFib)
+        ++countFib
+    }
+
+    return curFib / ten.pow((num - n).toDouble()).toInt() % 10
+}
