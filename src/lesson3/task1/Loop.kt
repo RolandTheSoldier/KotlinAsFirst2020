@@ -117,7 +117,7 @@ fun minDivisor(n: Int): Int {
  * Для заданного числа n > 1 найти максимальный делитель, меньший n
  */
 fun maxDivisor(n: Int): Int {
-    for (i in n / 2 downTo 2) {
+    for (i in n / 2 downTo sqrt(n.toDouble()).toInt()) {
         if (n % i == 0) return i
     }
     return 1
@@ -142,8 +142,7 @@ fun maxDivisor(n: Int): Int {
 fun collatzSteps(x: Int): Int {
     var count = 0
     var n = x
-    while (true) {
-        if (n == 1) return count
+    while (n != 1) {
         if (n % 2 == 0) {
             n /= 2
             ++count
@@ -152,6 +151,18 @@ fun collatzSteps(x: Int): Int {
             ++count
         }
     }
+    return count
+}
+
+/** Наибольший общий делитель **/
+fun gcd(x1: Int, x2: Int): Int {
+    var a = x1
+    var b = x2
+    while (a != 0 && b != 0) {
+        if (a > b) a %= b
+        else b %= a
+    }
+    return (a + b)
 }
 
 /**
@@ -163,13 +174,7 @@ fun collatzSteps(x: Int): Int {
 fun lcm(m: Int, n: Int): Int {
     if (m == n) return m
     if (m == 1 || n == 1) return max(m, n)
-    var a = m
-    var b = n
-    while (a != 0 && b != 0) {
-        if (a > b) a %= b
-        else b %= a
-    }
-    return n * m / (a + b)
+    return n * m / gcd(m, n)
 }
 
 /**
@@ -198,14 +203,14 @@ fun isCoPrime(m: Int, n: Int): Boolean {
  */
 fun revert(n: Int): Int {
     if (n / 10 == 0) return n
-    var rev = 0.0
-    val dn: Double = digitNumber(n).toDouble()
+    var rev = 0
+    val dn = digitNumber(n)
     val ten = 10.0
-    for (i in 1..dn.toInt()) {
+    for (i in 1..dn) {
         rev += (n / (ten.pow(dn - i.toDouble())).toInt() % 10) *
                 (ten.pow(i.toDouble() - 1.0)).toInt()
     }
-    return rev.toInt()
+    return rev
 }
 
 /**
@@ -217,18 +222,7 @@ fun revert(n: Int): Int {
  *
  * Использовать операции со строками в этой задаче запрещается.
  */
-fun isPalindrome(n: Int): Boolean {
-    var num = n
-    var dn = digitNumber(n)
-    val ten = 10.0
-    for (i in 1..digitNumber(n) / 2) {
-        if (num % 10 == num / (ten.pow(dn.toDouble() - 1.0)).toInt()) {
-            num = (num % (ten.pow(dn.toDouble() - 1.0)).toInt()) / 10
-            dn -= 2
-        } else return false
-    }
-    return true
-}
+fun isPalindrome(n: Int): Boolean = n == revert(n)
 
 /**
  * Средняя (3 балла)
