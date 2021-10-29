@@ -2,6 +2,9 @@
 
 package lesson6.task1
 
+import java.lang.Exception
+import kotlin.reflect.typeOf
+
 // Урок 6: разбор строк, исключения
 // Максимальное количество баллов = 13
 // Рекомендуемое количество баллов = 11
@@ -162,7 +165,24 @@ fun firstDuplicateIndex(str: String): Int = TODO()
  * или пустую строку при нарушении формата строки.
  * Все цены должны быть больше нуля либо равны нулю.
  */
-fun mostExpensive(description: String): String = TODO()
+fun mostExpensive(description: String): String {
+    if (description == "") return ""
+
+    val splitedDescription = description.split("; ", " ")
+    val listNames = mutableListOf<String>()
+    val listWorth = mutableListOf<Float>()
+
+    try {
+        for (i in splitedDescription.indices step 2) {
+            listNames += splitedDescription[i]
+            listWorth += splitedDescription[i + 1].toFloat()
+        }
+    } catch (e: Exception) {
+        return ""
+    }
+
+    return listNames[listWorth.indexOf(listWorth.maxOrNull())]
+}
 
 /**
  * Сложная (6 баллов)
