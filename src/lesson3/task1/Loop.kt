@@ -119,9 +119,9 @@ fun minDivisor(n: Int): Int {
 fun maxDivisor(n: Int): Int {
     if (n == 2) return 1
     if (n % 2 == 0) return n / 2
-    val one = if ((n / 2) % 2 == 0) 1 else 0
-    for (i in n / 2 - one downTo sqrt(n.toDouble()).toInt() step 2) {
-        if (n % i == 0) return i
+    val sqrtNPlusOne = sqrt(n.toDouble()).toInt() + 1
+    for (i in 3..sqrtNPlusOne step 2) {
+        if (n % i == 0) return n / i
     }
     return 1
 }
