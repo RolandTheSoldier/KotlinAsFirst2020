@@ -117,7 +117,10 @@ fun minDivisor(n: Int): Int {
  * Для заданного числа n > 1 найти максимальный делитель, меньший n
  */
 fun maxDivisor(n: Int): Int {
-    for (i in n / 2 downTo sqrt(n.toDouble()).toInt()) {
+    if (n == 2) return 1
+    if (n % 2 == 0) return n / 2
+    val one = if ((n / 2) % 2 == 0) 1 else 0
+    for (i in n / 2 - one downTo sqrt(n.toDouble()).toInt() step 2) {
         if (n % i == 0) return i
     }
     return 1
@@ -162,7 +165,7 @@ fun gcd(x1: Int, x2: Int): Int {
         if (a > b) a %= b
         else b %= a
     }
-    return (a + b)
+    return a + b
 }
 
 /**
