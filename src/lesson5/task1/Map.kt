@@ -301,10 +301,21 @@ fun findAllFriends(name: String, friends: Map<String, Set<String>>, nextSet: Set
  *   findSumOfTwo(listOf(1, 2, 3), 4) -> Pair(0, 2)
  *   findSumOfTwo(listOf(1, 2, 3), 6) -> Pair(-1, -1)
  */
+
 fun findSumOfTwo(list: List<Int>, number: Int): Pair<Int, Int> {
-    for (i in 0..(list.size - 2)) {
-        for (j in i + 1 until list.size)
-            if (number - list[i] == list[j]) return Pair(i, j)
+    val difList = mutableListOf<Int>()
+
+    try {
+        difList.add(number - list[0])
+    } catch (e: Exception) {
+        return Pair(-1, -1)
+    }
+
+    for (i in 1 until list.size) {
+        for (j in difList.indices)
+            if (list[i] + list[j] == number)
+                return Pair(j, i)
+        difList.add(number - list[i])
     }
 
     return Pair(-1, -1)
