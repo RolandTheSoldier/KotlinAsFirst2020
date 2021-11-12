@@ -314,7 +314,7 @@ fun findSumOfTwo(list: List<Int>, number: Int): Pair<Int, Int> {
     for (i in 1 until list.size) {
         if (difMap.containsKey(list[i]))
             return (difMap.getValue(list[i]) to i)
-        difMap += (number - list[i] to 0)
+        difMap += (number - list[i] to i)
     }
 
     return Pair(-1, -1)
