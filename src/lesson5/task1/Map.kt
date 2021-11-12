@@ -303,19 +303,18 @@ fun findAllFriends(name: String, friends: Map<String, Set<String>>, nextSet: Set
  */
 
 fun findSumOfTwo(list: List<Int>, number: Int): Pair<Int, Int> {
-    val difList = mutableListOf<Int>()
+    val difMap = mutableMapOf<Int, Int>()
 
     try {
-        difList.add(number - list[0])
+        difMap += (number - list[0] to 0)
     } catch (e: Exception) {
         return Pair(-1, -1)
     }
 
     for (i in 1 until list.size) {
-        for (j in difList.indices)
-            if (list[i] + list[j] == number)
-                return Pair(j, i)
-        difList.add(number - list[i])
+        if (difMap.containsKey(list[i]))
+            return (difMap.getValue(list[i]) to i)
+        difMap += (number - list[i] to 0)
     }
 
     return Pair(-1, -1)
