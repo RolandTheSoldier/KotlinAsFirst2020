@@ -166,22 +166,18 @@ fun firstDuplicateIndex(str: String): Int = TODO()
  * Все цены должны быть больше нуля либо равны нулю.
  */
 fun mostExpensive(description: String): String {
-    if (description == "") return ""
-
-    val splitedDescription = description.split("; ", " ")
-    val listNames = mutableListOf<String>()
-    val listWorth = mutableListOf<Float>()
+    val valueToName = mutableMapOf<Float, String>()
 
     try {
-        for (i in splitedDescription.indices step 2) {
-            listNames += splitedDescription[i]
-            listWorth += splitedDescription[i + 1].toFloat()
+        for (item in description.split("; ")) {
+            val pair = item.split(" ")
+            valueToName[pair[1].toFloat()] = pair[0]
         }
     } catch (e: Exception) {
         return ""
     }
 
-    return listNames[listWorth.indexOf(listWorth.maxOrNull())]
+    return valueToName[valueToName.keys.maxOrNull()].toString()
 }
 
 /**
@@ -195,7 +191,7 @@ fun mostExpensive(description: String): String {
  *
  * Вернуть -1, если roman не является корректным римским числом
  */
-val romanMap: Map<String, Int> = mapOf("I" to 1, "V" to 5, "X" to 10, "L" to 50, "C" to 100, "D" to 500, "M" to 1000)
+val romanMap = mapOf("I" to 1, "V" to 5, "X" to 10, "L" to 50, "C" to 100, "D" to 500, "M" to 1000)
 fun fromRoman(roman: String): Int {
     val listRoman: List<Int>
     try {
