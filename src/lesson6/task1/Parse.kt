@@ -3,7 +3,6 @@
 package lesson6.task1
 
 import java.lang.Exception
-import kotlin.reflect.typeOf
 
 // Урок 6: разбор строк, исключения
 // Максимальное количество баллов = 13
@@ -191,73 +190,59 @@ fun mostExpensive(description: String): String {
  *
  * Вернуть -1, если roman не является корректным римским числом
  */
-val romanMap = mapOf("I" to 1, "V" to 5, "X" to 10, "L" to 50, "C" to 100, "D" to 500, "M" to 1000)
+val romanMap = mapOf('I' to 1, 'V' to 5, 'X' to 10, 'L' to 50, 'C' to 100, 'D' to 500, 'M' to 1000)
+val romanMap5 = setOf(5, 50, 500)
 fun fromRoman(roman: String): Int {
-    val listRoman: List<Int>
-    try {
-        listRoman = roman.toList().map { romanMap[it.toString()] as Int }
-    } catch (e: NullPointerException) {
+    if (roman.isEmpty())
         return -1
+
+    val romanList = roman.toList()
+
+    val romanInArabic = mutableListOf<Int>()
+    for (item in romanList) {
+        if (romanMap.containsKey(item))
+            romanInArabic.add(romanMap.getValue(item))
+        else return -1
     }
-    if (listRoman.isEmpty()) return -1
 
-    if (listRoman.size == 1) return listRoman[0]
 
-    val resultList = mutableListOf<Int>()
+    var result = 0
 
-    var lastN = listRoman[0]
-    var lastSimilar = 0
+    var i = 0
 
-    for (i in 1 until listRoman.size) if (lastN != 0) {
-        if (listRoman[i] > lastN) {
-            if (lenInt(listRoman[i] - 1) == lenInt(lastN)) {
-                resultList.add(listRoman[i] - lastN)
-                lastN = 0
-            }
-        } else
-            if (lenInt(listRoman[i]) == lenInt(lastN)) {
-                if (lastSimilar == listRoman[i]) {
-                    resultList.add(listRoman[i] + lastN)
-                    lastN = 0
-                    lastSimilar = 0
+    try {
+        while (i < romanInArabic.size) {
+            result += romanInArabic[i]
+            if (romanMap5.contains(romanInArabic[i])) {
+                if (romanInArabic[i + 1] < romanInArabic[i]) {
+                    i++
                 } else {
-                    if (listRoman[i] == lastN) {
-                        lastSimilar = listRoman[i]
-                        lastN *= 2
-                        if (i == listRoman.size - 1) resultList.add(lastN)
-                    } else {
-                        resultList.add(lastN)
-                        lastN = listRoman[i]
-                        if (i == listRoman.size - 1) resultList.add(lastN)
-                    }
-
+                    return -1
                 }
             } else {
-                resultList.add(lastN)
-                lastN = listRoman[i]
-                if (i == listRoman.size - 1) resultList.add(lastN)
+                if (romanInArabic[i + 1] < romanInArabic[i]) {
+                    i++
+                } else if (romanInArabic[i + 1] > romanInArabic[i]) {
+                    result += romanInArabic[i + 1] - romanInArabic[i] * 2
+                    i += 2
+                } else {
+                    result += romanInArabic[i]
+                    if (romanInArabic[i + 2] == romanInArabic[i]) {
+                        result += romanInArabic[i]
+                        i += 3
+                    } else if (romanInArabic[i + 2] < romanInArabic[i]) {
+                        i += 2
+                    } else {
+                        return -1
+                    }
+                }
             }
-    } else {
-        lastN = listRoman[i]
-        if (i == listRoman.size - 1) resultList.add(lastN)
-    }
+        }
+    } catch (e: IndexOutOfBoundsException) {
 
-    val result = resultList.fold(0) { a, b ->
-        a + b
     }
 
     return result
-}
-
-fun lenInt(n: Int): Int {
-    var resN = n
-    var len = 0
-    while (resN >= 1) {
-        len++
-        resN /= 10
-    }
-
-    return len
 }
 
 /**
