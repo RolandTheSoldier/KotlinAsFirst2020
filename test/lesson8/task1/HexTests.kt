@@ -12,6 +12,8 @@ class HexTests {
     @Tag("3")
     fun hexPointDistance() {
         assertEquals(5, HexPoint(6, 1).distance(HexPoint(1, 4)))
+        assertEquals(8, HexPoint(8, 0).distance(HexPoint(0, 6)))
+        assertEquals(2, HexPoint(3, 4).distance(HexPoint(5, 2)))
     }
 
     @Test
@@ -122,6 +124,10 @@ class HexTests {
         assertEquals(
             3,
             hexagonByThreePoints(HexPoint(2, 3), HexPoint(3, 3), HexPoint(5, 3))?.radius
+        )
+        assertEquals(
+            Hexagon(HexPoint(2, 3), 0),
+            hexagonByThreePoints(HexPoint(2, 3), HexPoint(2, 3), HexPoint(2, 3))
         )
     }
 

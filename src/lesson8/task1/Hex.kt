@@ -2,6 +2,9 @@
 
 package lesson8.task1
 
+import kotlin.math.abs
+import kotlin.math.max
+
 /**
  * Точка (гекс) на шестиугольной сетке.
  * Координаты заданы как в примере (первая цифра - y, вторая цифра - x)
@@ -36,7 +39,7 @@ data class HexPoint(val x: Int, val y: Int) {
      * Расстояние вычисляется как число единичных отрезков в пути между двумя гексами.
      * Например, путь межу гексами 16 и 41 (см. выше) может проходить через 25, 34, 43 и 42 и имеет длину 5.
      */
-    fun distance(other: HexPoint): Int = TODO()
+    fun distance(other: HexPoint): Int = max(abs(this.x - other.x), abs(this.y - other.y))
 
     override fun toString(): String = "$y.$x"
 }
@@ -192,7 +195,67 @@ fun pathBetweenHexes(from: HexPoint, to: HexPoint): List<HexPoint> = TODO()
  *
  * Если все три точки совпадают, вернуть шестиугольник нулевого радиуса с центром в данной точке.
  */
-fun hexagonByThreePoints(a: HexPoint, b: HexPoint, c: HexPoint): Hexagon? = TODO()
+fun hexagonByThreePoints(a: HexPoint, b: HexPoint, c: HexPoint): Hexagon? {
+    val defaultHexPoints = listOf(a, b, c)
+    val lastHexs = arrayOf(mutableSetOf(a), mutableSetOf(b), mutableSetOf(c))
+    val checked = arrayOf(mutableSetOf(a), mutableSetOf(b), mutableSetOf(c))
+
+    var radiusForOneLine = -1
+    if ((a.x == b.x && b.x == c.x) || (a.y == b.y && b.y == c.y)) {
+        radiusForOneLine = max(max(a.distance(b), a.distance(c)), b.distance(c))
+    }
+
+    var i = 0
+    while (true) {
+        if (radiusForOneLine == -1) {
+            val resultHexagon = isIntersect(i, lastHexs)
+            if (resultHexagon != null)
+                return resultHexagon
+            findNeighbors(defaultHexPoints, lastHexs, checked)
+
+            if (checked[0].intersect(defaultHexPoints.toHashSet()).size >= 3)
+                return null
+        } else {
+            if (i == radiusForOneLine)
+                return isIntersect(i, lastHexs)
+            findNeighbors(defaultHexPoints, lastHexs, checked)
+        }
+
+        i++
+    }
+}
+
+fun isIntersect(radius: Int, lastHexes: Array<MutableSet<HexPoint>>): Hexagon? {
+    val center = lastHexes[0].intersect(lastHexes[1]).intersect(lastHexes[2])
+    if (center.count() != 0)
+        return Hexagon(center.toList()[0], radius)
+    return null
+}
+
+fun findNeighbors(
+    defaultHexPoints: List<HexPoint>,
+    lastHexes: Array<MutableSet<HexPoint>>,
+    checked: Array<MutableSet<HexPoint>>
+) {
+    val neighbors = Array<MutableSet<HexPoint>>(3) { mutableSetOf() }
+    for (i in 0..2) {
+        for (hex in lastHexes[i]) {
+            for (y in -1..1) {
+                for (x in -1..1) {
+                    if (!((x == 1) and (y == 1)) && !((x == 0) and (y == 0)) && !((x == -1) and (y == -1))) {
+                        val neighbor = HexPoint(hex.x + x, hex.y + y)
+                        if (checked[i].contains(neighbor))
+                            continue
+                        neighbors[i].add(neighbor)
+                    }
+                }
+            }
+        }
+        checked[i].addAll(neighbors[i])
+        lastHexes[i].clear()
+        lastHexes[i].addAll(neighbors[i])
+    }
+}
 
 /**
  * Очень сложная (20 баллов)
