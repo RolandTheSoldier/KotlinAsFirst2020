@@ -167,13 +167,11 @@ fun firstDuplicateIndex(str: String): Int = TODO()
 fun mostExpensive(description: String): String {
     val valueToName = mutableMapOf<Float, String>()
 
-    try {
-        for (item in description.split("; ")) {
-            val pair = item.split(" ")
-            valueToName[pair[1].toFloat()] = pair[0]
-        }
-    } catch (e: Exception) {
-        return ""
+    for (item in description.split("; ")) {
+        val pair = item.split(" ")
+        if (pair.count() != 2 || pair[1].toFloatOrNull() == null)
+            return ""
+        valueToName[pair[1].toFloat()] = pair[0]
     }
 
     return valueToName[valueToName.keys.maxOrNull()].toString()
@@ -210,36 +208,39 @@ fun fromRoman(roman: String): Int {
 
     var i = 0
 
-    try {
-        while (i < romanInArabic.size) {
-            result += romanInArabic[i]
-            if (romanMap5.contains(romanInArabic[i])) {
-                if (romanInArabic[i + 1] < romanInArabic[i]) {
-                    i++
+    while (i < romanInArabic.size) {
+        result += romanInArabic[i]
+        if (romanMap5.contains(romanInArabic[i])) {
+            if (i + 1 >= romanInArabic.size) break //Вышли за границы?
+
+            if (romanInArabic[i + 1] < romanInArabic[i]) {
+                i++
+            } else {
+                return -1
+            }
+        } else {
+            if (i + 1 >= romanInArabic.size) break //Вышли за границы?
+
+            if (romanInArabic[i + 1] < romanInArabic[i]) {
+                i++
+            } else if (romanInArabic[i + 1] > romanInArabic[i]) {
+                result += romanInArabic[i + 1] - romanInArabic[i] * 2
+                i += 2
+            } else {
+                result += romanInArabic[i]
+
+                if (i + 2 >= romanInArabic.size) break //Вышли за границы?
+
+                if (romanInArabic[i + 2] == romanInArabic[i]) {
+                    result += romanInArabic[i]
+                    i += 3
+                } else if (romanInArabic[i + 2] < romanInArabic[i]) {
+                    i += 2
                 } else {
                     return -1
                 }
-            } else {
-                if (romanInArabic[i + 1] < romanInArabic[i]) {
-                    i++
-                } else if (romanInArabic[i + 1] > romanInArabic[i]) {
-                    result += romanInArabic[i + 1] - romanInArabic[i] * 2
-                    i += 2
-                } else {
-                    result += romanInArabic[i]
-                    if (romanInArabic[i + 2] == romanInArabic[i]) {
-                        result += romanInArabic[i]
-                        i += 3
-                    } else if (romanInArabic[i + 2] < romanInArabic[i]) {
-                        i += 2
-                    } else {
-                        return -1
-                    }
-                }
             }
         }
-    } catch (e: IndexOutOfBoundsException) {
-
     }
 
     return result
