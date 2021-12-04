@@ -304,8 +304,8 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
                 }
                 i += 2
             } else if (line[i].toString() == "*") {
-                if (line[i + 1].toString() == "*") {
-                    if (line[i + 2].toString() == "*") {
+                if (i + 1 < line.length && line[i + 1].toString() == "*") {
+                    if (i + 2 < line.length && line[i + 2].toString() == "*") {
                         if (openedStars.contains(3)) {
                             writer.write("</i></b>")
                             openedStars.remove(3)
