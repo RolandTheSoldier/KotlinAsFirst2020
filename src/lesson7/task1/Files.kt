@@ -291,25 +291,20 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
 
     writer.write("<html><body><p>")
     for (line in File(inputName).readLines()) {
+        val newLine = line.replace("    ", "").replace(" ", "")
         if (!isHaveEmpty) {
-            if (line.isEmpty()) {
-                writer.write("</p><p>")
-                isHaveEmpty = true
-            } else if (line.length == 2 && line[0].toString() == "\\" && line[1].toString() == "t") {
-                writer.write("</p><p>")
-                isHaveEmpty = true
-            } else if (line.length == 1 && line[0].toString() == " ") {
+            if (newLine.isEmpty()) {
                 writer.write("</p><p>")
                 isHaveEmpty = true
             }
         }
-        if (line.isNotEmpty() && !(line.length == 1 && line[0].toString() == " ") && !(line.length == 2 && line[0].toString() == "\\" && line[1].toString() == "t"))
+        if (newLine.isNotEmpty())
             isHaveEmpty = false
 
 
         var i = 0
-        while (i < line.length) {
-            if (line[i].toString() == "~") {
+        while (i < newLine.length) {
+            if (newLine[i].toString() == "~") {
                 if (isOpenCross) {
                     writer.write("</s>")
                     isOpenCross = false
@@ -318,9 +313,9 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
                     isOpenCross = true
                 }
                 i += 2
-            } else if (line[i].toString() == "*") {
-                if (i + 1 < line.length && line[i + 1].toString() == "*") {
-                    if (i + 2 < line.length && line[i + 2].toString() == "*") {
+            } else if (newLine[i].toString() == "*") {
+                if (i + 1 < newLine.length && newLine[i + 1].toString() == "*") {
+                    if (i + 2 < newLine.length && newLine[i + 2].toString() == "*") {
                         if (openedStars.contains(3)) {
                             writer.write("</i></b>")
                             openedStars.remove(3)
@@ -361,7 +356,7 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
                     }
                 }
             } else {
-                writer.write(line[i].toString())
+                writer.write(newLine[i].toString())
                 i++
             }
         }
