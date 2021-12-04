@@ -293,7 +293,8 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
     for (line in File(inputName).readLines()) {
         if (line.isNotEmpty())
             isHaveEmpty = false
-        else if (!isHaveEmpty) {
+
+        if (line.isEmpty() && !isHaveEmpty) {
             writer.write("</p><p>")
             isHaveEmpty = true
         }
