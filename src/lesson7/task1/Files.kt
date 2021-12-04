@@ -287,11 +287,17 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
 
     val openedStars = mutableListOf<Int>()
     var isOpenCross = false
+    var isHaveEmpty = false
 
     writer.write("<html><body><p>")
     for (line in File(inputName).readLines()) {
-        if (line.isEmpty())
+        if (line.isNotEmpty())
+            isHaveEmpty = false
+        else if (!isHaveEmpty) {
             writer.write("</p><p>")
+            isHaveEmpty = true
+        }
+
         var i = 0
         while (i < line.length) {
             if (line[i].toString() == "~") {
@@ -351,13 +357,6 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
             }
         }
     }
-    if (openedStars.isNotEmpty())
-        for (i in openedStars.size - 1..0)
-            when (openedStars[i]) {
-                3 -> writer.write("</i></b>")
-                2 -> writer.write("</b>")
-                1 -> writer.write("</i>")
-            }
 
     writer.write("</p></body></html>")
 
