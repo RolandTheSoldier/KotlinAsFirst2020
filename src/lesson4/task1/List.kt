@@ -4,6 +4,7 @@ package lesson4.task1
 
 import lesson3.task1.isPrime
 import lesson1.task1.discriminant
+import lesson1.task1.lengthInMeters
 import kotlin.math.*
 
 // Урок 4: списки
@@ -142,7 +143,6 @@ fun mean(list: List<Double>): Double = if (list.isNotEmpty()) list.average() els
  * Обратите внимание, что данная функция должна изменять содержание списка list, а не его копии.
  */
 fun center(list: MutableList<Double>): MutableList<Double> {
-    if (list.size == 0) return list
     val average = list.average()
     for (i in 0 until list.size) {
         list[i] -= average
@@ -177,9 +177,10 @@ fun times(a: List<Int>, b: List<Int>): Int {
 fun polynom(p: List<Int>, x: Int): Int {
     if (p.isEmpty()) return 0
     var sum = 0
-    val xDouble = x.toDouble()
+    var x2 = 1
     for (i in p.indices) {
-        sum += p[i] * xDouble.pow(i).toInt()
+        sum += p[i] * x2
+        x2 *= x
     }
     return sum
 }
@@ -195,8 +196,6 @@ fun polynom(p: List<Int>, x: Int): Int {
  * Обратите внимание, что данная функция должна изменять содержание списка list, а не его копии.
  */
 fun accumulate(list: MutableList<Int>): MutableList<Int> {
-    if (list.isEmpty()) return list
-    // var previous = 0
     for (i in 1 until list.size) {
         list[i] += list[i - 1]
     }
@@ -211,20 +210,17 @@ fun accumulate(list: MutableList<Int>): MutableList<Int> {
  * Множители в списке должны располагаться по возрастанию.
  */
 fun factorize(n: Int): List<Int> {
-    if (isPrime(n)) return listOf(n)
     val list: MutableList<Int> = mutableListOf()
-    var m = n
     val halfN = n / 2
-    do {
-        for (i in 2..halfN) {
-            if (m % i == 0) {
-                list.add(i)
-                m /= i
-                break
-            }
-        }
-    } while (m > 1)
-    return list
+    var m = n
+    var i = 2
+    while (i <= halfN) {
+        if (m % i == 0) {
+            list.add(i)
+            m /= i
+        } else ++i
+    }
+    return if (list.isEmpty()) listOf(n) else list
 }
 
 /**
@@ -244,7 +240,19 @@ fun factorizeToString(n: Int): String = factorize(n).joinToString(separator = "*
  * Результат перевода вернуть в виде списка цифр в base-ичной системе от старшей к младшей,
  * например: n = 100, base = 4 -> (1, 2, 1, 0) или n = 250, base = 14 -> (1, 3, 12)
  */
-fun convert(n: Int, base: Int): List<Int> = TODO()
+fun convert(n: Int, base: Int): List<Int> {
+    if (n < 0 || base < 1) return listOf()
+    if (n == 0) return listOf(0)
+    val list: MutableList<Int> = mutableListOf()
+    var number = n
+    while (number >= base) {
+        list.add(number % base)
+        number /= base
+    }
+    list.add(number)
+    list.reverse()
+    return list
+}
 
 
 /**
@@ -259,6 +267,14 @@ fun convert(n: Int, base: Int): List<Int> = TODO()
  * (например, n.toString(base) и подобные), запрещается.
  */
 fun convertToString(n: Int, base: Int): String = TODO()
+//{
+//    val list = convert(n, base)
+//    var str = ""
+//    for (number in list) {
+//        if (number < 10) str += number.toString()
+//        if (number >= 10) str += number.
+//    }
+//}
 
 /**
  * Средняя (3 балла)
