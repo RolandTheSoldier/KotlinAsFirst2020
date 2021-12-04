@@ -298,9 +298,12 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
             } else if (line.length == 2 && line[0].toString() == "\\" && line[1].toString() == "t") {
                 writer.write("</p><p>")
                 isHaveEmpty = true
+            } else if (line.length == 1 && line[0].toString() == " ") {
+                writer.write("</p><p>")
+                isHaveEmpty = true
             }
         }
-        if (line.isNotEmpty() && !(line.length == 2 && line[0].toString() == "\\" && line[1].toString() == "t"))
+        if (line.isNotEmpty() && !(line.length == 1 && line[0].toString() == " ") && !(line.length == 2 && line[0].toString() == "\\" && line[1].toString() == "t"))
             isHaveEmpty = false
 
 
