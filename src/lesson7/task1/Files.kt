@@ -291,7 +291,8 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
 
     writer.write("<html><body><p>")
     for (line in File(inputName).readLines()) {
-        val newLine = line.replace("    ", "").replace(" ", "")
+        val newLine = line.replace(Regex("[\\s\\n\\t]"), "")
+
         if (!isHaveEmpty) {
             if (newLine.isEmpty()) {
                 writer.write("</p><p>")
