@@ -291,13 +291,18 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
 
     writer.write("<html><body><p>")
     for (line in File(inputName).readLines()) {
-        if (line.isNotEmpty())
+        if (!isHaveEmpty) {
+            if (line.isEmpty()) {
+                writer.write("</p><p>")
+                isHaveEmpty = true
+            } else if (line.length == 2 && line[0].toString() == "\\" && line[1].toString() == "t") {
+                writer.write("</p><p>")
+                isHaveEmpty = true
+            }
+        }
+        if (line.isNotEmpty() && !(line.length == 2 && line[0].toString() == "\\" && line[1].toString() == "t"))
             isHaveEmpty = false
 
-        if (line.isEmpty() && !isHaveEmpty) {
-            writer.write("</p><p>")
-            isHaveEmpty = true
-        }
 
         var i = 0
         while (i < line.length) {
