@@ -293,75 +293,79 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
     for (line in File(inputName).readLines()) {
         val newLine = line.replace(Regex("[\\s\\n\\t]"), "")
 
-        if (!isHaveEmpty) {
-            if (newLine.isEmpty()) {
+        if (newLine.isEmpty()) {
+            if (!isHaveEmpty) {
                 writer.write("</p><p>")
                 isHaveEmpty = true
             }
         }
-        if (newLine.isNotEmpty())
+        if (newLine.isNotEmpty()) {
             isHaveEmpty = false
 
-
-        var i = 0
-        while (i < newLine.length) {
-            if (newLine[i].toString() == "~") {
-                if (isOpenCross) {
-                    writer.write("</s>")
-                    isOpenCross = false
-                } else {
-                    writer.write("<s>")
-                    isOpenCross = true
-                }
-                i += 2
-            } else if (newLine[i].toString() == "*") {
-                if (i + 1 < newLine.length && newLine[i + 1].toString() == "*") {
-                    if (i + 2 < newLine.length && newLine[i + 2].toString() == "*") {
-                        if (openedStars.contains(3)) {
-                            writer.write("</i></b>")
-                            openedStars.remove(3)
-                            i += 3
-                        } else if (openedStars.contains(2)) {
-                            writer.write("</b>")
-                            openedStars.remove(2)
-                            i += 2
-                        } else if (openedStars.contains(1)) {
-                            writer.write("</i>")
+            var i = 0
+            while (i < line.length) {
+                if (line[i].toString() == "~") {
+                    if (isOpenCross) {
+                        writer.write("</s>")
+                        isOpenCross = false
+                    } else {
+                        writer.write("<s>")
+                        isOpenCross = true
+                    }
+                    i += 2
+                } else if (line[i].toString() == "*") {
+                    if (i + 1 < line.length && line[i + 1].toString() == "*") {
+                        if (i + 2 < line.length && line[i + 2].toString() == "*") {
+                            if (openedStars.contains(3)) {
+                                writer.write("</i></b>")
+                                openedStars.remove(3)
+                                i += 3
+                            } else if (openedStars.contains(2)) {
+                                writer.write("</b>")
+                                openedStars.remove(2)
+                                i += 2
+                            } else if (openedStars.contains(1)) {
+                                writer.write("</i>")
+                                openedStars.remove(1)
+                                i += 1
+                            } else {
+                                writer.write("<b><i>")
+                                openedStars += 3
+                                i += 3
+                            }
+                        } else {
+                            if (openedStars.contains(2)) {
+                                writer.write("</b>")
+                                openedStars.remove(2)
+                                i += 2
+                            } else {
+                                writer.write("<b>")
+                                openedStars += 2
+                                i += 2
+                            }
+                        }
+                    } else {
+                        if (openedStars.contains(1)) {
                             openedStars.remove(1)
-                            i += 1
+                            writer.write("</i>")
+                            i++
                         } else {
-                            writer.write("<b><i>")
-                            openedStars += 3
-                            i += 3
-                        }
-                    } else {
-                        if (openedStars.contains(2)) {
-                            writer.write("</b>")
-                            openedStars.remove(2)
-                            i += 2
-                        } else {
-                            writer.write("<b>")
-                            openedStars += 2
-                            i += 2
+                            openedStars += 1
+                            writer.write("<i>")
+                            i++
                         }
                     }
                 } else {
-                    if (openedStars.contains(1)) {
-                        openedStars.remove(1)
-                        writer.write("</i>")
-                        i++
-                    } else {
-                        openedStars += 1
-                        writer.write("<i>")
-                        i++
-                    }
+                    writer.write(line[i].toString())
+                    i++
                 }
-            } else {
-                writer.write(newLine[i].toString())
-                i++
             }
         }
-    }
+        }
+
+
+
+
 
     writer.write("</p></body></html>")
 
