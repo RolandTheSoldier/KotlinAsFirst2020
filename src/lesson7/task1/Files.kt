@@ -285,7 +285,7 @@ Suspendisse <s>et elit in enim tempus iaculis</s>.
 fun markdownToHtmlSimple(inputName: String, outputName: String) {
     val writer = File(outputName).bufferedWriter()
 
-    val openedStars = mutableSetOf<Int>()
+    val openedStars = mutableListOf<Int>()
     var isOpenCross = false
 
     writer.write("<html><body><p>")
@@ -351,6 +351,14 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
             }
         }
     }
+    if (openedStars.isNotEmpty())
+        for (i in openedStars.size - 1..0)
+            when (openedStars[i]) {
+                3 -> writer.write("</i></b>")
+                2 -> writer.write("</b>")
+                1 -> writer.write("</i>")
+            }
+
     writer.write("</p></body></html>")
 
     writer.close()
@@ -534,7 +542,7 @@ fun printDivisionProcess(lhv: Int, rhv: Int, outputName: String) {
     var endPosition = prevNumber.toString().length - 1
     var divResultPosition = lhv.toString().length + 3
 
-    if (prevNumber.toString().length == dataDiv[0].toString().length){
+    if (prevNumber.toString().length == dataDiv[0].toString().length) {
         writer.write(" ")
         lhvString = " $lhvString"
         endPosition++
