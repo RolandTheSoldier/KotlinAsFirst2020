@@ -489,9 +489,11 @@ fun printDivisionProcess(lhv: Int, rhv: Int, outputName: String) {
         //region "Чёрточки"
         writer.newLine()
 
-        for (j in 0 until newPosition)
+        val newPositionForLine = Math.min(newPosition, lastPosition - prevNumber.toString().length + 1)
+
+        for (j in 0 until newPositionForLine)
             writer.write(" ")
-        for (j in newPosition until lastPosition + 1)
+        for (j in newPositionForLine until lastPosition + 1)
             writer.write("-")
         //endregion
 
