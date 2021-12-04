@@ -452,34 +452,43 @@ fun printMultiplicationProcess(lhv: Int, rhv: Int, outputName: String) {
 fun printDivisionProcess(lhv: Int, rhv: Int, outputName: String) {
     val writer = File(outputName).bufferedWriter()
     val divResult = lhv / rhv
-    val lhvString = lhv.toString()
+    var lhvString = lhv.toString()
 
     val dataDiv = mutableListOf<Int>()
 
     for (number in divResult.toString())
         dataDiv.add(number.toString().toInt() * rhv)
 
-
-    writer.write(" $lhv | $rhv")
-
+    var endOfNumber = lhvString.length - 1
     var prevNumber = lhv / (10.0.pow(dataDiv.size.toDouble() - 1)).toInt()
-    var lastPosition = prevNumber.toString().length
+    var endPosition = prevNumber.toString().length - 1
+    var divResultPosition = lhv.toString().length + 3
+
+    if (prevNumber.toString().length == dataDiv[0].toString().length){
+        writer.write(" ")
+        lhvString = " $lhvString"
+        endPosition++
+        divResultPosition++
+        endOfNumber++
+    }
+
+    writer.write("$lhv | $rhv")
 
     var isFirstIteration = true
     for (curNumber in dataDiv) {
         writer.newLine()
 
-        var newPosition = lastPosition - curNumber.toString().length
+        var startPosition = endPosition - curNumber.toString().length
 
         //region Результат умножения на число
-        for (j in 0 until newPosition)
+        for (j in 0 until startPosition)
             writer.write(" ")
         writer.write("-$curNumber")
         //endregion
 
         //region Результат деления (однократно)
         if (isFirstIteration) {
-            for (j in lastPosition + 1 until lhv.toString().length + 4)
+            for (j in endPosition + 1 until divResultPosition)
                 writer.write(" ")
             writer.write("$divResult")
             isFirstIteration = false
@@ -489,11 +498,11 @@ fun printDivisionProcess(lhv: Int, rhv: Int, outputName: String) {
         //region "Чёрточки"
         writer.newLine()
 
-        val newPositionForLine = Math.min(newPosition, lastPosition - prevNumber.toString().length + 1)
+        startPosition = Math.min(startPosition, endPosition - prevNumber.toString().length + 1)
 
-        for (j in 0 until newPositionForLine)
+        for (j in 0 until startPosition)
             writer.write(" ")
-        for (j in newPositionForLine until lastPosition + 1)
+        for (j in startPosition until endPosition + 1)
             writer.write("-")
         //endregion
 
@@ -502,19 +511,19 @@ fun printDivisionProcess(lhv: Int, rhv: Int, outputName: String) {
 
         val reminder = prevNumber - curNumber
 
-        newPosition = lastPosition - reminder.toString().length + 1
-        for (j in 0 until newPosition)
+        startPosition = endPosition - reminder.toString().length + 1
+        for (j in 0 until startPosition)
             writer.write(" ")
         writer.write("$reminder")
 
-        if (lhvString.length == lastPosition)
+        if (endOfNumber == endPosition)
             break
 
-        writer.write(lhvString[lastPosition].toString())
+        writer.write(lhvString[endPosition + 1].toString())
         //endregion
 
-        prevNumber = ("$reminder" + lhvString[lastPosition].toString()).toInt()
-        lastPosition++
+        prevNumber = ("$reminder" + lhvString[endPosition + 1].toString()).toInt()
+        endPosition++
     }
 
     writer.close()
