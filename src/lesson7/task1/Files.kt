@@ -283,7 +283,77 @@ Suspendisse <s>et elit in enim tempus iaculis</s>.
  * (Отступы и переносы строк в примере добавлены для наглядности, при решении задачи их реализовывать не обязательно)
  */
 fun markdownToHtmlSimple(inputName: String, outputName: String) {
-    TODO()
+    val writer = File(outputName).bufferedWriter()
+
+    val openedStars = mutableSetOf<Int>()
+    var isOpenCross = false
+
+    writer.write("<html><body><p>")
+    for (line in File(inputName).readLines()) {
+        if (line.isEmpty())
+            writer.write("</p><p>")
+        var i = 0
+        while (i < line.length) {
+            if (line[i].toString() == "~") {
+                if (isOpenCross) {
+                    writer.write("</s>")
+                    isOpenCross = false
+                } else {
+                    writer.write("<s>")
+                    isOpenCross = true
+                }
+                i += 2
+            } else if (line[i].toString() == "*") {
+                if (line[i + 1].toString() == "*") {
+                    if (line[i + 2].toString() == "*") {
+                        if (openedStars.contains(3)) {
+                            writer.write("</i></b>")
+                            openedStars.remove(3)
+                            i += 3
+                        } else if (openedStars.contains(2)) {
+                            writer.write("</b>")
+                            openedStars.remove(2)
+                            i += 2
+                        } else if (openedStars.contains(1)) {
+                            writer.write("</i>")
+                            openedStars.remove(1)
+                            i += 1
+                        } else {
+                            writer.write("<b><i>")
+                            openedStars += 3
+                            i += 3
+                        }
+                    } else {
+                        if (openedStars.contains(2)) {
+                            writer.write("</b>")
+                            openedStars.remove(2)
+                            i += 2
+                        } else {
+                            writer.write("<b>")
+                            openedStars += 2
+                            i += 2
+                        }
+                    }
+                } else {
+                    if (openedStars.contains(1)) {
+                        openedStars.remove(1)
+                        writer.write("</i>")
+                        i++
+                    } else {
+                        openedStars += 1
+                        writer.write("<i>")
+                        i++
+                    }
+                }
+            } else {
+                writer.write(line[i].toString())
+                i++
+            }
+        }
+    }
+    writer.write("</p></body></html>")
+
+    writer.close()
 }
 
 /**
