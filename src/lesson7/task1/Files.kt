@@ -287,7 +287,7 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
 
     val openedStars = mutableListOf<Int>()
     var isOpenCross = false
-    var isHaveEmpty = false
+    var isHaveEmpty = true
 
     writer.write("<html><body><p>")
     for (line in File(inputName).readLines()) {
