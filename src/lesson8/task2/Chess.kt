@@ -245,7 +245,7 @@ fun knightTrajectory(start: Square, end: Square): List<Square> {
     cost[start.row - 1][start.column - 1] = 0
 
     while (reachable.count() > 0) {
-        val node = chooseNode(reachable, cost, end)
+        val node = reachable[0]
 
         if (node == end)
             return buildPath(start, end, previous)
@@ -261,28 +261,11 @@ fun knightTrajectory(start: Square, end: Square): List<Square> {
 
             previous[neighbor.row - 1][neighbor.column - 1] = node
             cost[neighbor.row - 1][neighbor.column - 1] =
-                cost[node.row - 1][node.column - 1] + estDistance(node, neighbor)
+                cost[node.row - 1][node.column - 1]
         }
     }
 
     return listOf()
-}
-
-fun estDistance(node: Square, goal: Square): Int =
-    ((node.row - goal.row).toDouble().pow(2) + (node.column - goal.column).toDouble().pow(2)).toInt()
-
-fun chooseNode(reachable: MutableList<Square>, cost: Array<Array<Int>>, end: Square): Square {
-    var mincost = Int.MAX_VALUE
-    var bestNode = Square(-1, -1)
-    for (node in reachable) {
-        val totalCost = cost[node.row - 1][node.column - 1] + estDistance(node, end)
-        if (mincost > totalCost) {
-            mincost = totalCost
-            bestNode = node
-        }
-    }
-
-    return bestNode
 }
 
 fun getNeighbors(node: Square, explored: MutableList<Square>): MutableList<Square> {
