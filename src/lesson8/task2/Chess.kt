@@ -2,6 +2,9 @@
 
 package lesson8.task2
 
+import java.lang.IllegalArgumentException
+import kotlin.math.pow
+
 /**
  * Клетка шахматной доски. Шахматная доска квадратная и имеет 8 х 8 клеток.
  * Поэтому, обе координаты клетки (горизонталь row, вертикаль column) могут находиться в пределах от 1 до 8.
@@ -22,7 +25,20 @@ data class Square(val column: Int, val row: Int) {
      * В нотации, колонки обозначаются латинскими буквами от a до h, а ряды -- цифрами от 1 до 8.
      * Для клетки не в пределах доски вернуть пустую строку
      */
-    fun notation(): String = TODO()
+    fun notation(): String =
+        if (!inside()) ""
+        else
+            when (column) {
+                1 -> "a$row"
+                2 -> "b$row"
+                3 -> "c$row"
+                4 -> "d$row"
+                5 -> "e$row"
+                6 -> "f$row"
+                7 -> "g$row"
+                8 -> "h$row"
+                else -> ""
+            }
 }
 
 /**
@@ -32,7 +48,22 @@ data class Square(val column: Int, val row: Int) {
  * В нотации, колонки обозначаются латинскими буквами от a до h, а ряды -- цифрами от 1 до 8.
  * Если нотация некорректна, бросить IllegalArgumentException
  */
-fun square(notation: String): Square = TODO()
+fun square(notation: String): Square =
+    if (notation.length == 2 && (notation[1].toString().toInt() in 1..8)) {
+        when (notation[0]) {
+            'a' -> Square(1, notation[1].toString().toInt())
+            'b' -> Square(2, notation[1].toString().toInt())
+            'c' -> Square(3, notation[1].toString().toInt())
+            'd' -> Square(4, notation[1].toString().toInt())
+            'e' -> Square(5, notation[1].toString().toInt())
+            'f' -> Square(6, notation[1].toString().toInt())
+            'g' -> Square(7, notation[1].toString().toInt())
+            'h' -> Square(8, notation[1].toString().toInt())
+            else -> throw IllegalArgumentException()
+        }
+    } else {
+        throw IllegalArgumentException()
+    }
 
 /**
  * Простая (2 балла)
@@ -203,4 +234,101 @@ fun knightMoveNumber(start: Square, end: Square): Int = TODO()
  *
  * Если возможно несколько вариантов самой быстрой траектории, вернуть любой из них.
  */
-fun knightTrajectory(start: Square, end: Square): List<Square> = TODO()
+fun knightTrajectory(start: Square, end: Square): List<Square> {
+    val previous = Array(8) { Array(8) { Square(0, 0) } }
+    val cost = Array(8) { Array(8) { 10 } }
+
+    val reachable = mutableListOf<Square>()
+    val explored = mutableListOf<Square>()
+
+    reachable.add(start)
+    cost[start.row - 1][start.column - 1] = 0
+
+    while (reachable.count() > 0) {
+        val node = chooseNode(reachable, cost, end)
+
+        if (node == end)
+            return buildPath(start, end, previous)
+
+        reachable.remove(node)
+        explored.add(node)
+
+        val newReachable = getNeighbors(node, explored)
+        for (neighbor in newReachable) {
+            if (!reachable.contains(neighbor))
+                reachable.add(neighbor)
+
+
+            previous[neighbor.row - 1][neighbor.column - 1] = node
+            cost[neighbor.row - 1][neighbor.column - 1] =
+                cost[node.row - 1][node.column - 1] + estDistance(node, neighbor)
+        }
+    }
+
+    return listOf()
+}
+
+fun estDistance(node: Square, goal: Square): Int =
+    ((node.row - goal.row).toDouble().pow(2) + (node.column - goal.column).toDouble().pow(2)).toInt()
+
+fun chooseNode(reachable: MutableList<Square>, cost: Array<Array<Int>>, end: Square): Square {
+    var mincost = Int.MAX_VALUE
+    var bestNode = Square(-1, -1)
+    for (node in reachable) {
+        val totalCost = cost[node.row - 1][node.column - 1] + estDistance(node, end)
+        if (mincost > totalCost) {
+            mincost = totalCost
+            bestNode = node
+        }
+    }
+
+    return bestNode
+}
+
+fun getNeighbors(node: Square, explored: MutableList<Square>): MutableList<Square> {
+    val neighbors = mutableListOf<Square>()
+
+    //region Добавление соседей
+    var neighbor = Square(node.column + 2, node.row + 1)
+    if (neighbor.inside() && !explored.contains(neighbor))
+        neighbors.add(neighbor)
+    neighbor = Square(node.column - 2, node.row - 1)
+    if (neighbor.inside() && !explored.contains(neighbor))
+        neighbors.add(neighbor)
+    neighbor = Square(node.column + 1, node.row + 2)
+    if (neighbor.inside() && !explored.contains(neighbor))
+        neighbors.add(neighbor)
+    neighbor = Square(node.column - 1, node.row - 2)
+    if (neighbor.inside() && !explored.contains(neighbor))
+        neighbors.add(neighbor)
+    neighbor = Square(node.column + 2, node.row - 1)
+    if (neighbor.inside() && !explored.contains(neighbor))
+        neighbors.add(neighbor)
+    neighbor = Square(node.column + 1, node.row - 2)
+    if (neighbor.inside() && !explored.contains(neighbor))
+        neighbors.add(neighbor)
+    neighbor = Square(node.column - 2, node.row + 1)
+    if (neighbor.inside() && !explored.contains(neighbor))
+        neighbors.add(neighbor)
+    neighbor = Square(node.column - 1, node.row + 2)
+    if (neighbor.inside() && !explored.contains(neighbor))
+        neighbors.add(neighbor)
+    //endregion
+
+    return neighbors
+}
+
+fun buildPath(start: Square, end: Square, previous: Array<Array<Square>>): List<Square> {
+    val path = mutableListOf<Square>()
+    var goal = end
+
+    while (goal != start) {
+        path.add(goal)
+        goal = previous[goal.row - 1][goal.column - 1]
+    }
+    path.add(start)
+
+    return path.reversed()
+}
+
+
