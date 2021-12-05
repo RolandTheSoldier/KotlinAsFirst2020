@@ -303,7 +303,7 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
             if (isHaveNotEmpty && isHaveEmpty)
                 writer.write("</p>")
 
-            if (isHaveEmpty)
+            if (isHaveEmpty && isHaveNotEmpty)
                 writer.write("<p>")
 
             isHaveEmpty = false
