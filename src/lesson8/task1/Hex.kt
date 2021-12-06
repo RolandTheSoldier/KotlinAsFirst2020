@@ -2,7 +2,9 @@
 
 package lesson8.task1
 
+import java.lang.IllegalArgumentException
 import kotlin.math.abs
+import kotlin.math.ceil
 import kotlin.math.max
 
 /**
@@ -72,7 +74,7 @@ data class Hexagon(val center: HexPoint, val radius: Int) {
      *
      * Вернуть true, если заданная точка находится внутри или на границе шестиугольника
      */
-    fun contains(point: HexPoint): Boolean = TODO()
+    fun contains(point: HexPoint): Boolean = radius >= point.distance(center)
 }
 
 /**
@@ -212,7 +214,63 @@ fun hexagonByThreePoints(a: HexPoint, b: HexPoint, c: HexPoint): Hexagon? {
  *
  * Пример: 13, 32, 45, 18 -- шестиугольник радиусом 3 (с центром, например, в 15)
  */
-fun minContainingHexagon(vararg points: HexPoint): Hexagon = TODO()
+fun minContainingHexagon(vararg points: HexPoint): Hexagon {
+    if (points.isEmpty())
+        throw IllegalArgumentException()
+    if (points.toSet().size == 1)
+        return Hexagon(points[0], 0)
+
+
+    var maxDistance = 0
+    var point1 = HexPoint(0, 0)
+    var point2 = HexPoint(0, 0)
+    for (i in 0..points.size - 2)
+        for (j in i until points.size) {
+            val distance = points[i].distance(points[j])
+            if (distance > maxDistance) {
+                maxDistance = distance
+                point1 = points[i]
+                point2 = points[j]
+            }
+        }
+
+    val ring1 = mutableSetOf<HexPoint>()
+    val ring2 = mutableListOf<HexPoint>()
+
+    val radius = ceil(maxDistance.toDouble() / 2).toInt()
+
+    var add = 0
+    while (true) {
+        for (i in 0 until (radius + add)) {
+            ring1 += HexPoint(point1.x - (radius + add), point1.y + i)
+            ring1 += HexPoint(point1.x + (radius + add), point1.y - i)
+            ring1 += HexPoint(point1.x - (radius + add) + i, point1.y + (radius + add))
+            ring1 += HexPoint(point1.x + i, point1.y + (radius + add) - i)
+            ring1 += HexPoint(point1.x - i, point1.y - (radius + add) + i)
+            ring1 += HexPoint(point1.x + (radius + add) - i, point1.y - (radius + add))
+
+            ring2 += HexPoint(point2.x - (radius + add), point2.y + i)
+            ring2 += HexPoint(point2.x + (radius + add), point2.y - i)
+            ring2 += HexPoint(point2.x - (radius + add) + i, point2.y + (radius + add))
+            ring2 += HexPoint(point2.x + i, point2.y + (radius + add) - i)
+            ring2 += HexPoint(point2.x - i, point2.y - (radius + add) + i)
+            ring2 += HexPoint(point2.x + (radius + add) - i, point2.y - (radius + add))
+        }
+
+        for (center in ring1.intersect(ring2)) {
+            var flag = false
+            for (point in points)
+                if (!Hexagon(center, (radius + add)).contains(point)) {
+                    flag = true
+                    break
+                }
+            if (!flag)
+                return Hexagon(center, (radius + add))
+        }
+
+        add++
+    }
+}
 
 
 
