@@ -234,43 +234,84 @@ fun minContainingHexagon(vararg points: HexPoint): Hexagon {
             }
         }
 
-    val radius = ceil(maxDistance.toDouble() / 2).toInt()
 
-    var add = 0
-    while (true) {
-        val ring1 = mutableSetOf<HexPoint>()
-        val ring2 = mutableListOf<HexPoint>()
+    var radius = ceil(maxDistance.toDouble() / 2).toInt()
+    var countIntersectLine = 0
+    while (radius < maxDistance) {
+        for (i in 0 until radius) {
+            var center = HexPoint(point1.x - radius, point1.y + i)
+            var result = checkCenter(points, center, radius, point2)
+            if (result != null) {
+                return result
+            }
 
-        for (i in 0 until (radius + add)) {
-            ring1 += HexPoint(point1.x - (radius + add), point1.y + i)
-            ring1 += HexPoint(point1.x + (radius + add), point1.y - i)
-            ring1 += HexPoint(point1.x - (radius + add) + i, point1.y + (radius + add))
-            ring1 += HexPoint(point1.x + i, point1.y + (radius + add) - i)
-            ring1 += HexPoint(point1.x - i, point1.y - (radius + add) + i)
-            ring1 += HexPoint(point1.x + (radius + add) - i, point1.y - (radius + add))
+            center = HexPoint(point1.x + radius, point1.y - i)
+            result = checkCenter(points, center, radius, point2)
+            if (result != null) {
+                if (result == Hexagon(HexPoint(0, 0), -1))
+                    countIntersectLine++
+                else
+                    return result
+            }
 
-            ring2 += HexPoint(point2.x - (radius + add), point2.y + i)
-            ring2 += HexPoint(point2.x + (radius + add), point2.y - i)
-            ring2 += HexPoint(point2.x - (radius + add) + i, point2.y + (radius + add))
-            ring2 += HexPoint(point2.x + i, point2.y + (radius + add) - i)
-            ring2 += HexPoint(point2.x - i, point2.y - (radius + add) + i)
-            ring2 += HexPoint(point2.x + (radius + add) - i, point2.y - (radius + add))
+            center = HexPoint(point1.x - radius + i, point1.y + radius)
+            result = checkCenter(points, center, radius, point2)
+            if (result != null) {
+                if (result == Hexagon(HexPoint(0, 0), -1))
+                    countIntersectLine++
+                else
+                    return result
+            }
+
+            center = HexPoint(point1.x + i, point1.y + radius - i)
+            result = checkCenter(points, center, radius, point2)
+            if (result != null) {
+                if (result == Hexagon(HexPoint(0, 0), -1))
+                    countIntersectLine++
+                else
+                    return result
+            }
+
+            center = HexPoint(point1.x - i, point1.y - radius + i)
+            result = checkCenter(points, center, radius, point2)
+            if (result != null) {
+                if (result == Hexagon(HexPoint(0, 0), -1))
+                    countIntersectLine++
+                else
+                    return result
+            }
+
+            center = HexPoint(point1.x + radius - i, point1.y - radius)
+            result = checkCenter(points, center, radius, point2)
+            if (result != null) {
+                if (result == Hexagon(HexPoint(0, 0), -1))
+                    countIntersectLine++
+                else
+                    return result
+            }
         }
 
-        for (center in ring1.intersect(ring2)) {
-            var flag = false
-            for (point in points)
-                if (!Hexagon(center, (radius + add)).contains(point)) {
-                    flag = true
-                    break
-                }
-            if (!flag)
-                return Hexagon(center, (radius + add))
-        }
-
-        add++
+        radius++
     }
+
+    return Hexagon(HexPoint(0, 0), 0)
 }
 
-
+fun checkCenter(
+    points: Array<out HexPoint>,
+    center: HexPoint,
+    radius: Int,
+    point2: HexPoint
+): Hexagon? {
+    if (Hexagon(center, radius).contains(point2)) {
+        var flag = false
+        for (point in points) {
+            if (!Hexagon(center, radius).contains(point))
+                flag = true
+        }
+        if (!flag)
+            return Hexagon(center, radius)
+    }
+    return null
+}
 
