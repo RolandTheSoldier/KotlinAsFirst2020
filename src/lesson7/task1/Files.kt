@@ -3,6 +3,7 @@
 package lesson7.task1
 
 import java.io.File
+import kotlin.math.min
 import kotlin.math.pow
 
 // Урок 7: работа с файлами
@@ -567,49 +568,25 @@ fun printDivisionProcess(lhv: Int, rhv: Int, outputName: String) {
     for (curNumber in dataDiv) {
         writer.newLine()
 
-        var startPosition = endPosition - curNumber.toString().length
+        writer.write("-$curNumber".padStart(endPosition + 1))
 
-        //region Результат умножения на число
-        for (j in 0 until startPosition)
-            writer.write(" ")
-        writer.write("-$curNumber")
-        //endregion
-
-        //region Результат деления (однократно)
         if (isFirstIteration) {
-            for (j in endPosition + 1 until divResultPosition)
-                writer.write(" ")
-            writer.write("$divResult")
+            writer.write("$divResult".padStart(divResultPosition - endPosition + divResult.toString().length - 1))
             isFirstIteration = false
         }
-        //endregion
 
-        //region "Чёрточки"
         writer.newLine()
+        val startPosition = min(endPosition - curNumber.toString().length, endPosition - prevNumber.toString().length + 1)
+        writer.write("".padStart(startPosition).padEnd(endPosition + 1, '-'))
 
-        startPosition = Math.min(startPosition, endPosition - prevNumber.toString().length + 1)
-
-        for (j in 0 until startPosition)
-            writer.write(" ")
-        for (j in startPosition until endPosition + 1)
-            writer.write("-")
-        //endregion
-
-        //region Остаток
         writer.newLine()
-
         val reminder = prevNumber - curNumber
-
-        startPosition = endPosition - reminder.toString().length + 1
-        for (j in 0 until startPosition)
-            writer.write(" ")
-        writer.write("$reminder")
+        writer.write("$reminder".padStart(endPosition + 1))
 
         if (endOfNumber == endPosition)
             break
 
         writer.write(lhvString[endPosition + 1].toString())
-        //endregion
 
         prevNumber = ("$reminder" + lhvString[endPosition + 1].toString()).toInt()
         endPosition++

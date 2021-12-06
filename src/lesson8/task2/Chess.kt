@@ -238,7 +238,7 @@ fun knightTrajectory(start: Square, end: Square): List<Square> {
     val previous = Array(8) { Array(8) { Square(0, 0) } }
     val cost = Array(8) { Array(8) { 10 } }
 
-    val reachable = mutableListOf<Square>()
+    val reachable = ArrayDeque<Square>()
     val explored = mutableListOf<Square>()
 
     reachable.add(start)
@@ -255,7 +255,7 @@ fun knightTrajectory(start: Square, end: Square): List<Square> {
 
         val newReachable = getNeighbors(node, explored)
         for (neighbor in newReachable) {
-            if (!reachable.contains(neighbor))
+            if (!reachable.toSet().contains(neighbor))
                 reachable.add(neighbor)
 
 

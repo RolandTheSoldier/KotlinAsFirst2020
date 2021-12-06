@@ -234,13 +234,13 @@ fun minContainingHexagon(vararg points: HexPoint): Hexagon {
             }
         }
 
-    val ring1 = mutableSetOf<HexPoint>()
-    val ring2 = mutableListOf<HexPoint>()
-
     val radius = ceil(maxDistance.toDouble() / 2).toInt()
 
     var add = 0
     while (true) {
+        val ring1 = mutableSetOf<HexPoint>()
+        val ring2 = mutableListOf<HexPoint>()
+
         for (i in 0 until (radius + add)) {
             ring1 += HexPoint(point1.x - (radius + add), point1.y + i)
             ring1 += HexPoint(point1.x + (radius + add), point1.y - i)
