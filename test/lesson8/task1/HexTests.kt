@@ -116,15 +116,15 @@ class HexTests {
     @Tag("20")
     fun hexagonByThreePoints() {
         assertEquals(
+            3,
+            hexagonByThreePoints(HexPoint(2, 3), HexPoint(3, 3), HexPoint(5, 3))?.radius
+        )
+        assertEquals(
             Hexagon(HexPoint(4, 2), 2),
             hexagonByThreePoints(HexPoint(3, 1), HexPoint(2, 3), HexPoint(4, 4))
         )
         assertNull(
             hexagonByThreePoints(HexPoint(3, 1), HexPoint(2, 3), HexPoint(5, 4))
-        )
-        assertEquals(
-            3,
-            hexagonByThreePoints(HexPoint(2, 3), HexPoint(3, 3), HexPoint(5, 3))?.radius
         )
         assertEquals(
             Hexagon(HexPoint(2, 3), 0),
@@ -135,10 +135,31 @@ class HexTests {
     @Test
     @Tag("20")
     fun minContainingHexagon() {
-        val points = arrayOf(HexPoint(3, 1), HexPoint(3, 2), HexPoint(5, 4), HexPoint(8, 1))
-        val result = minContainingHexagon(*points)
+        var points = arrayOf(HexPoint(3, 1), HexPoint(3, 2), HexPoint(5, 4), HexPoint(8, 1))
+        var result = minContainingHexagon(*points)
         assertEquals(3, result.radius)
         assertTrue(points.all { result.contains(it) })
+
+        points = arrayOf(
+            HexPoint(687, -558),
+            HexPoint(283, -999),
+            HexPoint(-1000, -999),
+            HexPoint(207, -1000),
+            HexPoint(-558, -486),
+            HexPoint(-558, 2),
+            HexPoint(-633, -1000),
+            HexPoint(-1000, -557),
+            HexPoint(798, -1000),
+            HexPoint(-557, 319),
+            HexPoint(-999, 989),
+            HexPoint(-1000, 989),
+            HexPoint(94, -245),
+            HexPoint(-557, -439)
+        )
+        result = minContainingHexagon(*points)
+        assertEquals(1329, result.radius)
+        assertTrue(points.all { result.contains(it) })
+
     }
 
 }

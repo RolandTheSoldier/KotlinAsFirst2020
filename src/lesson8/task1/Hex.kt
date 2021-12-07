@@ -2,7 +2,6 @@
 
 package lesson8.task1
 
-import java.lang.IllegalArgumentException
 import kotlin.math.abs
 import kotlin.math.ceil
 import kotlin.math.max
@@ -75,6 +74,10 @@ data class Hexagon(val center: HexPoint, val radius: Int) {
      * Вернуть true, если заданная точка находится внутри или на границе шестиугольника
      */
     fun contains(point: HexPoint): Boolean = radius >= point.distance(center)
+
+    fun containsOn(point: HexPoint): Boolean = radius == point.distance(center)
+
+    fun containsIn(point: HexPoint): Boolean = radius > point.distance(center)
 }
 
 /**
@@ -201,7 +204,80 @@ fun pathBetweenHexes(from: HexPoint, to: HexPoint): List<HexPoint> = TODO()
  * Если все три точки совпадают, вернуть шестиугольник нулевого радиуса с центром в данной точке.
  */
 fun hexagonByThreePoints(a: HexPoint, b: HexPoint, c: HexPoint): Hexagon? {
-    TODO()
+    if (a == b && a == c)
+        return Hexagon(a, 0)
+
+    var maxDistance = a.distance(b)
+    var point = a
+    val points = mutableListOf(a, b, c)
+
+    if (a.distance(c) > maxDistance)
+        maxDistance = a.distance(c)
+
+    if (b.distance(c) > maxDistance) {
+        maxDistance = b.distance(c)
+        point = b
+    }
+
+    points.remove(point)
+
+    var radius = ceil(maxDistance.toDouble() / 2).toInt()
+    while (true) {
+        var countIn = 0
+        for (i in 0 until radius) {
+            var center = HexPoint(point.x - radius, point.y + i)
+            if (Hexagon(center, radius).containsOn(points[0]) &&
+                Hexagon(center, radius).containsOn(points[1])
+            )
+                return Hexagon(center, radius)
+            if (Hexagon(center, radius).containsIn(points[0]) && Hexagon(center, radius).containsIn(points[1]))
+                countIn++
+
+            center = HexPoint(point.x + radius, point.y - i)
+            if (Hexagon(center, radius).containsOn(points[0]) &&
+                Hexagon(center, radius).containsOn(points[1])
+            )
+                return Hexagon(center, radius)
+            if (Hexagon(center, radius).containsIn(points[0]) && Hexagon(center, radius).containsIn(points[1]))
+                countIn++
+
+            center = HexPoint(point.x - radius + i, point.y + radius)
+            if (Hexagon(center, radius).containsOn(points[0]) &&
+                Hexagon(center, radius).containsOn(points[1])
+            )
+                return Hexagon(center, radius)
+            if (Hexagon(center, radius).containsIn(points[0]) && Hexagon(center, radius).containsIn(points[1]))
+                countIn++
+
+            center = HexPoint(point.x + i, point.y + radius - i)
+            if (Hexagon(center, radius).containsOn(points[0]) &&
+                Hexagon(center, radius).containsOn(points[1])
+            )
+                return Hexagon(center, radius)
+            if (Hexagon(center, radius).containsIn(points[0]) && Hexagon(center, radius).containsIn(points[1]))
+                countIn++
+
+            center = HexPoint(point.x - i, point.y - radius + i)
+            if (Hexagon(center, radius).containsOn(points[0]) &&
+                Hexagon(center, radius).containsOn(points[1])
+            )
+                return Hexagon(center, radius)
+            if (Hexagon(center, radius).containsIn(points[0]) && Hexagon(center, radius).containsIn(points[1]))
+                countIn++
+
+            center = HexPoint(point.x + radius - i, point.y - radius)
+            if (Hexagon(center, radius).containsOn(points[0]) &&
+                Hexagon(center, radius).containsOn(points[1])
+            )
+                return Hexagon(center, radius)
+            if (Hexagon(center, radius).containsIn(points[0]) && Hexagon(center, radius).containsIn(points[1]))
+                countIn++
+        }
+        if (countIn >= 2)
+            return null
+
+        radius++
+    }
 }
 
 /**
@@ -215,103 +291,6 @@ fun hexagonByThreePoints(a: HexPoint, b: HexPoint, c: HexPoint): Hexagon? {
  * Пример: 13, 32, 45, 18 -- шестиугольник радиусом 3 (с центром, например, в 15)
  */
 fun minContainingHexagon(vararg points: HexPoint): Hexagon {
-    if (points.isEmpty())
-        throw IllegalArgumentException()
-    if (points.toSet().size == 1)
-        return Hexagon(points[0], 0)
-
-
-    var maxDistance = 0
-    var point1 = HexPoint(0, 0)
-    var point2 = HexPoint(0, 0)
-    for (i in 0..points.size - 2)
-        for (j in i until points.size) {
-            val distance = points[i].distance(points[j])
-            if (distance > maxDistance) {
-                maxDistance = distance
-                point1 = points[i]
-                point2 = points[j]
-            }
-        }
-
-
-    var radius = ceil(maxDistance.toDouble() / 2).toInt()
-    var countIntersectLine = 0
-    while (radius < maxDistance) {
-        for (i in 0 until radius) {
-            var center = HexPoint(point1.x - radius, point1.y + i)
-            var result = checkCenter(points, center, radius, point2)
-            if (result != null) {
-                return result
-            }
-
-            center = HexPoint(point1.x + radius, point1.y - i)
-            result = checkCenter(points, center, radius, point2)
-            if (result != null) {
-                if (result == Hexagon(HexPoint(0, 0), -1))
-                    countIntersectLine++
-                else
-                    return result
-            }
-
-            center = HexPoint(point1.x - radius + i, point1.y + radius)
-            result = checkCenter(points, center, radius, point2)
-            if (result != null) {
-                if (result == Hexagon(HexPoint(0, 0), -1))
-                    countIntersectLine++
-                else
-                    return result
-            }
-
-            center = HexPoint(point1.x + i, point1.y + radius - i)
-            result = checkCenter(points, center, radius, point2)
-            if (result != null) {
-                if (result == Hexagon(HexPoint(0, 0), -1))
-                    countIntersectLine++
-                else
-                    return result
-            }
-
-            center = HexPoint(point1.x - i, point1.y - radius + i)
-            result = checkCenter(points, center, radius, point2)
-            if (result != null) {
-                if (result == Hexagon(HexPoint(0, 0), -1))
-                    countIntersectLine++
-                else
-                    return result
-            }
-
-            center = HexPoint(point1.x + radius - i, point1.y - radius)
-            result = checkCenter(points, center, radius, point2)
-            if (result != null) {
-                if (result == Hexagon(HexPoint(0, 0), -1))
-                    countIntersectLine++
-                else
-                    return result
-            }
-        }
-
-        radius++
-    }
-
-    return Hexagon(HexPoint(0, 0), 0)
-}
-
-fun checkCenter(
-    points: Array<out HexPoint>,
-    center: HexPoint,
-    radius: Int,
-    point2: HexPoint
-): Hexagon? {
-    if (Hexagon(center, radius).contains(point2)) {
-        var flag = false
-        for (point in points) {
-            if (!Hexagon(center, radius).contains(point))
-                flag = true
-        }
-        if (!flag)
-            return Hexagon(center, radius)
-    }
-    return null
+    TODO()
 }
 
