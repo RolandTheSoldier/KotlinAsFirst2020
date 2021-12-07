@@ -226,6 +226,7 @@ fun hexagonByThreePoints(a: HexPoint, b: HexPoint, c: HexPoint): Hexagon? {
         point3 = a
     }
 
+    var countOfOut = 0
     var radius = ceil(maxDistance.toDouble() / 2).toInt()
     while (true) {
         for (i in 0 until radius) {
@@ -234,7 +235,7 @@ fun hexagonByThreePoints(a: HexPoint, b: HexPoint, c: HexPoint): Hexagon? {
                 if (Hexagon(center, radius).containsOn(point3))
                     return Hexagon(center, radius)
                 else if (!Hexagon(center, radius).containsIn(point3))
-                    return null
+                    countOfOut++
             }
 
             center = HexPoint(point1.x + radius, point1.y - i)
@@ -242,7 +243,7 @@ fun hexagonByThreePoints(a: HexPoint, b: HexPoint, c: HexPoint): Hexagon? {
                 if (Hexagon(center, radius).containsOn(point3))
                     return Hexagon(center, radius)
                 else if (!Hexagon(center, radius).containsIn(point3))
-                    return null
+                    countOfOut++
             }
 
             center = HexPoint(point1.x - radius + i, point1.y + radius)
@@ -250,7 +251,7 @@ fun hexagonByThreePoints(a: HexPoint, b: HexPoint, c: HexPoint): Hexagon? {
                 if (Hexagon(center, radius).containsOn(point3))
                     return Hexagon(center, radius)
                 else if (!Hexagon(center, radius).containsIn(point3))
-                    return null
+                    countOfOut++
             }
 
             center = HexPoint(point1.x + i, point1.y + radius - i)
@@ -258,7 +259,7 @@ fun hexagonByThreePoints(a: HexPoint, b: HexPoint, c: HexPoint): Hexagon? {
                 if (Hexagon(center, radius).containsOn(point3))
                     return Hexagon(center, radius)
                 else if (!Hexagon(center, radius).containsIn(point3))
-                    return null
+                    countOfOut++
             }
 
             center = HexPoint(point1.x - i, point1.y - radius + i)
@@ -266,7 +267,7 @@ fun hexagonByThreePoints(a: HexPoint, b: HexPoint, c: HexPoint): Hexagon? {
                 if (Hexagon(center, radius).containsOn(point3))
                     return Hexagon(center, radius)
                 else if (!Hexagon(center, radius).containsIn(point3))
-                    return null
+                    countOfOut++
             }
 
             center = HexPoint(point1.x + radius - i, point1.y - radius)
@@ -274,9 +275,11 @@ fun hexagonByThreePoints(a: HexPoint, b: HexPoint, c: HexPoint): Hexagon? {
                 if (Hexagon(center, radius).containsOn(point3))
                     return Hexagon(center, radius)
                 else if (!Hexagon(center, radius).containsIn(point3))
-                    return null
+                    countOfOut++
             }
         }
+        if (countOfOut == 1)
+            return null
 
         radius++
     }
