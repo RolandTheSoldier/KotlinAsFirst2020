@@ -116,6 +116,10 @@ class HexTests {
     @Tag("20")
     fun hexagonByThreePoints() {
         assertEquals(
+            1362,
+            hexagonByThreePoints(HexPoint(126, -1000), HexPoint(805, -558), HexPoint(-557, -1000))?.radius
+        )
+        assertEquals(
             3,
             hexagonByThreePoints(HexPoint(2, 3), HexPoint(3, 3), HexPoint(5, 3))?.radius
         )

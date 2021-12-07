@@ -208,73 +208,75 @@ fun hexagonByThreePoints(a: HexPoint, b: HexPoint, c: HexPoint): Hexagon? {
         return Hexagon(a, 0)
 
     var maxDistance = a.distance(b)
-    var point = a
-    val points = mutableListOf(a, b, c)
+    var point1 = a
+    var point2 = b
+    var point3 = c
 
-    if (a.distance(c) > maxDistance)
+    if (a.distance(c) > maxDistance) {
         maxDistance = a.distance(c)
+        point1 = a
+        point2 = c
+        point3 = b
+    }
 
     if (b.distance(c) > maxDistance) {
         maxDistance = b.distance(c)
-        point = b
+        point1 = b
+        point2 = c
+        point3 = a
     }
-
-    points.remove(point)
 
     var radius = ceil(maxDistance.toDouble() / 2).toInt()
     while (true) {
-        var countIn = 0
         for (i in 0 until radius) {
-            var center = HexPoint(point.x - radius, point.y + i)
-            if (Hexagon(center, radius).containsOn(points[0]) &&
-                Hexagon(center, radius).containsOn(points[1])
-            )
-                return Hexagon(center, radius)
-            if (Hexagon(center, radius).containsIn(points[0]) && Hexagon(center, radius).containsIn(points[1]))
-                countIn++
+            var center = HexPoint(point1.x - radius, point1.y + i)
+            if (Hexagon(center, radius).containsOn(point2)) {
+                if (Hexagon(center, radius).containsOn(point3))
+                    return Hexagon(center, radius)
+                else if (!Hexagon(center, radius).containsIn(point3))
+                    return null
+            }
 
-            center = HexPoint(point.x + radius, point.y - i)
-            if (Hexagon(center, radius).containsOn(points[0]) &&
-                Hexagon(center, radius).containsOn(points[1])
-            )
-                return Hexagon(center, radius)
-            if (Hexagon(center, radius).containsIn(points[0]) && Hexagon(center, radius).containsIn(points[1]))
-                countIn++
+            center = HexPoint(point1.x + radius, point1.y - i)
+            if (Hexagon(center, radius).containsOn(point2)) {
+                if (Hexagon(center, radius).containsOn(point3))
+                    return Hexagon(center, radius)
+                else if (!Hexagon(center, radius).containsIn(point3))
+                    return null
+            }
 
-            center = HexPoint(point.x - radius + i, point.y + radius)
-            if (Hexagon(center, radius).containsOn(points[0]) &&
-                Hexagon(center, radius).containsOn(points[1])
-            )
-                return Hexagon(center, radius)
-            if (Hexagon(center, radius).containsIn(points[0]) && Hexagon(center, radius).containsIn(points[1]))
-                countIn++
+            center = HexPoint(point1.x - radius + i, point1.y + radius)
+            if (Hexagon(center, radius).containsOn(point2)) {
+                if (Hexagon(center, radius).containsOn(point3))
+                    return Hexagon(center, radius)
+                else if (!Hexagon(center, radius).containsIn(point3))
+                    return null
+            }
 
-            center = HexPoint(point.x + i, point.y + radius - i)
-            if (Hexagon(center, radius).containsOn(points[0]) &&
-                Hexagon(center, radius).containsOn(points[1])
-            )
-                return Hexagon(center, radius)
-            if (Hexagon(center, radius).containsIn(points[0]) && Hexagon(center, radius).containsIn(points[1]))
-                countIn++
+            center = HexPoint(point1.x + i, point1.y + radius - i)
+            if (Hexagon(center, radius).containsOn(point2)) {
+                if (Hexagon(center, radius).containsOn(point3))
+                    return Hexagon(center, radius)
+                else if (!Hexagon(center, radius).containsIn(point3))
+                    return null
+            }
 
-            center = HexPoint(point.x - i, point.y - radius + i)
-            if (Hexagon(center, radius).containsOn(points[0]) &&
-                Hexagon(center, radius).containsOn(points[1])
-            )
-                return Hexagon(center, radius)
-            if (Hexagon(center, radius).containsIn(points[0]) && Hexagon(center, radius).containsIn(points[1]))
-                countIn++
+            center = HexPoint(point1.x - i, point1.y - radius + i)
+            if (Hexagon(center, radius).containsOn(point2)) {
+                if (Hexagon(center, radius).containsOn(point3))
+                    return Hexagon(center, radius)
+                else if (!Hexagon(center, radius).containsIn(point3))
+                    return null
+            }
 
-            center = HexPoint(point.x + radius - i, point.y - radius)
-            if (Hexagon(center, radius).containsOn(points[0]) &&
-                Hexagon(center, radius).containsOn(points[1])
-            )
-                return Hexagon(center, radius)
-            if (Hexagon(center, radius).containsIn(points[0]) && Hexagon(center, radius).containsIn(points[1]))
-                countIn++
+            center = HexPoint(point1.x + radius - i, point1.y - radius)
+            if (Hexagon(center, radius).containsOn(point2)) {
+                if (Hexagon(center, radius).containsOn(point3))
+                    return Hexagon(center, radius)
+                else if (!Hexagon(center, radius).containsIn(point3))
+                    return null
+            }
         }
-        if (countIn >= 2)
-            return null
 
         radius++
     }
