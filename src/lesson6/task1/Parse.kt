@@ -2,6 +2,8 @@
 
 package lesson6.task1
 
+import kotlin.math.max
+
 // Урок 6: разбор строк, исключения
 // Максимальное количество баллов = 13
 // Рекомендуемое количество баллов = 11
@@ -47,6 +49,7 @@ fun timeSecondsToStr(seconds: Int): String {
 /**
  * Пример: консольный ввод
  */
+/*
 fun main() {
     println("Введите время в формате ЧЧ:ММ:СС")
     val line = readLine()
@@ -61,7 +64,7 @@ fun main() {
         println("Достигнут <конец файла> в процессе чтения строки. Программа прервана")
     }
 }
-
+*/
 
 /**
  * Средняя (4 балла)
@@ -127,7 +130,20 @@ fun bestLongJump(jumps: String): Int = TODO()
  * При нарушении формата входной строки, а также в случае отсутствия удачных попыток,
  * вернуть -1.
  */
-fun bestHighJump(jumps: String): Int = TODO()
+fun bestHighJump(jumps: String): Int {
+    val list = mutableListOf<String>()
+    val reg = Regex("""[0-9]{3}\s\+""").findAll(jumps).forEach { list.add(it.value) }
+    if (list.isEmpty()) return -1
+
+    var maxResult = 0
+    for (result in list) {
+        val current = result.substringBefore(" ").toInt()
+        // println(current)
+        if (current > maxResult) maxResult = current
+        // catch (e: NumberFormatException) {
+    }
+    return maxResult
+}
 
 /**
  * Сложная (6 баллов)
