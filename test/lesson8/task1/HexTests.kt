@@ -14,7 +14,6 @@ class HexTests {
         assertEquals(5, HexPoint(6, 1).distance(HexPoint(1, 4)))
         assertEquals(8, HexPoint(8, 0).distance(HexPoint(0, 6)))
         assertEquals(2, HexPoint(3, 4).distance(HexPoint(5, 2)))
-        assertEquals(922, HexPoint(-78, -558).distance(HexPoint(-1000, -843)))
     }
 
     @Test
