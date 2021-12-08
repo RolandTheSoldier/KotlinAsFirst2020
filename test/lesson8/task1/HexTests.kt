@@ -14,7 +14,7 @@ class HexTests {
         assertEquals(5, HexPoint(6, 1).distance(HexPoint(1, 4)))
         assertEquals(8, HexPoint(8, 0).distance(HexPoint(0, 6)))
         assertEquals(2, HexPoint(3, 4).distance(HexPoint(5, 2)))
-        assertEquals(194, HexPoint(-558, -1000).distance(HexPoint(-557, -807)))
+        assertEquals(922, HexPoint(-78, -558).distance(HexPoint(-1000, -843)))
     }
 
     @Test
@@ -116,6 +116,10 @@ class HexTests {
     @Tag("20")
     fun hexagonByThreePoints() {
         assertEquals(
+            922,
+            hexagonByThreePoints(HexPoint(-1000, -558), HexPoint(-1000, -843), HexPoint(844, -999))?.radius
+        )
+        assertEquals(
             3,
             hexagonByThreePoints(HexPoint(2, 3), HexPoint(3, 3), HexPoint(5, 3))?.radius
         )
@@ -143,12 +147,12 @@ class HexTests {
     @Test
     @Tag("20")
     fun minContainingHexagon() {
-        //var points = arrayOf(HexPoint(3, 1), HexPoint(3, 2), HexPoint(5, 4), HexPoint(8, 1))
-        //var result = minContainingHexagon(*points)
-        //assertEquals(3, result.radius)
-        //assertTrue(points.all { result.contains(it) })
+        var points = arrayOf(HexPoint(3, 1), HexPoint(3, 2), HexPoint(5, 4), HexPoint(8, 1))
+        var result = minContainingHexagon(*points)
+        assertEquals(3, result.radius)
+        assertTrue(points.all { result.contains(it) })
 
-        var points = arrayOf(
+        points = arrayOf(
             HexPoint(687, -558),
             HexPoint(283, -999),
             HexPoint(-1000, -999),
@@ -164,7 +168,7 @@ class HexTests {
             HexPoint(94, -245),
             HexPoint(-557, -439)
         )
-        var result = minContainingHexagon(*points)
+        result = minContainingHexagon(*points)
         assertEquals(1329, result.radius)
         assertTrue(points.all { result.contains(it) })
 
