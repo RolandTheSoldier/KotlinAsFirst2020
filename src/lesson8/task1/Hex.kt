@@ -76,8 +76,6 @@ data class Hexagon(val center: HexPoint, val radius: Int) {
     fun contains(point: HexPoint): Boolean = radius >= point.distance(center)
 
     fun containsOn(point: HexPoint): Boolean = radius == point.distance(center)
-
-    fun containsIn(point: HexPoint): Boolean = radius > point.distance(center)
 }
 
 /**
