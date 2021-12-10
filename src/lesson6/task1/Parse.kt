@@ -2,6 +2,7 @@
 
 package lesson6.task1
 
+import kotlin.math.exp
 import kotlin.math.max
 
 // Урок 6: разбор строк, исключения
@@ -132,17 +133,8 @@ fun bestLongJump(jumps: String): Int = TODO()
  */
 fun bestHighJump(jumps: String): Int {
     val list = mutableListOf<String>()
-    val reg = Regex("""[0-9]{3}\s\+""").findAll(jumps).forEach { list.add(it.value) }
-    if (list.isEmpty()) return -1
-
-    var maxResult = 0
-    for (result in list) {
-        val current = result.substringBefore(" ").toInt()
-        // println(current)
-        if (current > maxResult) maxResult = current
-        // catch (e: NumberFormatException) {
-    }
-    return maxResult
+    Regex("""[0-9]+(?=\s\+)""").findAll(jumps).forEach { list.add(it.value) }
+    return if (list.isNotEmpty()) list.maxOrNull()!!.toInt() else -1
 }
 
 /**
@@ -154,7 +146,25 @@ fun bestHighJump(jumps: String): Int {
  * Вернуть значение выражения (6 для примера).
  * Про нарушении формата входной строки бросить исключение IllegalArgumentException
  */
-fun plusMinus(expression: String): Int = TODO()
+fun plusMinus(expression: String): Int {
+    if (!Regex("""\d+(\s(\+|-)\s\d+)*""").matches(expression))
+        throw java.lang.IllegalArgumentException()
+
+    val list = Regex("""\s""").split(expression)
+    var checkSign = true
+    var sum = 0
+    for (part in list) {
+        if (part == "+" || part == "-") {
+            checkSign = part == "+"
+            continue
+        }
+        if (checkSign)
+            sum += part.toInt()
+        else
+            sum -= part.toInt()
+    }
+    return sum
+}
 
 /**
  * Сложная (6 баллов)

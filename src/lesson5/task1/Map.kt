@@ -222,8 +222,7 @@ fun extractRepeats(list: List<String>): Map<String, Int> {
     val map = mutableMapOf<String, Int>()
     for (str in list) {
         if (map.containsKey(str)) {
-            val value = map[str]
-            map[str] = (value ?: 0) + 1
+            map[str] = map[str]!! + 1
         } else {
             map[str] = 1
         }
