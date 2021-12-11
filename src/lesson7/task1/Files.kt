@@ -2,6 +2,7 @@
 
 package lesson7.task1
 
+import kotlin.math.*
 import java.io.File
 
 // Урок 7: работа с файлами
@@ -63,7 +64,13 @@ fun alignFile(inputName: String, lineLength: Int, outputName: String) {
  * Подчёркивание в середине и/или в конце строк значения не имеет.
  */
 fun deleteMarked(inputName: String, outputName: String) {
-    TODO()
+    val writer = File(outputName).bufferedWriter()
+    for (line in File(inputName).readLines()) {
+        if (line.startsWith("_")) continue
+        writer.write(line)
+        writer.newLine()
+    }
+    writer.close()
 }
 
 /**
@@ -75,8 +82,9 @@ fun deleteMarked(inputName: String, outputName: String) {
  * Регистр букв игнорировать, то есть буквы е и Е считать одинаковыми.
  *
  */
-fun countSubstrings(inputName: String, substrings: List<String>): Map<String, Int> = TODO()
-
+fun countSubstrings(inputName: String, substrings: List<String>): Map<String, Int> {
+    TODO()
+}
 
 /**
  * Средняя (12 баллов)
@@ -144,7 +152,65 @@ fun centerFile(inputName: String, outputName: String) {
  * 8) Если входной файл удовлетворяет требованиям 1-7, то он должен быть в точности идентичен выходному файлу
  */
 fun alignFileByWidth(inputName: String, outputName: String) {
-    TODO()
+
+    val listDivided = mutableListOf<MutableList<String>>()
+    val listIn = (File(inputName).readLines()).toMutableList()
+    val listOfLengths = mutableListOf<Int>()
+    var maxLength = 0
+    var indexOfMaxString = 0
+    var strNoSpace: Int
+
+    for (str in listIn) {
+        strNoSpace = str.replace(Regex("""\s+"""), "").length
+        if (strNoSpace > maxLength) {
+            maxLength = strNoSpace
+            indexOfMaxString = listDivided.size
+        }
+        if (strNoSpace == 0) listDivided.add(mutableListOf(""))
+        else listDivided.add(str.split(Regex("""\s+""")).toMutableList())
+        listOfLengths.add(strNoSpace)
+    }
+
+    for (list in listDivided) {
+        list.removeAt(0)
+    }
+
+    maxLength += listDivided[indexOfMaxString].size - 1
+    val writer = File(outputName).bufferedWriter()
+    var index = -1
+
+    for (list in listDivided) {
+        ++index
+        if (listOfLengths[index] == 0) {
+            writer.newLine()
+            continue
+        }
+        if (list.size == 1) {
+            writer.write(list[0])
+            writer.newLine()
+            continue
+        }
+
+        val spaceSize = (maxLength - listOfLengths[index]) / (list.size - 1)
+        var remainderOfSpace = (maxLength - listOfLengths[index]) % (list.size - 1)
+        var countSpaces = 0
+
+        for (word in list) {
+            writer.write(word)
+            ++countSpaces
+            if (countSpaces == list.size) break
+            for (time in 1..spaceSize)
+                writer.write(" ")
+            if (remainderOfSpace > 0) {
+                writer.write(" ")
+                --remainderOfSpace
+            }
+        }
+        writer.newLine()
+    }
+
+    writer.close()
+
 }
 
 /**
@@ -427,7 +493,6 @@ fun printMultiplicationProcess(lhv: Int, rhv: Int, outputName: String) {
     TODO()
 }
 
-
 /**
  * Сложная (25 баллов)
  *
@@ -449,6 +514,103 @@ fun printMultiplicationProcess(lhv: Int, rhv: Int, outputName: String) {
  *
  */
 fun printDivisionProcess(lhv: Int, rhv: Int, outputName: String) {
-    TODO()
+
+    val ten = 10                               // Десять.
+
+    fun findDigit(n: Int, amount: Int): Int {
+
+        return if (n != 1)
+            n % ten.toDouble().pow(amount).toInt() / ten.toDouble().pow(amount - 1).toInt()
+        else 1
+    }
+
+
+    fun countDigits(n: Int): Int {
+        var numOfDigits = 0
+        var num = n
+        while (num > 0) {
+            num /= 10
+            ++numOfDigits
+        }
+        return if (n != 0) numOfDigits else 1
+    }
+
+
+    val writer = File(outputName).bufferedWriter()
+
+    val quotient = lhv / rhv                    // Частное
+    val remainder = lhv % rhv                   // Конечный остаток от деления
+
+    var space = 2                               // Отступ (начальный)
+    var checkDigit = 0                          // Проверка нужной цифры
+    var dent = lhv                              // Делимое
+    var numOfDigits = countDigits(dent)         // Количество цифр
+    var amount = 0                              // Количество пробелов (вторая строка)
+
+    for (i in 1..numOfDigits) {
+        if (lhv / (ten.toDouble().pow(numOfDigits - i).toInt()) / rhv > 0) {
+            dent = lhv / (ten.toDouble().pow(numOfDigits - i).toInt())
+            //  dent = dent / rhv * rhv
+            amount = numOfDigits - i
+            checkDigit = findDigit(lhv, amount)
+            break
+        }
+        if (i == numOfDigits) dent = 0
+    }                                           // Теперь dent - первичная делимая часть
+
+    writer.write("  $lhv | $rhv")
+
+    writer.newLine()
+    writer.write(" -${dent - (dent % rhv)}")
+    for (i in 1..amount) writer.write(" ")
+    writer.write("   $quotient")
+
+    writer.newLine()
+    for (i in 1 until space) writer.write(" ")
+    for (i in 1..countDigits(dent) + 1) writer.write("-")
+
+    // amount надо уменьшать на -1
+
+    while (amount > 0) {       //(dent > rhv) {
+        space += countDigits(dent) - countDigits(dent % rhv)
+        dent %= rhv      // * ten + checkDigit
+
+        writer.newLine()
+        for (i in 1..space) writer.write(" ")
+        writer.write(dent)
+        writer.write(checkDigit)
+
+        dent = dent * ten + checkDigit
+
+        writer.newLine()
+        for(i in 1..space)
+            writer.write("")
+
+        --amount
+        checkDigit = findDigit(lhv, amount)
+        dent = dent * ten + checkDigit
+
+    }
+
 }
 
+/**
+ * Сложная (25 баллов)
+ *
+ * Вывести в выходной файл процесс деления столбиком числа lhv (> 0) на число rhv (> 0).
+ *
+ * Пример (для lhv == 19935, rhv == 22):
+  19935 | 22
+ -198     906
+ ----
+    13
+    -0
+    --
+    135
+   -132
+   ----
+      3
+
+ * Используемые пробелы, отступы и дефисы должны в точности соответствовать примеру.
+ *
+ */
