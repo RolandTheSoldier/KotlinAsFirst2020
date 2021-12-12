@@ -4,6 +4,7 @@ package lesson7.task1
 
 import kotlin.math.*
 import java.io.File
+import kotlin.system.exitProcess
 
 // Урок 7: работа с файлами
 // Урок интегральный, поэтому его задачи имеют сильно увеличенную стоимость
@@ -153,8 +154,14 @@ fun centerFile(inputName: String, outputName: String) {
  */
 fun alignFileByWidth(inputName: String, outputName: String) {
 
+    val writer = File(outputName).bufferedWriter()
     val listDivided = mutableListOf<MutableList<String>>()
     val listIn = (File(inputName).readLines()).toMutableList()
+    if (listIn.isEmpty()) {
+        writer.write("")
+        writer.close()
+        exitProcess(0)
+    }
     val listOfLengths = mutableListOf<Int>()
     var maxLength = 0
     var indexOfMaxString = 0
@@ -176,7 +183,6 @@ fun alignFileByWidth(inputName: String, outputName: String) {
     }
 
     maxLength += listDivided[indexOfMaxString].size - 1
-    val writer = File(outputName).bufferedWriter()
     var index = -1
 
     for (list in listDivided) {
@@ -334,15 +340,15 @@ Suspendisse ~~et elit in enim tempus iaculis~~.
  *
  * Соответствующий выходной файл:
 <html>
-    <body>
-        <p>
-            Lorem ipsum <i>dolor sit amet</i>, consectetur <b>adipiscing</b> elit.
-            Vestibulum lobortis. <s>Est vehicula rutrum <i>suscipit</i></s>, ipsum <s>lib</s>ero <i>placerat <b>tortor</b></i>.
-        </p>
-        <p>
-            Suspendisse <s>et elit in enim tempus iaculis</s>.
-        </p>
-    </body>
+<body>
+<p>
+Lorem ipsum <i>dolor sit amet</i>, consectetur <b>adipiscing</b> elit.
+Vestibulum lobortis. <s>Est vehicula rutrum <i>suscipit</i></s>, ipsum <s>lib</s>ero <i>placerat <b>tortor</b></i>.
+</p>
+<p>
+Suspendisse <s>et elit in enim tempus iaculis</s>.
+</p>
+</body>
 </html>
  *
  * (Отступы и переносы строк в примере добавлены для наглядности, при решении задачи их реализовывать не обязательно)
@@ -385,65 +391,65 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
  *
  * Пример входного файла:
 ///////////////////////////////начало файла/////////////////////////////////////////////////////////////////////////////
-* Утка по-пекински
-    * Утка
-    * Соус
-* Салат Оливье
-    1. Мясо
-        * Или колбаса
-    2. Майонез
-    3. Картофель
-    4. Что-то там ещё
-* Помидоры
-* Фрукты
-    1. Бананы
-    23. Яблоки
-        1. Красные
-        2. Зелёные
+ * Утка по-пекински
+ * Утка
+ * Соус
+ * Салат Оливье
+1. Мясо
+ * Или колбаса
+2. Майонез
+3. Картофель
+4. Что-то там ещё
+ * Помидоры
+ * Фрукты
+1. Бананы
+23. Яблоки
+1. Красные
+2. Зелёные
 ///////////////////////////////конец файла//////////////////////////////////////////////////////////////////////////////
  *
  *
  * Соответствующий выходной файл:
 ///////////////////////////////начало файла/////////////////////////////////////////////////////////////////////////////
 <html>
-  <body>
-    <p>
-      <ul>
-        <li>
-          Утка по-пекински
-          <ul>
-            <li>Утка</li>
-            <li>Соус</li>
-          </ul>
-        </li>
-        <li>
-          Салат Оливье
-          <ol>
-            <li>Мясо
-              <ul>
-                <li>Или колбаса</li>
-              </ul>
-            </li>
-            <li>Майонез</li>
-            <li>Картофель</li>
-            <li>Что-то там ещё</li>
-          </ol>
-        </li>
-        <li>Помидоры</li>
-        <li>Фрукты
-          <ol>
-            <li>Бананы</li>
-            <li>Яблоки
-              <ol>
-                <li>Красные</li>
-                <li>Зелёные</li>
-              </ol>
-            </li>
-          </ol>
-        </li>
-      </ul>
-    </p>
-  </body>
+<body>
+<p>
+<ul>
+<li>
+Утка по-пекински
+<ul>
+<li>Утка</li>
+<li>Соус</li>
+</ul>
+</li>
+<li>
+Салат Оливье
+<ol>
+<li>Мясо
+<ul>
+<li>Или колбаса</li>
+</ul>
+</li>
+<li>Майонез</li>
+<li>Картофель</li>
+<li>Что-то там ещё</li>
+</ol>
+</li>
+<li>Помидоры</li>
+<li>Фрукты
+<ol>
+<li>Бананы</li>
+<li>Яблоки
+<ol>
+<li>Красные</li>
+<li>Зелёные</li>
+</ol>
+</li>
+</ol>
+</li>
+</ul>
+</p>
+</body>
 </html>
 ///////////////////////////////конец файла//////////////////////////////////////////////////////////////////////////////
  * (Отступы и переносы строк в примере добавлены для наглядности, при решении задачи их реализовывать не обязательно)
@@ -470,28 +476,29 @@ fun markdownToHtml(inputName: String, outputName: String) {
  * Вывести в выходной файл процесс умножения столбиком числа lhv (> 0) на число rhv (> 0).
  *
  * Пример (для lhv == 19935, rhv == 111):
-   19935
-*    111
+19935
+ *    111
 --------
-   19935
+19935
 + 19935
 +19935
 --------
- 2212785
+2212785
  * Используемые пробелы, отступы и дефисы должны в точности соответствовать примеру.
  * Нули в множителе обрабатывать так же, как и остальные цифры:
-  235
-*  10
+235
+ *  10
 -----
-    0
+0
 +235
 -----
- 2350
+2350
  *
  */
 fun printMultiplicationProcess(lhv: Int, rhv: Int, outputName: String) {
     TODO()
 }
+
 
 /**
  * Сложная (25 баллов)
@@ -499,31 +506,29 @@ fun printMultiplicationProcess(lhv: Int, rhv: Int, outputName: String) {
  * Вывести в выходной файл процесс деления столбиком числа lhv (> 0) на число rhv (> 0).
  *
  * Пример (для lhv == 19935, rhv == 22):
-  19935 | 22
- -198     906
- ----
-    13
-    -0
-    --
-    135
-   -132
-   ----
-      3
+19935 | 22
+-198     906
+----
+13
+-0
+--
+135
+-132
+----
+3
 
  * Используемые пробелы, отступы и дефисы должны в точности соответствовать примеру.
  *
  */
 fun printDivisionProcess(lhv: Int, rhv: Int, outputName: String) {
 
-    val ten = 10                               // Десять.
+    // * * * * * * *
+    // Функции 1) поиска текущей спускающейся цифры и 2) количества цифр в числе
 
-    fun findDigit(n: Int, amount: Int): Int {
+    val ten = 10   // Десять. Для функций
 
-        return if (n != 1)
-            n % ten.toDouble().pow(amount).toInt() / ten.toDouble().pow(amount - 1).toInt()
-        else 1
-    }
-
+    fun findDigit(n: Int, amount: Int): Int =
+        n % ten.toDouble().pow(amount).toInt() / ten.toDouble().pow(amount - 1).toInt()
 
     fun countDigits(n: Int): Int {
         var numOfDigits = 0
@@ -536,32 +541,47 @@ fun printDivisionProcess(lhv: Int, rhv: Int, outputName: String) {
     }
 
 
+    // * * * * * * *
+    // Переменные и константы
+
     val writer = File(outputName).bufferedWriter()
 
-    val quotient = lhv / rhv                    // Частное
-    val remainder = lhv % rhv                   // Конечный остаток от деления
+    var space = 1                           // Пространство (начальное)
+    var checkDigit = 0                      // Текущая спускающаяся цифра
+    var dent = lhv                          // Текущее делимое
+    var amount = 0                          // Количество цифр, оставшееся для прибавления
 
-    var space = 2                               // Отступ (начальный)
-    var checkDigit = 0                          // Проверка нужной цифры
-    var dent = lhv                              // Делимое
-    var numOfDigits = countDigits(dent)         // Количество цифр
-    var amount = 0                              // Количество пробелов (вторая строка)
+    val quotient = lhv / rhv                // Частное
+    val remainder = lhv % rhv               // Конечный остаток от деления
+    val numOfDigits = countDigits(dent)     // Количество цифр в изначальном делимом
+
+
+    // * * * * * * *
+    // Определяем начальные dent, amount & checkDigit
 
     for (i in 1..numOfDigits) {
         if (lhv / (ten.toDouble().pow(numOfDigits - i).toInt()) / rhv > 0) {
             dent = lhv / (ten.toDouble().pow(numOfDigits - i).toInt())
-            //  dent = dent / rhv * rhv
             amount = numOfDigits - i
             checkDigit = findDigit(lhv, amount)
             break
         }
-        if (i == numOfDigits) dent = 0
-    }                                           // Теперь dent - первичная делимая часть
+    }
 
-    writer.write("  $lhv | $rhv")
+    if (amount < 0) {
+        println("Amount < 0")
+        writer.close()
+        exitProcess(-1)
+    }
+
+
+    // * * * * * * *
+    // Вывод первых трёх строк
+
+    writer.write(" $lhv | $rhv")
 
     writer.newLine()
-    writer.write(" -${dent - (dent % rhv)}")
+    writer.write("-${dent / rhv * rhv}")
     for (i in 1..amount) writer.write(" ")
     writer.write("   $quotient")
 
@@ -569,48 +589,88 @@ fun printDivisionProcess(lhv: Int, rhv: Int, outputName: String) {
     for (i in 1 until space) writer.write(" ")
     for (i in 1..countDigits(dent) + 1) writer.write("-")
 
-    // amount надо уменьшать на -1
+    if (amount == 0) {
+        writer.newLine()
+        for (i in 1..space + countDigits(dent) - countDigits(remainder)) writer.write(" ")
+        writer.write(remainder.toString())
+    }
 
-    while (amount > 0) {       //(dent > rhv) {
-        space += countDigits(dent) - countDigits(dent % rhv)
-        dent %= rhv      // * ten + checkDigit
+
+    // * * * * * * *
+    // Вывод остальных разностей
+
+    while (true) {
+
+        if ((lhv < rhv) || (space == 1 && amount == 0)) break
 
         writer.newLine()
-        for (i in 1..space) writer.write(" ")
-        writer.write(dent)
-        writer.write(checkDigit)
+        for (i in 1..space + countDigits(dent) - countDigits(dent % rhv)) writer.write(" ")
+        writer.write((dent % rhv).toString())
+        if (amount == 0) break
+        writer.write(checkDigit.toString())
 
-        dent = dent * ten + checkDigit
-
-        writer.newLine()
-        for(i in 1..space)
-            writer.write("")
-
+        val dentPrevious = dent
+        dent = dent % rhv * ten + checkDigit
         --amount
-        checkDigit = findDigit(lhv, amount)
-        dent = dent * ten + checkDigit
+        if (amount != 0) checkDigit = findDigit(lhv, amount)
+
+
+        var secondSpace: Int
+        if (dent / rhv == 0) secondSpace = space + countDigits(dentPrevious)
+        else {
+            secondSpace = space + countDigits(dentPrevious) - countDigits(dentPrevious % rhv)
+            if (dentPrevious % rhv == 0) ++secondSpace
+        }
+
+
+        writer.newLine()
+
+        for (i in 1 until secondSpace)
+            writer.write(" ")
+        writer.write("-")
+        writer.write((dent / rhv * rhv).toString())
+
+        writer.newLine()
+        for (i in 1 until secondSpace)
+            writer.write(" ")
+        var line = countDigits(dent) + 1
+        if (dent % rhv == dent) --line
+        for (i in 1..line) writer.write("-")
+
+
+        space += countDigits(dentPrevious) - countDigits(dentPrevious % rhv)
+        if (dentPrevious % rhv == 0) ++space
 
     }
 
+    writer.close()
 }
 
-/**
- * Сложная (25 баллов)
- *
- * Вывести в выходной файл процесс деления столбиком числа lhv (> 0) на число rhv (> 0).
- *
- * Пример (для lhv == 19935, rhv == 22):
-  19935 | 22
- -198     906
- ----
-    13
-    -0
-    --
-    135
-   -132
-   ----
-      3
 
- * Используемые пробелы, отступы и дефисы должны в точности соответствовать примеру.
- *
- */
+//    [ 12345 / 55 ]     -    224 :  dent = 123,  amount = 2,    checkDigit = 4
+//       [ 12 / 2 ]      -    6 :    dent = 12,   amount = 0,    checkDigit =
+//        [ 4 / 2 ]      -    2 :    dent = 4,    amount = 0,    checkDigit =
+
+
+// 12345 | 55
+//-110     224
+//----
+//  134
+// -110
+// ----
+//   245
+//  -220
+//  ----
+//    25
+
+
+//  12 | 2
+// -12   6
+// ---
+//   0
+
+
+//  4 | 2
+// -4   2
+// --
+//  0
