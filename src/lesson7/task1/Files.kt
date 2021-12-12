@@ -158,11 +158,22 @@ fun alignFileByWidth(inputName: String, outputName: String) {
     try {
         val listDivided = mutableListOf<MutableList<String>>()
         val listIn = (File(inputName).readLines()).toMutableList()
-        if (listIn.size == 1) {
-            writer.write(listIn[0])
-            writer.close()
-            return
+
+        val sizeOfZero = listIn[0].length
+        for (i in 1 until listIn.size) {
+            if (sizeOfZero != listIn[i].length) break
+            if (i == listIn.size - 1) {
+                for (j in 0 until listIn.size) {
+                    writer.write(listIn[i])
+                    if (j == listIn.size - 1) {
+                        writer.close()
+                        return
+                    }
+                    writer.newLine()
+                }
+            }
         }
+
         val listOfLengths = mutableListOf<Int>()
         var maxLength = 0
         var indexOfMaxString = 0
@@ -620,38 +631,32 @@ fun printDivisionProcess(lhv: Int, rhv: Int, outputName: String) {
         if (amount != 0) checkDigit = findDigit(lhv, amount)
 
 
-        var secondSpace: Int
-        if (dent / rhv == 0) secondSpace = space + countDigits(dentPrevious)
-        else {
-            secondSpace = space + countDigits(dentPrevious) - countDigits(dentPrevious % rhv)
-            if (dentPrevious % rhv == 0) ++secondSpace
-        }
-
 
         writer.newLine()
 
-        if (dent / rhv != 0 && dent > rhv)
-            secondSpace += countDigits(dent) - countDigits(dent / rhv * rhv)
+        var spaceTwo = space + countDigits(dentPrevious) - countDigits(dentPrevious % rhv) +
+                countDigits(dent) - countDigits(dent / rhv * rhv) - 1
+        if (dentPrevious % rhv == 0) ++spaceTwo
 
-        for (i in 1 until secondSpace)
-            writer.write(" ")
+        for (i in 1..spaceTwo) writer.write(" ")
         writer.write("-")
         writer.write((dent / rhv * rhv).toString())
 
+
+
         writer.newLine()
-        for (i in 1 until secondSpace)
-            writer.write(" ")
-        var line = countDigits(dent) + 1
 
-        if (dent % rhv == dent && dent != 0) --line
-        if (dentPrevious % rhv == 0 && checkDigit == 0) ++line
+        val spaceThree = if (countDigits(dent) > countDigits(dent / rhv * rhv) + 1)
+            space + countDigits(dentPrevious) - countDigits(dentPrevious % rhv)
+        else space + countDigits(dentPrevious) - countDigits(dent / rhv * rhv)
 
+        for (i in 1..spaceThree) writer.write(" ")
+
+        val line = space + countDigits(dentPrevious) + 1 - spaceThree
         for (i in 1..line) writer.write("-")
-
 
         space += countDigits(dentPrevious) - countDigits(dentPrevious % rhv)
         if (dentPrevious % rhv == 0) ++space
-
     }
 
     writer.close()
