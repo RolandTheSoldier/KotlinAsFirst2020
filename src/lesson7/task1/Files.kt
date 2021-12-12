@@ -159,12 +159,11 @@ fun alignFileByWidth(inputName: String, outputName: String) {
         val listDivided = mutableListOf<MutableList<String>>()
         val listIn = (File(inputName).readLines()).toMutableList()
 
-        val sizeOfZero = listIn[0].length
-        for (i in 1 until listIn.size) {
-            if (sizeOfZero != listIn[i].length) break
+        for (i in 0 until listIn.size) {
+            if (listIn[i] != listIn[i].trim()) break
             if (i == listIn.size - 1) {
                 for (j in 0 until listIn.size) {
-                    writer.write(listIn[i])
+                    writer.write(listIn[j])
                     if (j == listIn.size - 1) {
                         writer.close()
                         return
@@ -234,7 +233,6 @@ fun alignFileByWidth(inputName: String, outputName: String) {
         writer.close()
     }
 }
-
 
 /**
  * Средняя (14 баллов)
@@ -609,6 +607,8 @@ fun printDivisionProcess(lhv: Int, rhv: Int, outputName: String) {
         writer.newLine()
         for (i in 1..space + countDigits(dent) - countDigits(remainder)) writer.write(" ")
         writer.write(remainder.toString())
+        writer.close()
+        return
     }
 
 
@@ -616,8 +616,6 @@ fun printDivisionProcess(lhv: Int, rhv: Int, outputName: String) {
     // Вывод остальных разностей
 
     while (true) {
-
-        if ((lhv < rhv) || (space == 1 && amount == 0)) break
 
         writer.newLine()
         for (i in 1..space + countDigits(dent) - countDigits(dent % rhv)) writer.write(" ")
