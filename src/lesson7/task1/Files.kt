@@ -4,6 +4,7 @@ package lesson7.task1
 
 import kotlin.math.*
 import java.io.File
+import java.lang.NullPointerException
 import kotlin.system.exitProcess
 
 // Урок 7: работа с файлами
@@ -153,71 +154,71 @@ fun centerFile(inputName: String, outputName: String) {
  * 8) Если входной файл удовлетворяет требованиям 1-7, то он должен быть в точности идентичен выходному файлу
  */
 fun alignFileByWidth(inputName: String, outputName: String) {
-
     val writer = File(outputName).bufferedWriter()
-    val listDivided = mutableListOf<MutableList<String>>()
-    val listIn = (File(inputName).readLines()).toMutableList()
-    if (listIn.size == 1) {
-        writer.write("")
-        writer.close()
-        return
-    }
-    val listOfLengths = mutableListOf<Int>()
-    var maxLength = 0
-    var indexOfMaxString = 0
-    var strNoSpace: Int
+    try {
+        val listDivided = mutableListOf<MutableList<String>>()
+        val listIn = (File(inputName).readLines()).toMutableList()
+        val listOfLengths = mutableListOf<Int>()
+        var maxLength = 0
+        var indexOfMaxString = 0
+        var strNoSpace: Int
 
-    for (str in listIn) {
-        strNoSpace = str.replace(Regex("""\s+"""), "").length
-        if (strNoSpace > maxLength) {
-            maxLength = strNoSpace
-            indexOfMaxString = listDivided.size
-        }
-        if (strNoSpace == 0) listDivided.add(mutableListOf(""))
-        else listDivided.add(str.split(Regex("""\s+""")).toMutableList())
-        listOfLengths.add(strNoSpace)
-    }
-
-    for (list in listDivided) {
-        list.removeAt(0)
-    }
-
-    maxLength += listDivided[indexOfMaxString].size - 1
-    var index = -1
-
-    for (list in listDivided) {
-        ++index
-        if (listOfLengths[index] == 0) {
-            writer.newLine()
-            continue
-        }
-        if (list.size == 1) {
-            writer.write(list[0])
-            writer.newLine()
-            continue
-        }
-
-        val spaceSize = (maxLength - listOfLengths[index]) / (list.size - 1)
-        var remainderOfSpace = (maxLength - listOfLengths[index]) % (list.size - 1)
-        var countSpaces = 0
-
-        for (word in list) {
-            writer.write(word)
-            ++countSpaces
-            if (countSpaces == list.size) break
-            for (time in 1..spaceSize)
-                writer.write(" ")
-            if (remainderOfSpace > 0) {
-                writer.write(" ")
-                --remainderOfSpace
+        for (str in listIn) {
+            strNoSpace = str.replace(Regex("""\s+"""), "").length
+            if (strNoSpace > maxLength) {
+                maxLength = strNoSpace
+                indexOfMaxString = listDivided.size
             }
+            if (strNoSpace == 0) listDivided.add(mutableListOf(""))
+            else listDivided.add(str.split(Regex("""\s+""")).toMutableList())
+            listOfLengths.add(strNoSpace)
         }
-        writer.newLine()
+
+        for (list in listDivided) {
+            list.removeAt(0)
+        }
+
+        maxLength += listDivided[indexOfMaxString].size - 1
+        var index = -1
+
+        for (list in listDivided) {
+            ++index
+            if (listOfLengths[index] == 0) {
+                writer.newLine()
+                continue
+            }
+            if (list.size == 1) {
+                writer.write(list[0])
+                writer.newLine()
+                continue
+            }
+
+            val spaceSize = (maxLength - listOfLengths[index]) / (list.size - 1)
+            var remainderOfSpace = (maxLength - listOfLengths[index]) % (list.size - 1)
+            var countSpaces = 0
+
+            for (word in list) {
+                writer.write(word)
+                ++countSpaces
+                if (countSpaces == list.size) break
+                for (time in 1..spaceSize)
+                    writer.write(" ")
+                if (remainderOfSpace > 0) {
+                    writer.write(" ")
+                    --remainderOfSpace
+                }
+            }
+            writer.newLine()
+        }
+    } catch (e: java.lang.IndexOutOfBoundsException) {
+        writer.write("")
+    } catch (e: NullPointerException) {
+        writer.write("")
+    } finally {
+        writer.close()
     }
-
-    writer.close()
-
 }
+
 
 /**
  * Средняя (14 баллов)
