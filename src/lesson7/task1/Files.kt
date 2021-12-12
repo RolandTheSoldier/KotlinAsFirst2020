@@ -157,10 +157,10 @@ fun alignFileByWidth(inputName: String, outputName: String) {
     val writer = File(outputName).bufferedWriter()
     val listDivided = mutableListOf<MutableList<String>>()
     val listIn = (File(inputName).readLines()).toMutableList()
-    if (listIn.isEmpty()) {
+    if (listIn.size == 1 && listIn[0] == "") {
         writer.write("")
         writer.close()
-        exitProcess(0)
+        return
     }
     val listOfLengths = mutableListOf<Int>()
     var maxLength = 0
@@ -527,8 +527,8 @@ fun printDivisionProcess(lhv: Int, rhv: Int, outputName: String) {
 
     val ten = 10   // Десять. Для функций
 
-    fun findDigit(n: Int, amount: Int): Int =
-        n % ten.toDouble().pow(amount).toInt() / ten.toDouble().pow(amount - 1).toInt()
+    fun findDigit(n: Int, amount: Int): Int = if (amount > 0)
+        n % ten.toDouble().pow(amount).toInt() / ten.toDouble().pow(amount - 1).toInt() else 0
 
     fun countDigits(n: Int): Int {
         var numOfDigits = 0
@@ -571,7 +571,7 @@ fun printDivisionProcess(lhv: Int, rhv: Int, outputName: String) {
     if (amount < 0) {
         println("Amount < 0")
         writer.close()
-        exitProcess(-1)
+        return
     }
 
 
@@ -645,32 +645,3 @@ fun printDivisionProcess(lhv: Int, rhv: Int, outputName: String) {
 
     writer.close()
 }
-
-
-//    [ 12345 / 55 ]     -    224 :  dent = 123,  amount = 2,    checkDigit = 4
-//       [ 12 / 2 ]      -    6 :    dent = 12,   amount = 0,    checkDigit =
-//        [ 4 / 2 ]      -    2 :    dent = 4,    amount = 0,    checkDigit =
-
-
-// 12345 | 55
-//-110     224
-//----
-//  134
-// -110
-// ----
-//   245
-//  -220
-//  ----
-//    25
-
-
-//  12 | 2
-// -12   6
-// ---
-//   0
-
-
-//  4 | 2
-// -4   2
-// --
-//  0
