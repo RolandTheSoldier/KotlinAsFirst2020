@@ -156,12 +156,12 @@ fun alignFileByWidth(inputName: String, outputName: String) {
 
     val writer = File(outputName).bufferedWriter()
     val listDivided = mutableListOf<MutableList<String>>()
-    if (File(inputName).bufferedReader().readLine() == "") {
+    val listIn = (File(inputName).readLines()).toMutableList()
+    if (listIn.size == 1) {
         writer.write("")
         writer.close()
         return
     }
-    val listIn = (File(inputName).readLines()).toMutableList()
     val listOfLengths = mutableListOf<Int>()
     var maxLength = 0
     var indexOfMaxString = 0
@@ -498,7 +498,6 @@ fun markdownToHtml(inputName: String, outputName: String) {
 fun printMultiplicationProcess(lhv: Int, rhv: Int, outputName: String) {
     TODO()
 }
-
 
 /**
  * Сложная (25 баллов)
