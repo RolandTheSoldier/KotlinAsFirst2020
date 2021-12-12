@@ -158,6 +158,11 @@ fun alignFileByWidth(inputName: String, outputName: String) {
     try {
         val listDivided = mutableListOf<MutableList<String>>()
         val listIn = (File(inputName).readLines()).toMutableList()
+        if (listIn.size == 1) {
+            writer.write(listIn[0])
+            writer.close()
+            return
+        }
         val listOfLengths = mutableListOf<Int>()
         var maxLength = 0
         var indexOfMaxString = 0
@@ -637,7 +642,10 @@ fun printDivisionProcess(lhv: Int, rhv: Int, outputName: String) {
         for (i in 1 until secondSpace)
             writer.write(" ")
         var line = countDigits(dent) + 1
-        if (dent % rhv == dent) --line
+
+        if (dent % rhv == dent && dent != 0) --line
+        if (dentPrevious % rhv == 0 && checkDigit == 0) ++line
+
         for (i in 1..line) writer.write("-")
 
 
