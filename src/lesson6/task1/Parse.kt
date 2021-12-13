@@ -132,9 +132,9 @@ fun bestLongJump(jumps: String): Int = TODO()
  * вернуть -1.
  */
 fun bestHighJump(jumps: String): Int {
-    val list = mutableListOf<String>()
-    Regex("""[0-9]+(?=\s\+)""").findAll(jumps).forEach { list.add(it.value) }
-    return if (list.isNotEmpty()) list.maxOrNull()!!.toInt() else -1
+    val list = mutableListOf<Int>()
+    Regex("""[0-9]+(?=\s\+)""").findAll(jumps).forEach { list.add(it.value.toInt()) }
+    return list.maxOrNull() ?: -1
 }
 
 /**

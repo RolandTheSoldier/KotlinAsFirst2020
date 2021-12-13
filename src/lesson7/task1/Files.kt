@@ -85,7 +85,30 @@ fun deleteMarked(inputName: String, outputName: String) {
  *
  */
 fun countSubstrings(inputName: String, substrings: List<String>): Map<String, Int> {
-    TODO()
+    val listSubToSet = substrings.toSet()
+    val map = mutableMapOf<String, Int>()
+    for (line in listSubToSet) {
+        map[line] = 0
+    }
+
+    val reader = File(inputName).readLines()
+    for (line in reader) {
+        for (phrase in listSubToSet) {
+            val str = line.lowercase()
+            val phrase2 = phrase.lowercase()
+
+            var index = 0
+            var num = str.indexOf(phrase2, index)
+
+            while (num != -1) {
+                map[phrase] = map[phrase]!! + 1
+                index = num + 1
+                num = str.indexOf(phrase2, index)
+            }
+        }
+    }
+
+    return map
 }
 
 /**
@@ -102,7 +125,38 @@ fun countSubstrings(inputName: String, substrings: List<String>): Map<String, In
  *
  */
 fun sibilants(inputName: String, outputName: String) {
-    TODO()
+    val writer = File(outputName).bufferedWriter()
+    val list = (File(inputName).readLines()).toMutableList()
+    if (list.size == 1 && list[0] == "") {
+        writer.write("")
+        writer.close()
+        return
+    }
+
+    val regex = Regex(
+        """[а-я]*[жчшщ][ыяю][а-я]*|жю(?!ри)|(?<!бро)шю(?!р)|(?<!пара)шю(?!т)""",
+        RegexOption.IGNORE_CASE
+    )
+    val reg1 = Regex("""(?<=[жчшщ])ы""", RegexOption.IGNORE_CASE)   //   и
+    val reg2 = Regex("""(?<=[жчшщ])я""", RegexOption.IGNORE_CASE)   //   а
+    val reg3 = Regex("""(?<=[жчшщ])ю""", RegexOption.IGNORE_CASE)   //   у
+
+    for (str in list) {
+        val line = Regex(""" """).split(str).toMutableList()
+        for ((index, word) in line.withIndex()) {
+            if (regex.containsMatchIn(word)) {
+                when {
+                    reg1.containsMatchIn(word) -> reg1.replace(word, "и")
+                    reg2.containsMatchIn(word) -> reg2.replace(word, "а")
+                    reg3.containsMatchIn(word) -> reg3.replace(word, "у")
+                }
+                line[index] = word
+            }
+        }
+        writer.write(line.joinToString(separator = " "))
+        writer.newLine()
+    }
+    writer.close()
 }
 
 /**
