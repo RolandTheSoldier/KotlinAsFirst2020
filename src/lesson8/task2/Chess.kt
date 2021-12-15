@@ -27,18 +27,7 @@ data class Square(val column: Int, val row: Int) {
      */
     fun notation(): String =
         if (!inside()) ""
-        else
-            when (column) {
-                1 -> "a$row"
-                2 -> "b$row"
-                3 -> "c$row"
-                4 -> "d$row"
-                5 -> "e$row"
-                6 -> "f$row"
-                7 -> "g$row"
-                8 -> "h$row"
-                else -> ""
-            }
+        else "${(96 + column).toChar()}$row"
 }
 
 /**
@@ -239,7 +228,7 @@ fun knightTrajectory(start: Square, end: Square): List<Square> {
     val cost = Array(8) { Array(8) { 10 } }
 
     val reachable = mutableSetOf<Square>()
-    val explored = mutableListOf<Square>()
+    val explored = mutableSetOf<Square>()
 
     reachable.add(start)
     cost[start.row - 1][start.column - 1] = 0
@@ -268,7 +257,7 @@ fun knightTrajectory(start: Square, end: Square): List<Square> {
     return listOf()
 }
 
-fun getNeighbors(node: Square, explored: MutableList<Square>): MutableList<Square> {
+fun getNeighbors(node: Square, explored: MutableSet<Square>): MutableList<Square> {
     val neighbors = mutableListOf<Square>()
 
     //region Добавление соседей

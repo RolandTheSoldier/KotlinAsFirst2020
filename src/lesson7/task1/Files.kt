@@ -284,10 +284,23 @@ Suspendisse <s>et elit in enim tempus iaculis</s>.
  * (Отступы и переносы строк в примере добавлены для наглядности, при решении задачи их реализовывать не обязательно)
  */
 fun markdownToHtmlSimple(inputName: String, outputName: String) {
+    //region Работа со Stack
+    class Comp(var data: Int, val next: Comp?)
+
+    var top: Comp? = null
+
+    fun addComp(data: Int) {
+        val newComp = Comp(data, top)
+        top = newComp
+    }
+
+    fun removeComp() {
+        top = top?.next
+    }
+    //endregion
+
     val writer = File(outputName).bufferedWriter()
 
-    val openedStars = mutableListOf<Int>()
-    var isOpenCross = false
     var isHaveEmpty = true
     var isHaveNotEmpty = false
 
@@ -313,52 +326,52 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
             var i = 0
             while (i < line.length) {
                 if (line[i].toString() == "~") {
-                    if (isOpenCross) {
+                    if (top?.data == 0) {
                         writer.write("</s>")
-                        isOpenCross = false
+                        removeComp()
                     } else {
                         writer.write("<s>")
-                        isOpenCross = true
+                        addComp(0)
                     }
                     i += 2
                 } else if (line[i].toString() == "*") {
                     if (i + 1 < line.length && line[i + 1].toString() == "*") {
                         if (i + 2 < line.length && line[i + 2].toString() == "*") {
-                            if (openedStars.contains(3)) {
+                            if (top?.data == 3) {
                                 writer.write("</i></b>")
-                                openedStars.remove(3)
+                                removeComp()
                                 i += 3
-                            } else if (openedStars.contains(2)) {
+                            } else if (top?.data == 2) {
                                 writer.write("</b>")
-                                openedStars.remove(2)
+                                removeComp()
                                 i += 2
-                            } else if (openedStars.contains(1)) {
+                            } else if (top?.data == 1) {
                                 writer.write("</i>")
-                                openedStars.remove(1)
+                                removeComp()
                                 i += 1
                             } else {
                                 writer.write("<b><i>")
-                                openedStars += 3
+                                addComp(3)
                                 i += 3
                             }
                         } else {
-                            if (openedStars.contains(2)) {
+                            if (top?.data == 2) {
                                 writer.write("</b>")
-                                openedStars.remove(2)
+                                removeComp()
                                 i += 2
                             } else {
                                 writer.write("<b>")
-                                openedStars += 2
+                                addComp(2)
                                 i += 2
                             }
                         }
                     } else {
-                        if (openedStars.contains(1)) {
-                            openedStars.remove(1)
+                        if (top?.data == 1) {
+                            removeComp()
                             writer.write("</i>")
                             i++
                         } else {
-                            openedStars += 1
+                            addComp(1)
                             writer.write("<i>")
                             i++
                         }
@@ -372,7 +385,6 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
     }
 
     writer.write("</p></body></html>")
-
     writer.close()
 }
 
@@ -576,7 +588,8 @@ fun printDivisionProcess(lhv: Int, rhv: Int, outputName: String) {
         }
 
         writer.newLine()
-        val startPosition = min(endPosition - curNumber.toString().length, endPosition - prevNumber.toString().length + 1)
+        val startPosition =
+            min(endPosition - curNumber.toString().length, endPosition - prevNumber.toString().length + 1)
         writer.write("".padStart(startPosition).padEnd(endPosition + 1, '-'))
 
         writer.newLine()
