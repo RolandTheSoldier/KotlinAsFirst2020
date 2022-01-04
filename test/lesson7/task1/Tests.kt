@@ -3,15 +3,37 @@ package lesson7.task1
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 import java.io.File
+import java.lang.IllegalArgumentException
+
 
 class Tests {
+
 
     private fun assertFileContent(name: String, expectedContent: String) {
         val file = File(name)
         val content = file.readLines().joinToString("\n")
         assertEquals(expectedContent, content)
     }
+
+
+    @Test
+    fun myFun() {
+        assertEquals(myFun("D://testsMyFun/text.txt"), 16)
+        assertEquals(myFun("D://testsMyFun/text2.txt"), 5)
+        assertEquals(myFun("D://testsMyFun/text3.txt"), 4)
+        assertEquals(myFun("D://testsMyFun/text4.txt"), 4)
+        assertEquals(myFun("D://testsMyFun/text5.txt"), 6)
+        assertEquals(myFun("D://testsMyFun/text6.txt"), 17)
+        assertThrows<IllegalArgumentException> { myFun("D://testsMyFun/text7.txt") }
+        assertThrows<IllegalArgumentException> { myFun("D://testsMyFun/text8.txt") }
+        assertThrows<IllegalArgumentException> { myFun("D://testsMyFun/text9.txt") }
+        assertThrows<IllegalArgumentException> { myFun("D://testsMyFun/text10.txt") }
+        assertThrows<IllegalArgumentException> { myFun("D://testsMyFun/text11.txt") }
+        assertThrows<IllegalArgumentException> { myFun("D://testsMyFun/text12.txt") }
+    }
+
 
     @Test
     @Tag("Example")
@@ -76,11 +98,17 @@ Basic, Ruby, Swift.
     fun countSubstrings() {
         assertEquals(
             mapOf("РАЗНЫЕ" to 2, "ные" to 2, "Неряшливость" to 1, "е" to 49, "эволюция" to 0),
-            countSubstrings("input/substrings_in1.txt", listOf("РАЗНЫЕ", "ные", "Неряшливость", "е", "эволюция"))
+            countSubstrings(
+                "input/substrings_in1.txt",
+                listOf("РАЗНЫЕ", "ные", "Неряшливость", "е", "эволюция")
+            )
         )
         assertEquals(
             mapOf("Карминовый" to 2, "Некрасивый" to 2, "белоглазый" to 1),
-            countSubstrings("input/substrings_in1.txt", listOf("Карминовый", "Некрасивый", "белоглазый"))
+            countSubstrings(
+                "input/substrings_in1.txt",
+                listOf("Карминовый", "Некрасивый", "белоглазый")
+            )
         )
         assertEquals(
             mapOf("--" to 4, "ее" to 2, "животное" to 2, "." to 2),
@@ -208,7 +236,15 @@ Basic, Ruby, Swift.
     fun transliterate() {
         transliterate(
             "input/trans_in1.txt",
-            mapOf('з' to "zz", 'р' to "r", 'д' to "d", 'й' to "y", 'М' to "m", 'и' to "yy", '!' to "!!!"),
+            mapOf(
+                'з' to "zz",
+                'р' to "r",
+                'д' to "d",
+                'й' to "y",
+                'М' to "m",
+                'и' to "yy",
+                '!' to "!!!"
+            ),
             "temp.txt"
         )
         assertFileContent("temp.txt", "Zzdrавствуy,\nmyyr!!!")
@@ -216,7 +252,15 @@ Basic, Ruby, Swift.
 
         transliterate(
             "input/trans_in1.txt",
-            mapOf('з' to "zZ", 'р' to "r", 'д' to "d", 'й' to "y", 'М' to "m", 'и' to "YY", '!' to "!!!"),
+            mapOf(
+                'з' to "zZ",
+                'р' to "r",
+                'д' to "d",
+                'й' to "y",
+                'М' to "m",
+                'и' to "YY",
+                '!' to "!!!"
+            ),
             "temp.txt"
         )
         assertFileContent("temp.txt", "Zzdrавствуy,\nmyyr!!!")

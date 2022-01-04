@@ -2,10 +2,208 @@
 
 package lesson7.task1
 
+import lesson5.task1.containsIn
+import ru.spbstu.wheels.currentPlatform
 import kotlin.math.*
 import java.io.File
 import java.lang.NullPointerException
+import kotlin.IllegalArgumentException
 import kotlin.system.exitProcess
+
+
+fun myFun(inputName: String): Int {
+    val list = File(inputName).readLines().toMutableList()
+
+
+    // Индексы символа и строки Камеры
+    var charC = 0
+    var lineC = 0
+
+
+    // Проверка списка строк на правильность
+    val lineSize: Int
+    if (list.isEmpty()) throw IllegalArgumentException()
+    else lineSize = list[0].length
+    var checkC = 0
+    for (line in list) {
+        if (line.length != lineSize) throw IllegalArgumentException()
+        for (char in line) {
+            if (!(char == '.' || char == '#' || char == 'C')) {
+                throw IllegalArgumentException()
+            }
+            if (char == 'C') {
+                ++checkC
+                charC = line.indexOf('C')
+                lineC = list.indexOf(line)
+            }
+        }
+    }
+    if (checkC == 0 || checkC > 1) throw IllegalArgumentException()
+
+
+    // Логические переменные для контроля границ строк в восьми направлениях
+    var countBooleans = 8
+    var cUp = true
+    var cDown = true
+    var cLeft = true
+    var cRight = true
+    var cUpLeft = true
+    var cUpRight = true
+    var cDownLeft = true
+    var cDownRight = true
+
+
+    // Подсчёт шагов и свободных клеток
+    val maxListIndex = list.size - 1
+    val maxLineIndex = list[0].length - 1
+    var countEmpty = 0
+    var index = 0
+
+
+    // Поиск
+    while (countBooleans > 0) {
+        ++index
+
+        if (cUp) {
+            if (lineC != 0) {
+                if (list[lineC - index][charC] == '.') ++countEmpty
+                else {
+                    cUp = false
+                    --countBooleans
+                }
+                if (lineC - index == 0 && cUp) {
+                    cUp = false
+                    --countBooleans
+                }
+            } else {
+                cUp = false
+                --countBooleans
+            }
+        }
+
+        if (cDown) {
+            if (lineC != maxListIndex) {
+                if (list[lineC + index][charC] == '.') ++countEmpty
+                else {
+                    cDown = false
+                    --countBooleans
+                }
+                if (lineC + index == maxListIndex && cDown) {
+                    cDown = false
+                    --countBooleans
+                }
+            } else {
+                cDown = false
+                --countBooleans
+            }
+        }
+
+        if (cLeft) {
+            if (charC != 0) {
+                if (list[lineC][charC - index] == '.') ++countEmpty
+                else {
+                    cLeft = false
+                    --countBooleans
+                }
+                if (charC - index == 0 && cLeft) {
+                    cLeft = false
+                    --countBooleans
+                }
+            } else {
+                cLeft = false
+                --countBooleans
+            }
+        }
+
+        if (cRight) {
+            if (charC != maxLineIndex) {
+                if (list[lineC][charC + index] == '.') ++countEmpty
+                else {
+                    cRight = false
+                    --countBooleans
+                }
+                if (charC + index == maxLineIndex && cRight) {
+                    cRight = false
+                    --countBooleans
+                }
+            } else {
+                cRight = false
+                --countBooleans
+            }
+        }
+
+        if (cUpLeft) {
+            if (lineC != 0 && charC != 0) {
+                if (list[lineC - index][charC - index] == '.') ++countEmpty
+                else {
+                    cUpLeft = false
+                    --countBooleans
+                }
+                if (cUpLeft && (lineC - index == 0 || charC - index == 0)) {
+                    cUpLeft = false
+                    --countBooleans
+                }
+            } else {
+                cUpLeft = false
+                --countBooleans
+            }
+        }
+
+        if (cUpRight) {
+            if (lineC != 0 && charC != maxLineIndex) {
+                if (list[lineC - index][charC + index] == '.') ++countEmpty
+                else {
+                    cUpRight = false
+                    --countBooleans
+                }
+                if (cUpRight && (lineC - index == 0 || charC + index == maxLineIndex)) {
+                    cUpRight = false
+                    --countBooleans
+                }
+            } else {
+                cUpRight = false
+                --countBooleans
+            }
+        }
+
+        if (cDownLeft) {
+            if (lineC != maxListIndex && charC != 0) {
+                if (list[lineC + index][charC - index] == '.') ++countEmpty
+                else {
+                    cDownLeft = false
+                    --countBooleans
+                }
+                if (cDownLeft && (lineC + index == maxListIndex || charC - index == 0)) {
+                    cDownLeft = false
+                    --countBooleans
+                }
+            } else {
+                cDownLeft = false
+                --countBooleans
+            }
+        }
+
+        if (cDownRight) {
+            if (lineC != maxListIndex && charC != maxLineIndex) {
+                if (list[lineC + index][charC + index] == '.') ++countEmpty
+                else {
+                    cDownRight = false
+                    --countBooleans
+                }
+                if (cDownRight && (lineC + index == maxListIndex || charC + index == maxLineIndex)) {
+                    cDownRight = false
+                    --countBooleans
+                }
+            } else {
+                cDownRight = false
+                --countBooleans
+            }
+        }
+    }
+
+    return countEmpty
+}
+
 
 // Урок 7: работа с файлами
 // Урок интегральный, поэтому его задачи имеют сильно увеличенную стоимость
