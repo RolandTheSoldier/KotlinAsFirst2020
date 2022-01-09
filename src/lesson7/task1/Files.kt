@@ -33,12 +33,13 @@ fun myFun(inputName: String): Int {
             }
             if (char == 'C') {
                 ++checkC
+                if (checkC > 1) throw IllegalArgumentException()
                 charC = indexChar
                 lineC = indexLine
             }
         }
     }
-    if (checkC == 0 || checkC > 1) throw IllegalArgumentException()
+    if (checkC == 0) throw IllegalArgumentException()
 
 
     // Логические переменные для контроля границ строк в восьми направлениях
