@@ -25,16 +25,16 @@ fun myFun(inputName: String): Int {
     if (list.isEmpty()) throw IllegalArgumentException()
     else lineSize = list[0].length
     var checkC = 0
-    for (line in list) {
+    for ((indexLine, line) in list.withIndex()) {
         if (line.length != lineSize) throw IllegalArgumentException()
-        for (char in line) {
+        for ((indexChar, char) in line.withIndex()) {
             if (!(char == '.' || char == '#' || char == 'C')) {
                 throw IllegalArgumentException()
             }
             if (char == 'C') {
                 ++checkC
-                charC = line.indexOf('C')
-                lineC = list.indexOf(line)
+                charC = indexChar
+                lineC = indexLine
             }
         }
     }
