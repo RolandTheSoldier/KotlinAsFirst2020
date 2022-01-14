@@ -20,7 +20,8 @@ class Tests {
 
     @Test
     fun myFun() {
-        assertEquals(myFun("D://testsMyFun/text.txt"), 16)
+        assertEquals(myFun("D://testsMyFun/text0.txt"), 0)
+        assertEquals(myFun("D://testsMyFun/text1.txt"), 16)
         assertEquals(myFun("D://testsMyFun/text2.txt"), 5)
         assertEquals(myFun("D://testsMyFun/text3.txt"), 4)
         assertEquals(myFun("D://testsMyFun/text4.txt"), 4)

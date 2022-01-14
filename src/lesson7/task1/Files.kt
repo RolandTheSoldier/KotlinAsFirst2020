@@ -12,6 +12,95 @@ import kotlin.system.exitProcess
 
 
 fun myFun(inputName: String): Int {
+    val list = File(inputName).readLines()
+
+    // Индексы символа и строки Камеры
+    var charC = 0
+    var lineC = 0
+
+    // Проверка списка строк на правильность
+    val lineSize: Int
+    if (list.isEmpty()) throw IllegalArgumentException()
+    else lineSize = list[0].length
+    var checkC = 0
+    for ((indexLine, line) in list.withIndex()) {
+        if (line.length != lineSize) throw IllegalArgumentException()
+        for ((indexChar, char) in line.withIndex()) {
+            if (!(char == '.' || char == '#' || char == 'C')) {
+                throw IllegalArgumentException()
+            }
+            if (char == 'C') {
+                ++checkC
+                if (checkC > 1) throw IllegalArgumentException()
+                charC = indexChar
+                lineC = indexLine
+            }
+        }
+    }
+    if (checkC == 0) throw IllegalArgumentException()
+
+    // Подсчёт шагов и свободных клеток
+    val maxLine = list.size - 1
+    val maxChar = list[0].length - 1
+    var countEmpty = 0
+    val pairs =
+        listOf((-1 to 0), (1 to 0), (0 to -1), (0 to 1), (-1 to -1), (-1 to 1), (1 to -1), (1 to 1))
+    var curLine: Int
+    var curChar: Int
+
+    // Поиск
+    for ((first, second) in pairs) {
+        var index = 0
+        while (true) {
+            ++index
+
+            curLine = lineC + first * index
+            if (curLine < 0 || curLine > maxLine) break
+            curChar = charC + second * index
+            if (curChar < 0 || curChar > maxChar) break
+
+            if (list[curLine][curChar] == '.') ++countEmpty
+            else break
+        }
+    }
+    return countEmpty
+}
+
+
+
+
+
+fun main() {
+    println(myFun("D://testsMyFun/text.txt")) // 16
+    println(myFun("D://testsMyFun/text2.txt")) // 5
+    println(myFun("D://testsMyFun/text3.txt")) // 4
+    println(myFun("D://testsMyFun/text4.txt")) // 4
+    println(myFun("D://testsMyFun/text5.txt")) // 6
+    println(myFun("D://testsMyFun/text6.txt")) // 17
+    println(myFun("D://testsMyFun/text13.txt")) // 0
+    try {
+        println(myFun("D://testsMyFun/text7.txt"))
+    } catch (e: IllegalArgumentException) { println("Asserted throw") }
+    try {
+        println(myFun("D://testsMyFun/text8.txt"))
+    } catch (e: IllegalArgumentException) { println("Asserted throw") }
+    try {
+        println(myFun("D://testsMyFun/text9.txt"))
+    } catch (e: IllegalArgumentException) { println("Asserted throw") }
+    try {
+        println(myFun("D://testsMyFun/text10.txt"))
+    } catch (e: IllegalArgumentException) { println("Asserted throw") }
+    try {
+        println(myFun("D://testsMyFun/text11.txt"))
+    } catch (e: IllegalArgumentException) { println("Asserted throw") }
+    try {
+        println(myFun("D://testsMyFun/text12.txt"))
+    } catch (e: IllegalArgumentException) { println("Asserted throw") }
+
+}
+
+/*
+fun myFun(inputName: String): Int {
     val list = File(inputName).readLines().toMutableList()
 
 
@@ -204,6 +293,16 @@ fun myFun(inputName: String): Int {
 
     return countEmpty
 }
+
+*/
+
+
+
+
+
+
+
+
 
 
 // Урок 7: работа с файлами
