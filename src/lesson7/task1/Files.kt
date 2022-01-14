@@ -71,13 +71,13 @@ fun myFun(inputName: String): Int {
 
 
 fun main() {
-    println(myFun("D://testsMyFun/text.txt")) // 16
+    println(myFun("D://testsMyFun/text0.txt")) // 0
+    println(myFun("D://testsMyFun/text1.txt")) // 16
     println(myFun("D://testsMyFun/text2.txt")) // 5
     println(myFun("D://testsMyFun/text3.txt")) // 4
     println(myFun("D://testsMyFun/text4.txt")) // 4
     println(myFun("D://testsMyFun/text5.txt")) // 6
     println(myFun("D://testsMyFun/text6.txt")) // 17
-    println(myFun("D://testsMyFun/text13.txt")) // 0
     try {
         println(myFun("D://testsMyFun/text7.txt"))
     } catch (e: IllegalArgumentException) { println("Asserted throw") }
