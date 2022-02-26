@@ -307,7 +307,33 @@ fun decimalFromString(str: String, base: Int): Int = TODO()
  * 90 = XC, 100 = C, 400 = CD, 500 = D, 900 = CM, 1000 = M.
  * Например: 23 = XXIII, 44 = XLIV, 100 = C
  */
-fun roman(n: Int): String = TODO()
+val roman1 = listOf("I", "X", "C", "M")
+val roman5 = listOf("V", "L", "D")
+
+fun roman(n: Int): String {
+    val strN = n.toString()
+    val result = StringBuilder()
+
+    for ((index, number) in strN.withIndex()) {
+        val i = strN.length - index - 1
+        val interimResult = StringBuilder()
+        result.append(
+            when (number) {
+                '1' -> roman1[i]
+                '2' -> interimResult.append(roman1[i]).append(roman1[i])
+                '3' -> interimResult.append(roman1[i]).append(roman1[i]).append(roman1[i])
+                '4' -> interimResult.append(roman1[i]).append(roman5[i])
+                '5' -> roman5[i]
+                '6' -> interimResult.append(roman5[i]).append(roman1[i])
+                '7' -> interimResult.append(roman5[i]).append(roman1[i]).append(roman1[i])
+                '8' -> interimResult.append(roman5[i]).append(roman1[i]).append(roman1[i]).append(roman1[i])
+                '9' -> interimResult.append(roman1[i]).append(roman1[i + 1])
+                else -> ""
+            }
+        )
+    }
+    return result.toString()
+}
 
 /**
  * Очень сложная (7 баллов)
@@ -316,4 +342,105 @@ fun roman(n: Int): String = TODO()
  * Например, 375 = "триста семьдесят пять",
  * 23964 = "двадцать три тысячи девятьсот шестьдесят четыре"
  */
-fun russian(n: Int): String = TODO()
+fun russian(n: Int): String {
+    val thousand: String
+
+    return if (n < 1000) russianTo999(n, thousand = false, needSpace1 = false, needSpace2 = false)
+    else {
+        val lastThousand = n / 1000 % 100
+
+        thousand = when {
+            lastThousand in 11..14 -> "тысяч"
+            lastThousand - lastThousand / 10 * 10 == 1 -> "тысяча"
+            lastThousand - lastThousand / 10 * 10 in 2..4 -> "тысячи"
+            else -> "тысяч"
+        }
+        (russianTo999(n / 1000, thousand = true, needSpace1 = true, needSpace2 = true) + thousand + russianTo999(
+            n % 1000,
+            thousand = false,
+            needSpace1 = true,
+            needSpace2 = false
+        ))
+    }
+}
+
+val numb1 = mapOf(
+    1 to "один",
+    2 to "два",
+    3 to "три",
+    4 to "четыре",
+    5 to "пять",
+    6 to "шесть",
+    7 to "семь",
+    8 to "восемь",
+    9 to "девять"
+)
+val numb10 = mapOf(
+    1 to "десять",
+    2 to "двадцать",
+    3 to "тридцать",
+    4 to "сорок",
+    5 to "пятьдесят",
+    6 to "шестьдесят",
+    7 to "семьдесят",
+    8 to "восемьдесят",
+    9 to "девяносто"
+)
+val numb100 = mapOf(
+    1 to "сто",
+    2 to "двести",
+    3 to "триста",
+    4 to "четыреста",
+    5 to "пятьсот",
+    6 to "шестьсот",
+    7 to "семьсот",
+    8 to "восемьсот",
+    9 to "девятьсот"
+)
+val numb11to19 = mapOf(
+    11 to "одиннадцать",
+    12 to "двенадцать",
+    13 to "тринадцать",
+    14 to "четырнадцать",
+    15 to "пятнадцать",
+    16 to "шестнадцать",
+    17 to "семнадцать",
+    18 to "восемнадцать",
+    19 to "девятнадцать",
+)
+
+fun russianTo999(n: Int, thousand: Boolean, needSpace1: Boolean, needSpace2: Boolean): String {
+    var result = ""
+
+    val tens = n % 100
+    val units = tens % 10
+
+    if (!thousand && needSpace1) result += " "
+
+    if (n / 100 > 0) {
+        result += numb100[n / 100]
+        if (tens > 0) result += " "
+    }
+
+    if (tens > 0)
+        if (tens in 11..19)
+            return if (needSpace2) result + numb11to19[tens] + " "
+            else result + numb11to19[tens]
+        else if (tens > 9) {
+            if (units > 0) result += numb10[tens / 10] + " "
+            else result += numb10[tens / 10]
+        }
+
+    if (units > 0)
+        if (thousand) result += when (units) {
+            1 -> "одна"
+            2 -> "две"
+            in 3..9 -> numb1[units]
+            else -> ""
+        } else result += numb1[units]
+
+    return if (result != "" && result != " ") {
+        if (thousand) "$result "
+        else result
+    } else ""
+}

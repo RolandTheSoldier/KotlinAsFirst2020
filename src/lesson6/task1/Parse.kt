@@ -4,6 +4,8 @@ package lesson6.task1
 
 import kotlin.math.exp
 import kotlin.math.max
+import java.lang.Exception
+
 
 // Урок 6: разбор строк, исключения
 // Максимальное количество баллов = 13
@@ -188,7 +190,18 @@ fun firstDuplicateIndex(str: String): Int = TODO()
  * или пустую строку при нарушении формата строки.
  * Все цены должны быть больше нуля либо равны нулю.
  */
-fun mostExpensive(description: String): String = TODO()
+fun mostExpensive(description: String): String {
+    val valueToName = mutableMapOf<Float, String>()
+
+    for (item in description.split("; ")) {
+        val pair = item.split(" ")
+        if (pair.count() != 2 || pair[1].toFloatOrNull() == null)
+            return ""
+        valueToName[pair[1].toFloat()] = pair[0]
+    }
+
+    return valueToName[valueToName.keys.maxOrNull()].toString()
+}
 
 /**
  * Сложная (6 баллов)
@@ -201,7 +214,63 @@ fun mostExpensive(description: String): String = TODO()
  *
  * Вернуть -1, если roman не является корректным римским числом
  */
-fun fromRoman(roman: String): Int = TODO()
+val romanMap = mapOf('I' to 1, 'V' to 5, 'X' to 10, 'L' to 50, 'C' to 100, 'D' to 500, 'M' to 1000)
+val romanMap5 = setOf(5, 50, 500)
+fun fromRoman(roman: String): Int {
+    if (roman.isEmpty())
+        return -1
+
+    val romanList = roman.toList()
+
+    val romanInArabic = mutableListOf<Int>()
+    for (item in romanList) {
+        if (romanMap.containsKey(item))
+            romanInArabic.add(romanMap.getValue(item))
+        else return -1
+    }
+
+
+    var result = 0
+
+    var i = 0
+
+    while (i < romanInArabic.size) {
+        result += romanInArabic[i]
+        if (romanMap5.contains(romanInArabic[i])) {
+            if (i + 1 >= romanInArabic.size) break //Вышли за границы?
+
+            if (romanInArabic[i + 1] < romanInArabic[i]) {
+                i++
+            } else {
+                return -1
+            }
+        } else {
+            if (i + 1 >= romanInArabic.size) break //Вышли за границы?
+
+            if (romanInArabic[i + 1] < romanInArabic[i]) {
+                i++
+            } else if (romanInArabic[i + 1] > romanInArabic[i]) {
+                result += romanInArabic[i + 1] - romanInArabic[i] * 2
+                i += 2
+            } else {
+                result += romanInArabic[i]
+
+                if (i + 2 >= romanInArabic.size) break //Вышли за границы?
+
+                if (romanInArabic[i + 2] == romanInArabic[i]) {
+                    result += romanInArabic[i]
+                    i += 3
+                } else if (romanInArabic[i + 2] < romanInArabic[i]) {
+                    i += 2
+                } else {
+                    return -1
+                }
+            }
+        }
+    }
+
+    return result
+}
 
 /**
  * Очень сложная (7 баллов)

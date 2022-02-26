@@ -6,304 +6,6 @@ import lesson5.task1.containsIn
 import ru.spbstu.wheels.currentPlatform
 import kotlin.math.*
 import java.io.File
-import java.lang.NullPointerException
-import kotlin.IllegalArgumentException
-import kotlin.system.exitProcess
-
-
-fun myFun(inputName: String): Int {
-    val list = File(inputName).readLines()
-
-    // Индексы символа и строки Камеры
-    var charC = 0
-    var lineC = 0
-
-    // Проверка списка строк на правильность
-    val lineSize: Int
-    if (list.isEmpty()) throw IllegalArgumentException()
-    else lineSize = list[0].length
-    var checkC = 0
-    for ((indexLine, line) in list.withIndex()) {
-        if (line.length != lineSize) throw IllegalArgumentException()
-        for ((indexChar, char) in line.withIndex()) {
-            if (!(char == '.' || char == '#' || char == 'C')) {
-                throw IllegalArgumentException()
-            }
-            if (char == 'C') {
-                ++checkC
-                if (checkC > 1) throw IllegalArgumentException()
-                charC = indexChar
-                lineC = indexLine
-            }
-        }
-    }
-    if (checkC == 0) throw IllegalArgumentException()
-
-    // Подсчёт шагов и свободных клеток
-    val maxLine = list.size - 1
-    val maxChar = list[0].length - 1
-    var countEmpty = 0
-    val pairs =
-        listOf((-1 to 0), (1 to 0), (0 to -1), (0 to 1), (-1 to -1), (-1 to 1), (1 to -1), (1 to 1))
-    var curLine: Int
-    var curChar: Int
-
-    // Поиск
-    for ((first, second) in pairs) {
-        var index = 0
-        while (true) {
-            ++index
-
-            curLine = lineC + first * index
-            if (curLine < 0 || curLine > maxLine) break
-            curChar = charC + second * index
-            if (curChar < 0 || curChar > maxChar) break
-
-            if (list[curLine][curChar] == '.') ++countEmpty
-            else break
-        }
-    }
-    return countEmpty
-}
-
-
-
-
-
-fun main() {
-    println(myFun("D://testsMyFun/text0.txt")) // 0
-    println(myFun("D://testsMyFun/text1.txt")) // 16
-    println(myFun("D://testsMyFun/text2.txt")) // 5
-    println(myFun("D://testsMyFun/text3.txt")) // 4
-    println(myFun("D://testsMyFun/text4.txt")) // 4
-    println(myFun("D://testsMyFun/text5.txt")) // 6
-    println(myFun("D://testsMyFun/text6.txt")) // 17
-    try {
-        println(myFun("D://testsMyFun/text7.txt"))
-    } catch (e: IllegalArgumentException) { println("Asserted throw") }
-    try {
-        println(myFun("D://testsMyFun/text8.txt"))
-    } catch (e: IllegalArgumentException) { println("Asserted throw") }
-    try {
-        println(myFun("D://testsMyFun/text9.txt"))
-    } catch (e: IllegalArgumentException) { println("Asserted throw") }
-    try {
-        println(myFun("D://testsMyFun/text10.txt"))
-    } catch (e: IllegalArgumentException) { println("Asserted throw") }
-    try {
-        println(myFun("D://testsMyFun/text11.txt"))
-    } catch (e: IllegalArgumentException) { println("Asserted throw") }
-    try {
-        println(myFun("D://testsMyFun/text12.txt"))
-    } catch (e: IllegalArgumentException) { println("Asserted throw") }
-
-}
-
-/*
-fun myFun(inputName: String): Int {
-    val list = File(inputName).readLines().toMutableList()
-
-
-    // Индексы символа и строки Камеры
-    var charC = 0
-    var lineC = 0
-
-
-    // Проверка списка строк на правильность
-    val lineSize: Int
-    if (list.isEmpty()) throw IllegalArgumentException()
-    else lineSize = list[0].length
-    var checkC = 0
-    for ((indexLine, line) in list.withIndex()) {
-        if (line.length != lineSize) throw IllegalArgumentException()
-        for ((indexChar, char) in line.withIndex()) {
-            if (!(char == '.' || char == '#' || char == 'C')) {
-                throw IllegalArgumentException()
-            }
-            if (char == 'C') {
-                ++checkC
-                if (checkC > 1) throw IllegalArgumentException()
-                charC = indexChar
-                lineC = indexLine
-            }
-        }
-    }
-    if (checkC == 0) throw IllegalArgumentException()
-
-
-    // Логические переменные для контроля границ строк в восьми направлениях
-    var countBooleans = 8
-    var cUp = true
-    var cDown = true
-    var cLeft = true
-    var cRight = true
-    var cUpLeft = true
-    var cUpRight = true
-    var cDownLeft = true
-    var cDownRight = true
-
-
-    // Подсчёт шагов и свободных клеток
-    val maxListIndex = list.size - 1
-    val maxLineIndex = list[0].length - 1
-    var countEmpty = 0
-    var index = 0
-
-
-    // Поиск
-    while (countBooleans > 0) {
-        ++index
-
-        if (cUp) {
-            if (lineC != 0) {
-                if (list[lineC - index][charC] == '.') ++countEmpty
-                else {
-                    cUp = false
-                    --countBooleans
-                }
-                if (lineC - index == 0 && cUp) {
-                    cUp = false
-                    --countBooleans
-                }
-            } else {
-                cUp = false
-                --countBooleans
-            }
-        }
-
-        if (cDown) {
-            if (lineC != maxListIndex) {
-                if (list[lineC + index][charC] == '.') ++countEmpty
-                else {
-                    cDown = false
-                    --countBooleans
-                }
-                if (lineC + index == maxListIndex && cDown) {
-                    cDown = false
-                    --countBooleans
-                }
-            } else {
-                cDown = false
-                --countBooleans
-            }
-        }
-
-        if (cLeft) {
-            if (charC != 0) {
-                if (list[lineC][charC - index] == '.') ++countEmpty
-                else {
-                    cLeft = false
-                    --countBooleans
-                }
-                if (charC - index == 0 && cLeft) {
-                    cLeft = false
-                    --countBooleans
-                }
-            } else {
-                cLeft = false
-                --countBooleans
-            }
-        }
-
-        if (cRight) {
-            if (charC != maxLineIndex) {
-                if (list[lineC][charC + index] == '.') ++countEmpty
-                else {
-                    cRight = false
-                    --countBooleans
-                }
-                if (charC + index == maxLineIndex && cRight) {
-                    cRight = false
-                    --countBooleans
-                }
-            } else {
-                cRight = false
-                --countBooleans
-            }
-        }
-
-        if (cUpLeft) {
-            if (lineC != 0 && charC != 0) {
-                if (list[lineC - index][charC - index] == '.') ++countEmpty
-                else {
-                    cUpLeft = false
-                    --countBooleans
-                }
-                if (cUpLeft && (lineC - index == 0 || charC - index == 0)) {
-                    cUpLeft = false
-                    --countBooleans
-                }
-            } else {
-                cUpLeft = false
-                --countBooleans
-            }
-        }
-
-        if (cUpRight) {
-            if (lineC != 0 && charC != maxLineIndex) {
-                if (list[lineC - index][charC + index] == '.') ++countEmpty
-                else {
-                    cUpRight = false
-                    --countBooleans
-                }
-                if (cUpRight && (lineC - index == 0 || charC + index == maxLineIndex)) {
-                    cUpRight = false
-                    --countBooleans
-                }
-            } else {
-                cUpRight = false
-                --countBooleans
-            }
-        }
-
-        if (cDownLeft) {
-            if (lineC != maxListIndex && charC != 0) {
-                if (list[lineC + index][charC - index] == '.') ++countEmpty
-                else {
-                    cDownLeft = false
-                    --countBooleans
-                }
-                if (cDownLeft && (lineC + index == maxListIndex || charC - index == 0)) {
-                    cDownLeft = false
-                    --countBooleans
-                }
-            } else {
-                cDownLeft = false
-                --countBooleans
-            }
-        }
-
-        if (cDownRight) {
-            if (lineC != maxListIndex && charC != maxLineIndex) {
-                if (list[lineC + index][charC + index] == '.') ++countEmpty
-                else {
-                    cDownRight = false
-                    --countBooleans
-                }
-                if (cDownRight && (lineC + index == maxListIndex || charC + index == maxLineIndex)) {
-                    cDownRight = false
-                    --countBooleans
-                }
-            } else {
-                cDownRight = false
-                --countBooleans
-            }
-        }
-    }
-
-    return countEmpty
-}
-
-*/
-
-
-
-
-
-
-
-
-
 
 // Урок 7: работа с файлами
 // Урок интегральный, поэтому его задачи имеют сильно увеличенную стоимость
@@ -739,7 +441,108 @@ Suspendisse <s>et elit in enim tempus iaculis</s>.
  * (Отступы и переносы строк в примере добавлены для наглядности, при решении задачи их реализовывать не обязательно)
  */
 fun markdownToHtmlSimple(inputName: String, outputName: String) {
-    TODO()
+    //region Работа со Stack
+    class Comp(var data: Int, val next: Comp?)
+
+    var top: Comp? = null
+
+    fun addComp(data: Int) {
+        val newComp = Comp(data, top)
+        top = newComp
+    }
+
+    fun removeComp() {
+        top = top?.next
+    }
+    //endregion
+
+    val writer = File(outputName).bufferedWriter()
+
+    var isHaveEmpty = true
+    var isHaveNotEmpty = false
+
+    writer.write("<html><body><p>")
+    for (line in File(inputName).readLines()) {
+        val newLine = line.replace(Regex("[\\s\\n\\t]"), "")
+
+        if (newLine.isEmpty()) {
+            if (!isHaveEmpty) {
+                isHaveEmpty = true
+            }
+        }
+        if (newLine.isNotEmpty()) {
+            if (isHaveNotEmpty && isHaveEmpty)
+                writer.write("</p>")
+
+            if (isHaveEmpty && isHaveNotEmpty)
+                writer.write("<p>")
+
+            isHaveEmpty = false
+            isHaveNotEmpty = true
+
+            var i = 0
+            while (i < line.length) {
+                if (line[i].toString() == "~") {
+                    if (top?.data == 0) {
+                        writer.write("</s>")
+                        removeComp()
+                    } else {
+                        writer.write("<s>")
+                        addComp(0)
+                    }
+                    i += 2
+                } else if (line[i].toString() == "*") {
+                    if (i + 1 < line.length && line[i + 1].toString() == "*") {
+                        if (i + 2 < line.length && line[i + 2].toString() == "*") {
+                            if (top?.data == 3) {
+                                writer.write("</i></b>")
+                                removeComp()
+                                i += 3
+                            } else if (top?.data == 2) {
+                                writer.write("</b>")
+                                removeComp()
+                                i += 2
+                            } else if (top?.data == 1) {
+                                writer.write("</i>")
+                                removeComp()
+                                i += 1
+                            } else {
+                                writer.write("<b><i>")
+                                addComp(3)
+                                i += 3
+                            }
+                        } else {
+                            if (top?.data == 2) {
+                                writer.write("</b>")
+                                removeComp()
+                                i += 2
+                            } else {
+                                writer.write("<b>")
+                                addComp(2)
+                                i += 2
+                            }
+                        }
+                    } else {
+                        if (top?.data == 1) {
+                            removeComp()
+                            writer.write("</i>")
+                            i++
+                        } else {
+                            addComp(1)
+                            writer.write("<i>")
+                            i++
+                        }
+                    }
+                } else {
+                    writer.write(line[i].toString())
+                    i++
+                }
+            }
+        }
+    }
+
+    writer.write("</p></body></html>")
+    writer.close()
 }
 
 /**
@@ -905,126 +708,57 @@ fun printMultiplicationProcess(lhv: Int, rhv: Int, outputName: String) {
  *
  */
 fun printDivisionProcess(lhv: Int, rhv: Int, outputName: String) {
-
-    // * * * * * * *
-    // Функции 1) поиска текущей спускающейся цифры и 2) количества цифр в числе
-
-    val ten = 10   // Десять. Для функций
-
-    fun findDigit(n: Int, amount: Int): Int = if (amount > 0)
-        n % ten.toDouble().pow(amount).toInt() / ten.toDouble().pow(amount - 1).toInt() else 0
-
-    fun countDigits(n: Int): Int {
-        var numOfDigits = 0
-        var num = n
-        while (num > 0) {
-            num /= 10
-            ++numOfDigits
-        }
-        return if (n != 0) numOfDigits else 1
-    }
-
-
-    // * * * * * * *
-    // Переменные и константы
-
     val writer = File(outputName).bufferedWriter()
+    val divResult = lhv / rhv
+    var lhvString = lhv.toString()
 
-    var space = 1                           // Пространство (начальное)
-    var checkDigit = 0                      // Текущая спускающаяся цифра
-    var dent = lhv                          // Текущее делимое
-    var amount = 0                          // Количество цифр, оставшееся для прибавления
+    val dataDiv = mutableListOf<Int>()
 
-    val quotient = lhv / rhv                // Частное
-    val remainder = lhv % rhv               // Конечный остаток от деления
-    val numOfDigits = countDigits(dent)     // Количество цифр в изначальном делимом
+    for (number in divResult.toString())
+        dataDiv.add(number.toString().toInt() * rhv)
 
+    var endOfNumber = lhvString.length - 1
+    var prevNumber = lhv / (10.0.pow(dataDiv.size.toDouble() - 1)).toInt()
+    var endPosition = prevNumber.toString().length - 1
+    var divResultPosition = lhv.toString().length + 3
 
-    // * * * * * * *
-    // Определяем начальные dent, amount & checkDigit
+    if (prevNumber.toString().length == dataDiv[0].toString().length) {
+        writer.write(" ")
+        lhvString = " $lhvString"
+        endPosition++
+        divResultPosition++
+        endOfNumber++
+    }
 
-    for (i in 1..numOfDigits) {
-        if (lhv / (ten.toDouble().pow(numOfDigits - i).toInt()) / rhv > 0) {
-            dent = lhv / (ten.toDouble().pow(numOfDigits - i).toInt())
-            amount = numOfDigits - i
-            checkDigit = findDigit(lhv, amount)
-            break
+    writer.write("$lhv | $rhv")
+
+    var isFirstIteration = true
+    for (curNumber in dataDiv) {
+        writer.newLine()
+
+        writer.write("-$curNumber".padStart(endPosition + 1))
+
+        if (isFirstIteration) {
+            writer.write("$divResult".padStart(divResultPosition - endPosition + divResult.toString().length - 1))
+            isFirstIteration = false
         }
-    }
-
-    if (amount < 0) {
-        println("Amount < 0")
-        writer.close()
-        return
-    }
-
-
-    // * * * * * * *
-    // Вывод первых трёх строк
-
-    writer.write(" $lhv | $rhv")
-
-    writer.newLine()
-    writer.write("-${dent / rhv * rhv}")
-    for (i in 1..amount) writer.write(" ")
-    writer.write("   $quotient")
-
-    writer.newLine()
-    for (i in 1 until space) writer.write(" ")
-    for (i in 1..countDigits(dent) + 1) writer.write("-")
-
-    if (amount == 0) {
-        writer.newLine()
-        for (i in 1..space + countDigits(dent) - countDigits(remainder)) writer.write(" ")
-        writer.write(remainder.toString())
-        writer.close()
-        return
-    }
-
-
-    // * * * * * * *
-    // Вывод остальных разностей
-
-    while (true) {
 
         writer.newLine()
-        for (i in 1..space + countDigits(dent) - countDigits(dent % rhv)) writer.write(" ")
-        writer.write((dent % rhv).toString())
-        if (amount == 0) break
-        writer.write(checkDigit.toString())
-
-        val dentPrevious = dent
-        dent = dent % rhv * ten + checkDigit
-        --amount
-        if (amount != 0) checkDigit = findDigit(lhv, amount)
-
-
+        val startPosition =
+            min(endPosition - curNumber.toString().length, endPosition - prevNumber.toString().length + 1)
+        writer.write("".padStart(startPosition).padEnd(endPosition + 1, '-'))
 
         writer.newLine()
+        val reminder = prevNumber - curNumber
+        writer.write("$reminder".padStart(endPosition + 1))
 
-        var spaceTwo = space + countDigits(dentPrevious) - countDigits(dentPrevious % rhv) +
-                countDigits(dent) - countDigits(dent / rhv * rhv) - 1
-        if (dentPrevious % rhv == 0) ++spaceTwo
+        if (endOfNumber == endPosition)
+            break
 
-        for (i in 1..spaceTwo) writer.write(" ")
-        writer.write("-")
-        writer.write((dent / rhv * rhv).toString())
+        writer.write(lhvString[endPosition + 1].toString())
 
-
-
-        writer.newLine()
-
-        val spaceThree = if (countDigits(dent) > countDigits(dent / rhv * rhv) + 1)
-            space + countDigits(dentPrevious) - countDigits(dentPrevious % rhv)
-        else space + countDigits(dentPrevious) - countDigits(dent / rhv * rhv)
-
-        for (i in 1..spaceThree) writer.write(" ")
-
-        val line = space + countDigits(dentPrevious) + 1 - spaceThree
-        for (i in 1..line) writer.write("-")
-
-        space += countDigits(dentPrevious) - countDigits(dentPrevious % rhv)
-        if (dentPrevious % rhv == 0) ++space
+        prevNumber = ("$reminder" + lhvString[endPosition + 1].toString()).toInt()
+        endPosition++
     }
 
     writer.close()

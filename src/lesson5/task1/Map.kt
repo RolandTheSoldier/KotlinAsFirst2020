@@ -278,7 +278,31 @@ fun hasAnagrams(words: List<String>): Boolean = TODO()
  *          "GoodGnome" to setOf()
  *        )
  */
-fun propagateHandshakes(friends: Map<String, Set<String>>): Map<String, Set<String>> = TODO()
+fun propagateHandshakes(friends: Map<String, Set<String>>): Map<String, Set<String>> {
+    val friendsFull = friends.toMutableMap()
+    for ((_, others) in friends)
+        for (friend in others)
+            if (!friendsFull.contains(friend)) friendsFull[friend] = setOf()
+
+    val result = mutableMapOf<String, Set<String>>()
+    for ((key) in friendsFull) {
+        result[key] = findAllFriends(key, friendsFull, friendsFull.getValue(key), 0)
+    }
+
+    return result
+}
+
+fun findAllFriends(name: String, friends: Map<String, Set<String>>, nextSet: Set<String>, step: Int): Set<String> {
+    val result = nextSet.toMutableSet()
+
+    for (friend in step until nextSet.size) {
+        result.addAll(friends.getValue(nextSet.elementAt(friend)))
+    }
+    result.remove(name)
+
+    if (nextSet.size != result.size) result.addAll(findAllFriends(name, friends, result, nextSet.size))
+    return result
+}
 
 /**
  * Сложная (6 баллов)
@@ -297,7 +321,24 @@ fun propagateHandshakes(friends: Map<String, Set<String>>): Map<String, Set<Stri
  *   findSumOfTwo(listOf(1, 2, 3), 4) -> Pair(0, 2)
  *   findSumOfTwo(listOf(1, 2, 3), 6) -> Pair(-1, -1)
  */
-fun findSumOfTwo(list: List<Int>, number: Int): Pair<Int, Int> = TODO()
+
+fun findSumOfTwo(list: List<Int>, number: Int): Pair<Int, Int> {
+    val difMap = mutableMapOf<Int, Int>()
+
+    try {
+        difMap += (number - list[0] to 0)
+    } catch (e: Exception) {
+        return Pair(-1, -1)
+    }
+
+    for (i in 1 until list.size) {
+        if (difMap.containsKey(list[i]))
+            return (difMap.getValue(list[i]) to i)
+        difMap += (number - list[i] to i)
+    }
+
+    return Pair(-1, -1)
+}
 
 /**
  * Очень сложная (8 баллов)
@@ -320,4 +361,46 @@ fun findSumOfTwo(list: List<Int>, number: Int): Pair<Int, Int> = TODO()
  *     450
  *   ) -> emptySet()
  */
-fun bagPacking(treasures: Map<String, Pair<Int, Int>>, capacity: Int): Set<String> = TODO()
+fun bagPacking(treasures: Map<String, Pair<Int, Int>>, capacity: Int): Set<String> {
+    val result = mutableSetOf<String>()
+    var maximum = 0
+    var maxI = 0
+    var maxJ = 0
+
+    val listTreasures = mutableListOf("-" to (0 to 0))
+    listTreasures += treasures.toList()
+    val maxTreas = Array(listTreasures.size + 1) { Array(capacity + 1) { 0 } }
+    for (i in 1 until maxTreas.size - 1) {
+        for (j in 0 until capacity + 1) {
+            if (listTreasures[i].second.first > j)
+                maxTreas[i][j] = maxTreas[i - 1][j]
+            else {
+                maxTreas[i][j] = maxOf(
+                    maxTreas[i - 1][j],
+                    maxTreas[i - 1][j - listTreasures[i].second.first] + listTreasures[i].second.second
+                )
+            }
+
+            if (maxTreas[i][j] > maximum) {
+                maximum = maxTreas[i][j]
+                maxI = i
+                maxJ = j
+            }
+        }
+    }
+
+    //find optimal way
+    var i = maxI
+    var j = maxJ
+    while (j > 0) {
+        if (listTreasures[i].second.first <= j && maxTreas[i][j] - listTreasures[i].second.second == maxTreas[i - 1][j - listTreasures[i].second.first]) {
+            result += listTreasures[i].first
+            j -= listTreasures[i].second.first
+            i--
+        } else {
+            i--
+        }
+    }
+
+    return result
+}

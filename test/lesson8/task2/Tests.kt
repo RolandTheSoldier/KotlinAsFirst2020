@@ -164,6 +164,7 @@ class Tests {
     @Test
     @Tag("10")
     fun knightTrajectory() {
+        knightTrajectory(square("a6"), square("d2")).assertKnightTrajectory(square("a6"), square("d2"), 3)
         assertEquals(listOf(square("d3")), knightTrajectory(square("d3"), square("d3")))
         assertEquals(listOf(square("e4"), square("d6")), knightTrajectory(square("e4"), square("d6")))
         knightTrajectory(square("f5"), square("g6")).assertKnightTrajectory(square("f5"), square("g6"), 2)

@@ -68,14 +68,10 @@ fun minBiRoot(a: Double, b: Double, c: Double): Double {
  * Мой возраст. Для заданного 0 < n < 200, рассматриваемого как возраст человека,
  * вернуть строку вида: «21 год», «32 года», «12 лет».
  */
-fun ageDescription(age: Int): String = when {
-    age < 1 || age > 199 -> "Not correct number"
-    age % 100 in 10..20 -> "$age лет"
-    age % 10 == 1 -> "$age год"
-    age % 10 in 2..4 -> "$age года"
-    age % 10 == 0 || age % 10 in 5..9 -> "$age лет"
-    else -> "Not correct number"
-}
+fun ageDescription(age: Int): String = "$age " + if (age % 10 == 1 && age % 100 != 11) "год"
+else if (age % 10 in 2..4 && age % 100 !in 12..14) "года"
+else "лет"
+
 
 /**
  * Простая (2 балла)
@@ -182,3 +178,4 @@ fun triangleKind(a: Double, b: Double, c: Double): Int {
  */
 fun segmentLength(a: Int, b: Int, c: Int, d: Int): Int =
     if (minOf(d, b) - maxOf(a, c) >= 0) minOf(d, b) - maxOf(a, c) else -1
+

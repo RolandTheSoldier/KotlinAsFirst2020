@@ -299,6 +299,34 @@ class Tests {
                 )
             )
         )
+        assertEquals(
+            mapOf(
+                "0" to setOf(),
+                "2" to setOf(),
+                "1" to setOf("0", "2")
+            ),
+            propagateHandshakes(
+                mapOf(
+                    "0" to setOf(),
+                    "2" to setOf(),
+                    "1" to setOf("0", "2")
+                )
+            )
+        )
+        assertEquals(
+            mapOf(
+                "0" to setOf("2", "1"),
+                "2" to setOf("1", "0"),
+                "1" to setOf("0", "2")
+            ),
+            propagateHandshakes(
+                mapOf(
+                    "0" to setOf("2"),
+                    "2" to setOf("1"),
+                    "1" to setOf("0")
+                )
+            )
+        )
     }
 
     @Test
@@ -316,11 +344,30 @@ class Tests {
             Pair(-1, -1),
             findSumOfTwo(listOf(1, 2, 3), 6)
         )
+        assertEquals(
+            Pair(-1, -1),
+            findSumOfTwo(listOf(1, 1, 0, 1, 1, 1), 0)
+        )
     }
 
     @Test
     @Tag("8")
     fun bagPacking() {
+        assertEquals(
+            setOf("1", "7"),
+            bagPacking(
+                mapOf(
+                    "0" to (2 to 10),
+                    "1" to (1 to 10),
+                    "2" to (10 to 1),
+                    "3" to (10 to 1),
+                    "4" to (10 to 1),
+                    "5" to (10 to 1),
+                    "6" to (10 to 1),
+                    "7" to (1 to 20)
+                ), 2
+            )
+        )
         assertEquals(
             setOf("Кубок"),
             bagPacking(
@@ -333,6 +380,100 @@ class Tests {
             bagPacking(
                 mapOf("Кубок" to (500 to 2000), "Слиток" to (1000 to 5000)),
                 450
+            )
+        )
+        assertEquals(
+            setOf("Слиток"),
+            bagPacking(
+                mapOf("Кубок" to (500 to 2000), "Слиток" to (1000 to 3999)),
+                1000
+            )
+        )
+        assertEquals(
+            setOf("9", "8", "7", "6", "5", "4", "2", "1", "0"),
+            bagPacking(
+                mapOf(
+                    "0" to (1 to 1),
+                    "1" to (1 to 1),
+                    "2" to (1 to 1),
+                    "3" to (149 to 17),
+                    "4" to (276 to 26),
+                    "5" to (1 to 1),
+                    "6" to (462 to 192),
+                    "7" to (1 to 1),
+                    "8" to (1 to 1),
+                    "9" to (2 to 149)
+                ), 845
+            )
+        )
+        assertEquals(
+            setOf("4", "3", "2", "1", "0"),
+            bagPacking(
+                mapOf(
+                    "0" to (1 to 1),
+                    "1" to (499 to 2),
+                    "2" to (1 to 1),
+                    "3" to (108 to 2),
+                    "4" to (1 to 1),
+                    "5" to (2 to 1)
+                ), 611
+            )
+        )
+        assertEquals(
+            setOf("0", "1", "2", "3", "4", "5", "6"),
+            bagPacking(
+                mapOf(
+                    "0" to (1 to 1),
+                    "1" to (1 to 1),
+                    "2" to (85 to 1),
+                    "3" to (1 to 1),
+                    "4" to (1 to 1),
+                    "5" to (1 to 1),
+                    "6" to (148 to 1),
+                    "7" to (413 to 2)
+                ), 456
+            )
+        )
+        assertEquals(
+            setOf("0"),
+            bagPacking(
+                mapOf(
+                    "0" to (1 to 1),
+                    "1" to (1 to 1)
+                ), 1
+            )
+        )
+        assertEquals(
+            setOf("0", "1"),
+            bagPacking(
+                mapOf(
+                    "0" to (1 to 1),
+                    "1" to (1 to 1)
+                ), 2
+            )
+        )
+        assertEquals(
+            setOf("1"),
+            bagPacking(
+                mapOf(
+                    "0" to (500 to 1),
+                    "1" to (99 to 2),
+                    "2" to (500 to 1),
+                    "3" to (500 to 1),
+                    "4" to (1 to 1),
+                    "5" to (500 to 1),
+                    "6" to (500 to 1),
+                    "7" to (99 to 1)
+                ), 99
+            )
+        )
+        assertEquals(
+            setOf("1"),
+            bagPacking(
+                mapOf(
+                    "0" to (1 to 1),
+                    "1" to (1 to 2)
+                ), 1
             )
         )
     }

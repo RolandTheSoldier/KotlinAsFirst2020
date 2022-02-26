@@ -112,20 +112,29 @@ class Tests {
     @Test
     @Tag("6")
     fun mostExpensive() {
-        assertEquals("", mostExpensive(""))
+        assertEquals("", mostExpensive("Хлеб; 39.9 Молоко 62"))
         assertEquals("Курица", mostExpensive("Хлеб 39.9; Молоко 62.5; Курица 184.0; Конфеты 89.9"))
+        assertEquals("", mostExpensive(""))
         assertEquals("Вино", mostExpensive("Вино 255.0"))
+        assertEquals("", mostExpensive("Вино f255.0"))
+        assertEquals("", mostExpensive("Вин Iо f255.0"))
     }
 
     @Test
     @Tag("6")
     fun fromRoman() {
         assertEquals(1, fromRoman("I"))
+        assertEquals(-1, fromRoman(""))
+        assertEquals(2, fromRoman("II"))
+        assertEquals(3, fromRoman("III"))
         assertEquals(3000, fromRoman("MMM"))
         assertEquals(1978, fromRoman("MCMLXXVIII"))
         assertEquals(694, fromRoman("DCXCIV"))
         assertEquals(49, fromRoman("XLIX"))
         assertEquals(-1, fromRoman("Z"))
+        assertEquals(3057, fromRoman("MMMLVII"))
+        assertEquals(3051, fromRoman("MMMLI"))
+        assertEquals(2085, fromRoman("MMLXXXV"))
     }
 
     @Test

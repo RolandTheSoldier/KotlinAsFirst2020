@@ -78,8 +78,3 @@ fun brickPasses(a: Int, b: Int, c: Int, r: Int, s: Int): Boolean = when {
     r >= c && s >= a || r >= a && s >= c -> true
     else -> false
 }
-
-
-
-
-

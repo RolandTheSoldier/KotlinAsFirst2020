@@ -2,6 +2,10 @@
 
 package lesson8.task1
 
+import kotlin.math.abs
+import kotlin.math.ceil
+import kotlin.math.max
+
 /**
  * Точка (гекс) на шестиугольной сетке.
  * Координаты заданы как в примере (первая цифра - y, вторая цифра - x)
@@ -36,7 +40,12 @@ data class HexPoint(val x: Int, val y: Int) {
      * Расстояние вычисляется как число единичных отрезков в пути между двумя гексами.
      * Например, путь межу гексами 16 и 41 (см. выше) может проходить через 25, 34, 43 и 42 и имеет длину 5.
      */
-    fun distance(other: HexPoint): Int = TODO()
+    fun distance(other: HexPoint): Int {
+        return if ((this.x > other.x && this.y > other.y) || (this.x < other.x && this.y < other.y))
+            abs(this.x - other.x) + abs(this.y - other.y)
+        else
+            max(abs(this.x - other.x), abs(this.y - other.y))
+    }
 
     override fun toString(): String = "$y.$x"
 }
@@ -66,7 +75,9 @@ data class Hexagon(val center: HexPoint, val radius: Int) {
      *
      * Вернуть true, если заданная точка находится внутри или на границе шестиугольника
      */
-    fun contains(point: HexPoint): Boolean = TODO()
+    fun contains(point: HexPoint): Boolean = radius >= point.distance(center)
+
+    fun containsOn(point: HexPoint): Boolean = radius == point.distance(center)
 }
 
 /**
@@ -192,7 +203,76 @@ fun pathBetweenHexes(from: HexPoint, to: HexPoint): List<HexPoint> = TODO()
  *
  * Если все три точки совпадают, вернуть шестиугольник нулевого радиуса с центром в данной точке.
  */
-fun hexagonByThreePoints(a: HexPoint, b: HexPoint, c: HexPoint): Hexagon? = TODO()
+fun hexagonByThreePoints(a: HexPoint, b: HexPoint, c: HexPoint): Hexagon? {
+    if (a == b && a == c)
+        return Hexagon(a, 0)
+
+    var maxDistance = a.distance(b)
+    var point1 = a
+    var point2 = b
+    var point3 = c
+
+    if (a.distance(c) > maxDistance) {
+        maxDistance = a.distance(c)
+        point1 = a
+        point2 = c
+        point3 = b
+    }
+
+    if (b.distance(c) > maxDistance) {
+        maxDistance = b.distance(c)
+        point1 = b
+        point2 = c
+        point3 = a
+    }
+
+    var radius = ceil(maxDistance.toDouble() / 2).toInt()
+    while (radius <= maxDistance) {
+        val centers = mutableListOf<HexPoint>()
+        for (i in 0 until radius) {
+            var center = HexPoint(point1.x - radius, point1.y + i)
+            if (Hexagon(center, radius).containsOn(point2))
+                centers.add(center)
+
+            center = HexPoint(point1.x + radius, point1.y - i)
+            if (Hexagon(center, radius).containsOn(point2))
+                centers.add(center)
+
+            center = HexPoint(point1.x - radius + i, point1.y + radius)
+            if (Hexagon(center, radius).containsOn(point2))
+                centers.add(center)
+
+            center = HexPoint(point1.x + i, point1.y + radius - i)
+            if (Hexagon(center, radius).containsOn(point2))
+                centers.add(center)
+
+            center = HexPoint(point1.x - i, point1.y - radius + i)
+            if (Hexagon(center, radius).containsOn(point2))
+                centers.add(center)
+
+            center = HexPoint(point1.x + radius - i, point1.y - radius)
+            if (Hexagon(center, radius).containsOn(point2))
+                centers.add(center)
+
+
+        }
+
+        var countOut = 0
+        for (center in centers) {
+            if (!Hexagon(center, radius).contains(point3)) {
+                countOut++
+            } else if (Hexagon(center, radius).containsOn(point3))
+                return Hexagon(center, radius)
+        }
+
+        if (countOut == 1)
+            return null
+
+        radius++
+    }
+
+    return null
+}
 
 /**
  * Очень сложная (20 баллов)
@@ -204,7 +284,6 @@ fun hexagonByThreePoints(a: HexPoint, b: HexPoint, c: HexPoint): Hexagon? = TODO
  *
  * Пример: 13, 32, 45, 18 -- шестиугольник радиусом 3 (с центром, например, в 15)
  */
-fun minContainingHexagon(vararg points: HexPoint): Hexagon = TODO()
-
-
-
+fun minContainingHexagon(vararg points: HexPoint): Hexagon {
+    TODO()
+}
